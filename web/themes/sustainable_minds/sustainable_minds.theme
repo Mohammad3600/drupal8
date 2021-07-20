@@ -1,0 +1,586 @@
+<?php
+
+use Drupal\Core\Cache\Cache;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Views\ViewExecutable;
+use Drupal\Core\Url;
+
+//BE IXF: Configuration (see lines 468-500 for BE IXF preproc)
+include __DIR__ . '/src/be/be_ixf_client.php';
+use BrightEdge\BEIXFClient;
+
+
+//NOTE(Elijah): Adds theme suggestion for selection form
+function sustainable_minds_theme_suggestions_select_alter(array &$suggestions, array $variables) {
+  if ($variables["element"]["#context"]["#view_id"] !== null) {
+    $suggestions[] = 'select--'.$variables["element"]["#context"]["#view_id"];
+    $suggestions[] = 'select--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"];
+  }
+}
+
+/*function sustainable_minds_preprocess_image(&$variables){
+  $attributes = &$variables['attributes'];
+
+  if (!isset($attributes['loading'])) {
+    $variables['attributes']['loading'] = 'lazy';
+  }
+
+}*/
+
+function sustainable_minds_preprocess_select(&$variables, $hook, &$info) {
+  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'select--'.$variables["element"]["#context"]["#view_id"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','select--'.$variables["element"]["#context"]["#view_id"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/forms';
+  }else if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'select--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','select--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/forms';
+  }
+}
+
+//NOTE(Elijah): Adds theme suggestion for views pager
+function sustainable_minds_theme_suggestions_pager_alter(array &$suggestions, array $variables) {
+
+  $themeArray = $variables["pager"]["#theme"];
+  $arraySize = sizeof($themeArray);
+
+  for($i = 0; $i < $arraySize; $i++){
+    if ($themeArray[$i] !== null) {
+      $suggestions[] = 'pager--'.$themeArray[$i];
+    }
+  }
+}
+
+function sustainable_minds_preprocess_pager(&$variables, $hook, &$info) {
+
+  $themeArray = $variables["pager"]["#theme"];
+  $arraySize = sizeof($themeArray);
+
+  for($i = 0; $i < $arraySize; $i++){
+    if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/navigation/'.'pager--'.$themeArray[$i].'.html.twig'))) {
+      $info['template'] = str_replace('_','-','pager--'.$themeArray[$i]);
+      $info['path'] = 'themes/custom/sustainable_minds/templates/navigation';
+      $i = $arraySize;
+    }
+  }
+}
+
+//NOTE(Elijah): Adds theme suggestion for fieldset
+function sustainable_minds_theme_suggestions_fieldset_alter(array &$suggestions, array $variables) {
+
+  $test = 1;
+
+  if ($variables["element"]["#context"]["#view_id"] !== null) {
+    $suggestions[] = 'fieldset--'.$variables["element"]["#context"]["#view_id"];
+    $suggestions[] = 'fieldset--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"];
+  }
+
+}
+
+function sustainable_minds_preprocess_fieldset(&$variables, $hook, &$info) {
+
+  $test = 1;
+
+  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'fieldset--'.$variables["element"]["#context"]["#view_id"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','fieldset--'.$variables["element"]["#context"]["#view_id"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }else if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'fieldset--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','fieldset--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }
+
+}
+
+//NOTE(Elijah): Adds theme suggestion for form_element
+function sustainable_minds_theme_suggestions_form_element_alter(array &$suggestions, array $variables) {
+
+  if (array_key_exists("#parents", $variables["element"]) && $variables["element"]["#parents"][0] !== null) {
+    $suggestions[] = 'form-element--'.$variables["element"]["#parents"][0];
+  }
+
+  if ( array_key_exists("#id", $variables["element"]) && $variables["element"]["#id"] !== null) {
+    $suggestions[] = 'form-element--'.$variables["element"]["#id"];
+  }
+
+}
+
+function sustainable_minds_preprocess_form_element(&$variables, $hook, &$info) {
+
+  $parent = (array_key_exists("#parents", $variables["element"])) ?  $variables["element"]["#parents"][0] : null;
+  $id = (array_key_exists("#id", $variables["element"])) ? $variables["element"]["#id"] : null;
+
+  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'form-element--'.$parent.'.html.twig'))) {
+    if($parent) {
+      $info['template'] = str_replace('_','-','form-element--'.$parent);
+    }
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }else if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'form-element--'.$id.'.html.twig'))) {
+    if($id) {
+      $info['template'] = str_replace('_','-','form-element--'.$id);
+    }
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }
+
+}
+
+//NOTE(Elijah): Adds theme suggestion for views_view_fields
+function sustainable_minds_theme_suggestions_views_view_fields_alter(array &$suggestions, array $variables) {
+
+  $test = 1;
+
+  if ($variables["view"]->element["#name"] !== null) {
+    $suggestions[] = 'views-view-fields--'.$variables["view"]->element["#name"];
+  }
+
+}
+
+function sustainable_minds_preprocess_views_view_fields(&$variables, $hook, &$info) {
+
+  $test = 1;
+
+  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/views/'.'views-view-fields--'.$variables["view"]->element["#name"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','views-view-fields--'.$variables["view"]->element["#name"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/views';
+  }
+
+}
+
+////NOTE(Elijah): Adds theme suggestion for input__checkbox
+//function sustainable_minds_theme_suggestions_input__checkbox_alter(array &$suggestions, array $variables) {
+//
+//  $test = 1;
+//
+//  if ($variables["element"]["#parents"][0] !== null) {
+//    $suggestions[] = 'input--checkbox--'.$variables["element"]["#parents"][0];
+//  }
+//
+//  if ($variables["element"]["#id"] !== null) {
+//    $suggestions[] = 'input--checkbox--'.$variables["element"]["#id"];
+//  }
+//
+//}
+//
+//function sustainable_minds_preprocess_input__checkbox(&$variables, $hook, &$info) {
+//
+//  $test = 1;
+//
+//  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'input--checkbox--'.$variables["element"]["#parents"][0].'.html.twig'))) {
+//    $info['template'] = str_replace('_','-','input--checkbox--'.$variables["element"]["#parents"][0]);
+//    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+//  }else if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'input--checkbox--'.$variables["element"]["#id"].'.html.twig'))) {
+//    $info['template'] = str_replace('_','-','input--checkbox--'.$variables["element"]["#id"]);
+//    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+//  }
+//
+//}
+
+//function sustainable_minds_preprocess_node__general_content(&$variables, $hook, &$info){
+////  $variables['#attached']['library'][] = 'sustainable_minds/general';
+////  $variables['#attached']['library'][] = 'sustainable_minds/global-styling';
+//}
+
+//NOTE(Elijah): Adds theme suggestion for form_element_label
+function sustainable_minds_theme_suggestions_form_element_label_alter(array &$suggestions, array $variables) {
+
+  if(
+    strpos($_ENV["REDIRECT_URL"], "events") !== false ||
+    //  strpos($_POST["view_path"], "events") !== false ||
+     (array_key_exists("view_path", $_POST) && strpos($_POST["view_path"], "events") !== false) || 
+     strpos($_ENV["REQUEST_URI"], "events") !== false ||
+    strpos($_ENV["REDIRECT_URL"], "news") !== false ||
+    strpos($_ENV["REQUEST_URI"], "news") !== false ||
+    strpos($_ENV["REDIRECT_URL"], "resource-center") !== false ||
+    strpos($_ENV["REQUEST_URI"], "resource-center") !== false){
+
+      $suggestions[] = 'form-element-label--checkboxes';
+  }
+
+
+    if(strpos($variables["element"]["#id"], "author") !== false){
+    $suggestions[] = 'form-element-label--author';
+  }
+
+  if(strpos($variables["element"]["#id"], "edit-field-category-target") !== false){
+    $suggestions[] = 'form-element-label--category';
+  }
+
+  if ($variables["element"]["#id"] !== null) {
+    $suggestions[] = 'form-element-label--'.$variables["element"]["#id"];
+  }
+
+}
+
+function sustainable_minds_preprocess_form_element_label(&$variables, $hook, &$info){
+  $test = 1;
+
+  if(ltrim($variables["element"]["#id"],'edit-field-author-target-id-') != '' && strpos($variables["element"]["#id"], "author") !== false){
+    $filterTaxonomy = Drupal\taxonomy\Entity\Term::load(ltrim($variables["element"]["#id"],'edit-field-author-target-id-'));
+    if ($filterTaxonomy) {
+
+      $filterName = $filterTaxonomy->get("name");
+      $filterImage = $filterTaxonomy->get("field_image");
+      $filterDescription = $filterTaxonomy->get("field_description");
+      if ($filterTaxonomy->get("field_blog_author_title") != null) {
+        $filterTitle = $filterTaxonomy->get("field_blog_author_title");
+        $variables["title"] = $filterTitle->getValue()[0]['value'];
+      }
+
+      $variables["name"] = $filterName[0]->getValue()["value"];
+      if($filterImage->getValue()[0]['target_id'] !== null) {
+        $variables["image_path"] = file_create_url(\Drupal\file\Entity\File::load($filterImage->getValue()[0]['target_id'])->getFileUri());
+        $variables["image_alt"] = $filterImage->getValue()[0]['alt'];
+      }
+      $variables["description"] = $filterDescription->getValue()[0]['value'];
+    }
+  }
+
+  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'form-element-label--'.$variables["element"]["#id"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','form-element-label--'.$variables["element"]["#id"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }else if (strpos($variables["element"]["#id"], "author") !== false && file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'form-element-label--author'.'.html.twig'))) {
+    $info['template'] = 'form-element-label--author';
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }else if (strpos($variables["element"]["#id"], "edit-field-category-target") !== false && file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'form-element-label--category'.'.html.twig'))) {
+    $info['template'] = 'form-element-label--category';
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }else if((
+           strpos($_ENV["REDIRECT_URL"], "events") !== false ||
+           strpos($_ENV["REQUEST_URI"], "events") !== false ||
+           (array_key_exists("view_path", $_POST) && strpos($_POST["view_path"], "events") !== false) ||
+           strpos($_ENV["REDIRECT_URL"], "news") !== false ||
+           strpos($_ENV["REQUEST_URI"], "news") !== false ||
+           strpos($_ENV["REDIRECT_URL"], "resource-center") !== false ||
+           strpos($_ENV["REQUEST_URI"], "resource-center") !== false) &&
+           file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'form-element-label--checkboxes'.'.html.twig'))){
+    $info['template'] = 'form-element-label--checkboxes';
+    $info['path'] = 'themes/custom/sustainable_minds/templates/form';
+  }
+}
+
+
+function sustainable_minds_theme_suggestions_views_mini_pager_alter(array &$suggestions, array $variables) {
+  $test = 4;
+  if(strpos($_ENV["REDIRECT_URL"], "blog-listing") !== false || strpos($_ENV["REQUEST_URI"], "blog-listing") !== false ){
+    $suggestions[] = 'views-mini-pager--blog-listing';
+  }
+}
+
+function sustainable_minds_preprocess_views_mini_pager(&$variables, $hook){
+  if(strpos($_ENV["REDIRECT_URL"], "blog-listing") !== false || strpos($_ENV["REQUEST_URI"], "blog-listing") !== false){
+
+    if(file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/views/'.'views-mini-pager--blog-listing'.'.html.twig'))){
+      $info['template'] = str_replace('_','-','views-mini-pager--blog-listing');
+      $info['path'] = 'themes/custom/sustainable_minds/templates/views';
+    }
+  }
+}
+
+function sustainable_minds_preprocess_views_view__blog_listing(&$variables, $hook){
+  $test = 1;
+}
+
+function sustainable_minds_preprocess_node__blog_post__listing_page_entry(&$variables, $hook){
+  $test = 1;
+
+  $filterTaxonomy = $variables["content"]["field_author"][0]["#taxonomy_term"];
+  if($filterTaxonomy){
+    $filterImage = $filterTaxonomy->get("field_image");
+
+    if ($filterImage->getValue()[0]['target_id'] !== null) {
+      $variables["image_path"] = file_create_url(\Drupal\file\Entity\File::load($filterImage->getValue()[0]['target_id'])->getFileUri());
+      $variables["image_alt"] = $filterImage->getValue()[0]['alt'];
+    }
+  }
+}
+
+function sustainable_minds_preprocess_node__blog_post(&$variables, $hook){
+  $test = 1;
+}
+
+function sustainable_minds_preprocess_field__node__field_author__blog_post(&$variables, $hook){
+  $test = 1;
+}
+
+function sustainable_minds_preprocess_node__resource(&$variables, $hook){
+  $test = 1;
+  if (isset($_COOKIE["MarketoForm-1089"]) ) {
+
+    $variables["GATED_PAGE_COOKIE"] = ($_COOKIE["MarketoForm-1089"] != null) ? 1 : 0;
+  }
+//  $variables["elements"]["#cache"]["contexts"][] = "cookies.name";
+//  $variables['elements']['#cache']['max-age'] = '0';
+//  $tags = ['node:' . $variables["elements"]["#node"]->id()];
+//  Cache::invalidateTags($tags);
+//  \Drupal::service('page_cache_kill_switch')->trigger();
+}
+
+//function template_preprocess_form_element__field_author_target_id(&$variables, $hook){
+//  $test = 1;
+//}
+
+function sustainable_minds_preprocess_paragraph__lp_hero_form(&$variables, $hook){
+  $test = 1;
+}
+
+function sustainable_minds_preprocess_paragraph(&$variables){
+    if (isset($_COOKIE["MarketoForm-1089"]) ) {
+      $variables["GATED_PAGE_COOKIE"] = 1;
+    //  \Drupal::logger('sustainable_minds_preprocess_paragraph')->notice("1089 cookie is set, gated_page_cookie = ".$variables["GATED_PAGE_COOKIE"]);
+
+    }
+    else {
+      $variables["GATED_PAGE_COOKIE"] = 0;
+    //  \Drupal::logger('sustainable_minds_preprocess_paragraph')->notice("1089 cookie is not set, gated_page_cookie = ".$variables["GATED_PAGE_COOKIE"]);
+
+    }
+    if (isset($_COOKIE["MarketoForm-1281"]) ) {
+      $variables["CUSTOM_DOWNLOAD_COOKIE"] = 1;
+    }
+    else {
+      $variables["CUSTOM_DOWNLOAD_COOKIE"] = 0;
+    }
+    if (isset($_COOKIE["MarketoForm-1027"]) ) {
+      $variables["FREE_TRIAL_COOKIE"] = 1;
+    }
+    else {
+      $variables["FREE_TRIAL_COOKIE"] = 0;
+    }
+    if (isset($_COOKIE["MarketoForm-1030"]) ) {
+      $variables["CONTACT_US_COOKIE"] = 1;
+    }
+    else {
+      $variables["CONTACT_US_COOKIE"] = 0;
+    }
+    $node = \Drupal::request()->attributes->get('node');
+    if ($node != NULL) {
+      $bundle = $node->type->entity->label();
+      $variables['nodebundle'] = $bundle;
+      if ($bundle == 'Resource') {
+        $term = Term::load($node->get('field_asset_type')->target_id);
+        $assetType = $term->getName();
+        $variables['nodetitle'] = $node->getTitle();
+        $variables['resource_asset_type'] = $assetType;
+      }
+      if ($bundle == 'Landing Page') {
+        $variables['lp_redirecturl'] = $node->get('field_redirect_url')->value;
+        // Get marketo form id from node
+        $formId = $node->get('field_marketo_form_id')->value;
+        $cssId = 'lp-marketo-id';
+        switch ($formId) {
+          case 1089:
+            $cssId = "lp-marketo-id";
+            break;
+          case 1027:
+            $cssId = "freetrial-marketo-id";
+            break;
+          case 1030:
+            $cssId = "contactus-marketo-id";
+            break;
+          case 1032:
+            $cssId = "partner-marketo-id";
+            break;
+          case 1281:
+            $cssId = "custom-download-css-id";
+            break;
+
+        }
+        $variables['cssId'] = $cssId;
+
+      }
+      if ($bundle == 'General Content') {
+        // Get marketo form id from node
+        $formId = $node->get('field_marketo_form_id')->value;
+        if ($formId == 1016 ) {
+            $cssId = "custom-swag-marketo-id";
+            $variables['cssId'] = $cssId;
+        }
+      }
+    }
+    // Changes to add anchor links to paragraphs
+   
+     $variables['paragraph_id'] = $variables['paragraph']->id();
+}
+
+function sustainable_minds_preprocess_node__news(&$variables, $hook)
+{
+  $node = \Drupal::request()->attributes->get('node');
+
+  if ($node != NULL) {
+    if ($node->get('field_location')->value != "sustainable_minds") {
+      $response = new RedirectResponse($node->get('field_link_url')->value);
+      $response->send();
+      return;
+    }
+  }
+}
+//function sustainable_minds_preprocess_taxonomy_term__author(&$variables, $hook){
+//  $test = 1;
+//}
+
+function sustainable_minds_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  $test = 4;
+  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+    $content_type = $node->bundle();
+    $suggestions[] = 'page--'.$content_type;
+  }
+}
+
+function labs_redirect(&$variables, $hook, &$info){
+  $hosts = [
+    'local' => 'sustainable_minds.dev.dd',
+    'labs-dev' => 'labdev.sustainable_minds.com',
+    'labs-stage' => 'labstage.sustainable_minds.com',
+    'labs' => 'labs.sustainable_minds.com',
+    'sustainable_minds-dev' => 'dev.sustainable_minds.com',
+    'sustainable_minds-stage' => 'stage.sustainable_minds.com',
+    'sustainable_minds' => 'sustainable_minds.com',
+  ];
+
+//  $labsPage = '/labs';
+  $request = \Drupal::request();
+  $host = $request->getHost();
+  $uri = $request->getRequestUri();
+
+  $isLabsHost = $host == $hosts['labs'] || $host == $hosts['labs-dev'] || $host == $hosts['labs-stage'];
+  $isLabsPage = strpos($uri, '/labs') !== false;
+
+  if($isLabsPage){
+    $updatedUri = str_replace('/labs', '', $uri);
+
+    if($host == $hosts['local']){
+      $response = new RedirectResponse('https://'.$hosts['labs-dev'].$updatedUri);
+      $response->send();
+    }else if($host == $hosts['sustainable_minds-dev']){
+      $response = new RedirectResponse('https://'.$hosts['labs-dev'].$updatedUri);
+      $response->send();
+    }else if($host == $hosts['sustainable_minds-stage']){
+      $response = new RedirectResponse('https://'.$hosts['labs-stage'].$updatedUri);
+      $response->send();
+    }else if($host == $hosts['sustainable_minds']){
+      $response = new RedirectResponse('https://'.$hosts['labs'].$updatedUri);
+      $response->send();
+    }
+  } else if($isLabsHost && !$isLabsPage && $uri != '/'){
+
+    if($host == $hosts['labs-dev']){
+      $response = new RedirectResponse('https://'.$hosts['sustainable_minds-dev'].$uri);
+      $response->send();
+    }else if($host == $hosts['labs-dev']){
+      $response = new RedirectResponse('https://'.$hosts['sustainable_minds-stage'].$uri);
+      $response->send();
+    }else if($host == $hosts['labs-dev']){
+      $response = new RedirectResponse('https://'.$hosts['sustainable_minds'].'/'.$uri);
+      $response->send();
+    }
+
+  }
+}
+
+function sustainable_minds_preprocess_html(&$variables) {
+  //BE Config: add the following to preprocess_html
+  $be_ixf_client = getBrightedgeClient();
+  $variables['headString'] = "<meta name='be:drupal-theme' content='1.0.0'>".$be_ixf_client->getHeadOpen();
+}
+
+function sustainable_minds_preprocess_page(&$variables, $hook, &$info){
+  //BE Config: add the following to preprocess_page
+  //$be_ixf_client = getBrightedgeClient();
+  //$variables['bodyString'] = $be_ixf_client->getBodyString('body_1');
+  //$variables['close'] = $be_ixf_client->close();
+
+  //labs_redirect($variables, $hook, $info);
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if($node && $node->bundle() == "labs_post" && file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/layout/'.'page--'.$node->bundle().'.html.twig'))){
+    $info['template'] = str_replace('_','-','page--'.$node->bundle());
+    $info['path'] = 'themes/custom/sustainable_minds/templates/layout';
+  }
+}
+
+function sustainable_minds_preprocess_block(&$variables) {
+  //BE Config: add the following to preprocess_page
+  $be_ixf_client = getBrightedgeClient();
+  $variables['bodyString'] = $be_ixf_client->getBodyString('body_1');
+  $variables['close'] = $be_ixf_client->close();
+}
+
+//BE Config: add the following method to the theme.theme file
+function getBrightedgeClient() {
+  $be_ixf_config = array(
+    BEIXFClient::$ACCOUNT_ID_CONFIG => 'f00000000231592',
+    BEIXFClient::$ENVIRONMENT_CONFIG => BEIXFClient::$ENVIRONMENT_PRODUCTION,
+    BEIXFClient::$PAGE_HIDE_ORIGINALURL => 'True',
+  //BEIXFClient::$API_ENDPOINT_CONFIG => "https://ixfd-api.bc0a.com",
+  //BEIXFClient::$CANONICAL_HOST_CONFIG => "www.domain.com",
+  //BEIXFClient::$CANONICAL_PROTOCOL_CONFIG  => "https",
+
+  // BE IXF: By default, all URL parameters are ignored. If you have URL parameters that add value to
+  // page content.  Add them to this config value, separated by the pipe character (|).
+    BEIXFClient::$WHITELIST_PARAMETER_LIST_CONFIG => "ixf"
+  );
+
+  $be_ixf_client = new BEIXFClient($be_ixf_config);
+  return $be_ixf_client;
+}
+
+//NOTE: Adds theme suggestion for better exposed filters - checkboxes
+function sustainable_minds_theme_suggestions_bef_checkboxes_alter(array &$suggestions, array $variables) {
+  if ($variables["element"]["#context"]["#view_id"] !== null) {
+    $suggestions[] = 'bef-checkboxes--'.$variables["element"]["#context"]["#view_id"];
+    $suggestions[] = 'bef-checkboxes--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"];
+  }
+}
+
+function sustainable_minds_preprocess_bef_checkboxes(&$variables, $hook, &$info) {
+  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'bef_checkboxes--'.$variables["element"]["#context"]["#view_id"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','bef_checkboxes--'.$variables["element"]["#context"]["#view_id"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/forms';
+  }else if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'bef_checkboxes--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','bef_checkboxes--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/forms';
+  }
+}
+
+//NOTE: Adds theme suggestion for marketo form
+function sustainable_minds_theme_suggestions_marketo_form_alter(array &$suggestions, array $variables) {
+  if ($variables["form_id"] !== null) {
+    $suggestions[] = 'marketo-form--'.$variables["form_id"];
+  }
+}
+
+function sustainable_minds_preprocess_marketo_form(&$variables, $hook, &$info) {
+  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'marketo_form--'.$variables["form_id"].'.html.twig'))) {
+    $info['template'] = str_replace('_','-','marketo_form--'.$variables["form_id"]);
+    $info['path'] = 'themes/custom/sustainable_minds/templates/forms';
+  }
+}
+function sustainable_minds_page_attachments_alter(&$page){
+  $current_path = \Drupal::service('path.current')->getPath();
+  $path = $current_path = \Drupal::service('path.alias_manager')->getAliasByPath($current_path);
+  if($path == '/events/sustainable_minds-experience') {
+      $page['#attached']['library'][] = 'core/drupal.ajax';
+  }
+}
+function sustainable_minds_preprocess_node__workshop(&$variables, $hook){
+  //$node = \Drupal::request()->attributes->get('node');
+  // get the workshop node
+  $node = $variables['node'];
+  // get the parent node of workshop node ie. sustainable_minds_events node
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    $workshop_id = $node->id();
+  
+    $query = \Drupal::entityQuery('node')
+    ->condition('field_workshop', $workshop_id);
+    $sustainable_minds_event_array = $query->execute();
+   
+    foreach($sustainable_minds_event_array as  $key => $value ) {
+      $sustainable_minds_event_id = $value;    
+    }
+    // get the marketo form id set in the sustainable_minds_events node 
+    // and pass it on to node-workshop template
+    $sustainable_minds_event = \Drupal\node\Entity\Node::load($sustainable_minds_event_id);
+    //kint($sustainable_minds_event);
+    $variables['events_marketo_id'] = $sustainable_minds_event->get('field_marketo_form_id')->value;
+   
+  }
+}

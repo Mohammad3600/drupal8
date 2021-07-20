@@ -1,0 +1,73 @@
+.home-product {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-basis: 100%;
+    .product-title-line {
+        display: none;
+        height: 2px;
+        width: 45%;
+        margin: 48px auto;
+        background-color: #adafaf;
+        opacity: 60%;
+    }
+    .products-title {
+        width: 157px;
+        text-align: center;
+        color: #313638;
+        font-family: "Gotham Bold";
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+    .products-content {
+        border-left: 1px solid #adafaf;
+        position: relative;
+        height: 100%;
+        > a {
+            color: #1a59d1;
+            font-size: 20px;
+            position: absolute;
+            bottom: -6px;
+        }
+        .products-image {
+            margin-bottom: 24px;
+            position: relative;
+            .wistia_click_to_play {
+                cursor: pointer;
+            }
+            > div {
+                > img {
+                    width: 64px;
+                    position: absolute;
+                    left: 42%;
+                    top: 35%;
+                }
+            }
+        }
+        .products-subtitle {
+            font-family: "Gotham Bold", sans-serif;
+            font-size: 26px;
+            text-transform: none;
+            text-align: left;
+            letter-spacing: -0.25px;
+            margin-bottom: 0px;
+            min-height: 56px;
+            @media (min-width: 1280px) and (max-width: 1358px) {
+                min-height: 84px;
+            }
+            @media (min-width: 768px) and (max-width: 1115px) {
+                min-height: 84px;
+            }
+        }
+        .products-description {
+            margin: 24px 0px;
+            font-size: 1.1em;
+            line-height: 130%;
+            text-transform: none;
+            font-weight: 400;
+            letter-spacing: -0.25px;
+            color: #313638;
+            margin-bottom: 46px;
+        }
+    }
+}

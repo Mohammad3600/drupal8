@@ -1,0 +1,163 @@
+.home-3-small-cards {
+    background-repeat: no-repeat;
+    background-size: 100% 66.5%, cover;
+    padding: 72px 0px;
+    .home-3-cards-content {
+        &.orange-hdg {
+            > h1,
+            > h2,
+            > h3,
+            > h4 {
+                color: #fa6624;
+            }
+        }
+        &.blue-hdg {
+            > h1,
+            > h2,
+            > h3,
+            > h4 {
+                color: #1a59d1;
+            }
+        }
+        &.orange-grad-hdg {
+            > h1,
+            > h2,
+            > h3,
+            > h4 {
+                background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+        .home-3-cards-title {
+            font-size: 36px;
+            font-weight: 300;
+            text-transform: none;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        .cards-container {
+            display: flex;
+            max-width: 1200px;
+            margin: auto;
+            > div {
+                flex-basis: 100%;
+            }
+            .home-small-card-image {
+                margin: 30px 15px;
+                box-shadow: 4px 4px 48px rgba(0, 0, 0, 0.15);
+                min-height: calc(95% - 38px);
+                background: #fff;
+
+                img {
+                    max-width: 360px;
+                    padding: 24px;
+                }
+                &:hover {
+                    transform: scale(1.02);
+                    cursor: pointer;
+                    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
+                }
+                @media (max-width: 620px) {
+                    margin-left: 0px;
+                    margin-right: 0px;
+                }
+                @media (max-width: 340px) {
+                    margin-top: 26px;
+                    margin-bottom: 26px;
+                }
+            }
+            .home-small-card-text {
+                position: relative;
+                margin: 30px 15px;
+                box-shadow: 4px 4px 48px rgba(0, 0, 0, 0.15);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: calc(95% - 38px);
+                background: #fff;
+                .image-container {
+                    img {
+                        padding: 24px;
+                        @media (max-width: 340px) {
+                            height: 103px !important;
+                            padding-bottom: 16px;
+                        }
+                    }
+                }
+                .card-score {
+                    font-weight: bold;
+                    font-size: 80px;
+                    line-height: 110%;
+                    text-align: center;
+                }
+                .star-rating {
+                    max-width: 200px;
+                    padding: 12px 0;
+                }
+                &:hover {
+                    transform: scale(1.02);
+                    cursor: pointer;
+                    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
+                }
+                @media (max-width: 620px) {
+                    margin-right: 0px;
+                    margin-left: 0px;
+                    .card-score {
+                        font-size: 56px;
+                    }
+                }
+                @media (max-width: 340px) {
+                    margin-top: 26px;
+                    margin-bottom: 26px;
+                }
+            }
+            &.home-cards-owl-carousel {
+                background-color: transparent;
+                display: block;
+                position: relative;
+                width: 100%;
+
+                .owl-stage-outer {
+                    position: relative;
+                    overflow: hidden;
+                    -webkit-transform: translate3d(0px, 0px, 0px);
+
+                    .owl-stage {
+                        display: flex;
+                        margin: auto;
+                    }
+                }
+
+                .owl-nav {
+                    display: none;
+                }
+                .owl-dots {
+                    display: flex;
+                    justify-content: center;
+                    &.disabled {
+                        display: none;
+                    }
+                    button.owl-dot {
+                        border: 2px solid #adafaf;
+                        border-radius: 20px;
+                        padding: 4px;
+                        margin: 17px 4px 0;
+
+                        @media (max-width: 620px) {
+                            margin: 39px 4px 0;
+                        }
+
+                        &.active {
+                            background: #adafaf;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @media (max-width: 600px) {
+        padding: 64px 0;
+    }
+}

@@ -1,0 +1,162 @@
+/* migrated from redesign-nov-2019.css on 04Jun2021 */
+
+/* Module 8 */
+.review-section {
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#392a67+1,603173+100 */
+  background: #392a67; /* Old browsers */
+  background: -moz-linear-gradient(45deg,  #392a67 1%, #603173 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(45deg,  #392a67 1%,#603173 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(45deg,  #392a67 1%,#603173 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#392a67', endColorstr='#603173',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  padding: 80px 20px 80px 20px;
+}
+
+.review-section h2, .review-section h4, .review-section h3, .review-section p, .review-section small {
+  color: #fff;
+}
+.review-section h2 {
+  text-align: center;
+}
+.review-section h3 {
+  text-align: center;
+  margin: 24px 0 10px 0;
+  font-weight: 600;
+}
+.review-section p {
+  font-size: 1.15em;
+  font-weight: 400;
+  line-height: 130%;
+  text-transform: none;
+  padding: 30px 0;
+  margin-bottom: 0;
+  padding-bottom:50px;
+}
+.review-section a {
+  font-size: 1.3em;
+  font-weight: 500;
+  position: absolute;
+  bottom: 0;
+}
+.review-section a span {
+  font-size: .9em;
+}
+.review-section small {
+  font-size: .85em;
+  text-transform: uppercase;
+  padding-bottom: 7px;
+  padding-top: 20px;
+  display: inline-block;
+}
+.review-item:last-child img {
+  padding-right: 30px;
+  max-width: 298px !important;
+  width: 100%;
+}
+.review-section .title-line {
+  height: 1px;
+  width: 100%;
+  max-width: 234px;
+  margin: 15px auto;
+  background-color: #e0e1e1;
+}
+.review-content {
+  display: flex;
+  flex-flow: wrap;
+  max-width: 1240px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+.review-item {
+  flex: 1 1 250px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-content: center;
+}
+.review-item:first-child img {
+  width: 100%;
+  max-width: 190px !important;
+  margin: 0 auto;
+  padding: 0 5px;
+}
+.review-item:first-child img.large-logo {
+  max-width: 320px !important;
+  padding: 0;
+}
+.review-item:first-child {
+  padding: 0 60px 0 0;
+  border-right: 1px solid #e0e1e1;
+}
+.review-item:last-child {
+  flex: 4 1 500px;
+  max-width: 820px;
+  padding-left: 100px;
+}
+.review-item h2 {
+  text-align: center;
+  font-size: 80px;
+  font-weight: 700;
+  margin: 8px 0 15px 0;
+}
+.review-item h4 {
+  text-align: center;
+  text-transform: unset;
+  font-weight: 400;
+  font-size: 29px;
+}
+.slider-item {
+  min-height: 230px;
+  position: relative;
+}
+
+.slider-container {
+  padding: 2rem 3rem;
+  overflow: hidden;
+  position:relative;
+}
+.my-slider {
+  position: relative;
+}
+.slider-item {
+  width:100%;
+}
+.controls {
+  color:#fff;
+  font-size:25px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: 50%;
+  transform: translatey(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.controls:focus {
+  outline: none;
+}
+.controls li:hover {
+  cursor: pointer;
+}
+li.prev, li.next {
+  padding: 1.25px 2px 2px 8.5px;
+  background-color: #fff;
+  color: #452C6B;
+  border-radius: 50px;
+  height: 25px;
+  width: 25px;
+  font-size: 15px;
+}
+li.prev {
+  padding: 1.25px 2px 2px 5.5px;
+}
+.review-item:last-child {
+  flex: 4 1 500px;
+  max-width: 820px;
+  padding-left: 100px;
+  width: 100%;
+  margin: 0 auto;
+}

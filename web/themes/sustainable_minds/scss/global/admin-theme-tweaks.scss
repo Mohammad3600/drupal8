@@ -1,0 +1,6 @@
+/* Ensure that the admin menus render above the sustainable_minds header. */
+
+#toolbar-administration .toolbar-bar,
+#toolbar-administration .toolbar-tray {
+    z-index: 1100;
+}

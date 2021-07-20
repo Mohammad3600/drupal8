@@ -1,0 +1,1 @@
+body,h1,h2,h3,h4,h5,h6,ul,ol,dl,blockquote,p,address,table,fieldset,figure,pre,button,.xc-button,.cta_button,ul,ol,dd{direction:ltr}div *:first-child:not(.field){margin-top:0}h1,h2,h3,h4,h5,h6,ul,ol,dl,blockquote,p,address,table,fieldset,figure,pre{margin-top:}ul,ol,dd{margin-left:}*{word-break:break-word}button>*{pointer-events:none}

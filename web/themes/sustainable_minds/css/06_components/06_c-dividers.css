@@ -1,0 +1,30 @@
+.xc-divider {
+    border: 0px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    opacity: .25
+}
+
+.xc-container__related-assets .xc-divider {
+    width: 95%;
+    margin: 0 auto
+}
+
+.xc-bg-dots {
+    position: absolute;
+    height: 300px;
+    background-image: url(/themes/custom/sustainable_minds/images/ill-bg-dots-pattern-1.svg);
+    width: 100vw;
+    top: 50%;
+    transform: translateY(-50%) translateX(4%);
+    z-index: 1
+}
+
+.xc-container__col--reverse .xc-bg-dots {
+    transform: translateY(-50%) translateX(-4%)
+}
+
+.xc-nav .xc-divider {
+    width: 75%;
+    margin: 0 auto
+}

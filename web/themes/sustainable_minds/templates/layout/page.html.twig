@@ -1,0 +1,38 @@
+<div class="layout-container">
+ 
+ {{ page.header }}
+ 
+ 
+ <div role="main" class="body-container-wrapper">
+ <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+ <section>
+ <div class="container bg_white">
+ <div class="row">
+ <div class="layout-content col-lg-9">
+ {{ page.content }}
+ </div>{# /.layout-content #}
+ 
+ {% if page.side_bar %}
+ <aside class="layout-sidebar-first col-lg-3 my-3" role="complementary">
+ {{ page.side_bar }}
+ </aside>
+ {% endif %}
+ </div>
+ </div> 
+ </section> 
+ 
+ {% if page.sidebar_second %}
+ <aside class="layout-sidebar-second" role="complementary">
+ {{ page.sidebar_second }}
+ </aside>
+ {% endif %}
+ 
+ </div>
+ 
+ {% if page.footer %}
+ <footer role="contentinfo">
+ {{ page.footer }}
+ </footer>
+ {% endif %}
+ 
+</div>{# /.layout-container #}

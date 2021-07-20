@@ -1,0 +1,337 @@
+.solution-brief-wrapper {
+
+    .solution-brief-text-container {
+        width: 40%;
+        padding: 50px;
+        padding-bottom: 120px;
+        background: rgba($color: #fff, $alpha: 0.8);
+
+        @media (max-width: 769px) {
+            width: 100%;
+            padding: 0;
+            padding: 50px;
+            padding-bottom: 120px;
+        }
+
+        .solution-brief-hero {
+
+            h1 {
+                font-size: 2.2em;
+                color: #fa6624;
+                text-transform: none;
+                margin: 0;
+                text-align: center;
+            }
+
+        }
+
+    }
+
+    .solution-brief-benefits {
+        padding: 30px 60px;
+        margin-top: -80px;
+        margin-bottom: 30px;
+        background: #1a59d1;
+        color: #fff;
+        border-radius: 5px;
+        box-shadow: 1px 31px 175px -50px rgba(0, 0, 0, 0.2);
+
+        h2 {
+            font-size: 2em;
+            color: #fff;
+            text-transform: none;
+            text-align: center;
+        }
+
+        p {
+
+            color: #fff;
+
+        }
+
+    }
+
+    .solution-brief-benefits-cta {
+        text-align: center;
+
+        button {
+            background-color: #fa6624;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 15px 25px;
+            margin: 30px;
+            border: 0;
+            outline: none;
+            cursor: pointer;
+            }
+
+      }
+
+    .solution-brief-main {
+        @media (max-width: 426px) {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .customer-story-body-wrapper {
+            padding: 15px 0;
+        }
+
+        .solution-brief-table-wrapper {
+            padding: 15px 0;
+
+            p {
+                color: #fff;
+            }
+
+            h2 {
+                color: #313638;
+                font-size: 16px;
+                font-weight: 300;
+                letter-spacing: 2px;
+            }
+
+            h3 {
+                color: #8e9092;
+                font-size: 16px;
+                font-weight:300;
+            }
+            
+            h4 {
+                color: black;
+                font-size: 12px;
+                font-weight:300;
+            }
+
+            .solution-brief-table-container {
+                @media (max-width: 426px) {
+                    overflow-x: scroll;
+                }
+
+                table {
+                    @media (max-width: 585px) {
+                        border-collapse: separate;
+                        table-layout: inherit;
+                        border-spacing: 2px;
+                    }
+                }
+
+                td {
+                    border-color: #fff;
+                    padding: 50px 10px;
+                    text-align: left;
+
+                }
+
+                .black-text {
+                    p {
+                        color: #313638;
+                    }
+                }
+
+                .table-head {
+                    padding: 10px 10px;
+
+                }
+                
+                .table-row-dark-grey {
+                    background-color: rgba(49,54,56,255);
+                }
+                
+                .table-row-dark-blue {
+                    background-color: rgba(26,89,209,255);
+                }
+                
+                .table-row-medium-blue {
+                    background-color: rgba(221,230,248,255);
+                }
+                
+                .table-row-light-blue {
+                    background-color: rgba(244,247,253,255);
+                }
+                
+                .table-data-bold {
+                    font-weight: bold;
+                }
+            }
+
+        }
+
+        .solution-brief-image-wrapper {
+            margin-top: 30px !important;
+            padding: 15px 0;
+
+            h2 {
+                color: #313638;
+                font-size: 16px;
+                font-weight: 300;
+                letter-spacing: 2px;
+            }
+
+            h3 {
+                color: #8e9092;
+                font-size: 16px;
+                font-weight:300;
+            }
+            
+            h4 {
+                color: black;
+                font-size: 12px;
+                font-weight:300;
+            }
+
+            .solution-brief-bullets {
+                margin-bottom: 40px;
+
+                .solution-brief-bullet-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+
+                    .solution-brief-bullet-text {
+                        width: 97%;
+                        padding-top: 3px;
+
+                        @media (max-width: 769px) {
+                            width: 95%;
+                        }
+
+                        @media (max-width: 426px) {
+                            width: 91%;
+                        }
+
+                        @media (max-width: 376px) {
+                            width: 89%;
+                        }
+
+                        @media (max-width: 321px) {
+                            width: 85%;
+                        }
+
+                        p {
+                            font-size: 0.8em;
+                        }
+                    }
+
+                    .bullet {
+                        color: #fff;
+                        font-weight: 700;
+                        width: 25px;
+                        height: 25px;
+                        text-align: center;
+                        font-size: 0.5em;
+                        border-radius: 25px;
+                        padding-top: 6px;
+                        font-family: "Gotham Bold",sans-serif;
+                    }
+
+                    .bullet-orange-gradient {
+                        background: linear-gradient(45deg, #f47922 0%,#d32e05 100%);
+                    }
+
+                    .bullet-orange {
+                        background: #f47922;
+                    }
+
+                    .bullet-blue {
+                        background: #1a59d1;
+                    }
+
+                    .bullet-teal {
+                        background: #17BEBB;
+                    }
+
+                    .bullet-red {
+                        background: #BC2424;
+                    }
+
+                    .bullet-yellow {
+                        background: #F0A202;
+                    }
+
+                    .bullet-green {
+                        background: #329F5B;
+                    }
+                }
+            }
+
+            .wistia_embed {
+                padding: 0;
+            }
+
+            .wistia_click_to_play {
+                position: relative !important;
+
+                .video-img {
+
+                    img {
+                        object-fit: cover;
+                        width: 100%;
+                    }
+
+                }
+
+                .play-button {
+                        position: absolute !important;
+                        top: calc(50% - 33px);
+                        left: calc(50% - 33px);
+
+                }
+
+            }
+
+        }
+
+        .solution-brief-certifications-wrapper {
+            padding: 15px 0;
+            margin-bottom: 20px;
+
+            h2 {
+                padding-bottom: 10px;
+            }
+
+            .solution-brief-certification-wrapper {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                margin-bottom: 20px;
+
+                .solution-brief-certification-text {
+                    width: 50%;
+
+                    @media (max-width: 426px) {
+                        width: 100%;
+                        margin-bottom: 20px;
+                    }
+
+                }
+
+                .solution-brief-certification-logo {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-content: center;
+
+                    @media (max-width: 426px) {
+                        margin-bottom: 40px;
+                    }
+                }
+
+                .solution-brief-certification-title {
+                    color: #8e9092;
+                    text-transform: none;
+                    font-size: 1.5em;
+                    letter-spacing: -0.5px;
+                    margin-bottom: 10px;    
+                }
+
+            }
+
+        }
+
+    }
+
+}

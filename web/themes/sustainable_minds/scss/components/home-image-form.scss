@@ -1,0 +1,177 @@
+.home-image-form-paragraph {
+  display: flex;
+  background: #F4F6F8 !important;
+
+  .home-form-image-container {
+    width: 42.3%;
+
+    img {
+      height: 100% !important;
+      object-fit: cover;
+    }
+    
+  }
+  .home-form-container {
+    width: 57.7%;
+    padding: 80px 150px 80px 125px;
+
+    @media (min-width: 1024px) and (max-width: 1200px) {
+      padding: 70px 120px 70px 100px;
+    }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      padding: 60px
+    }
+
+    .home-form-content {
+      .home-form-title {
+        h2 {
+          font-size: 30px;
+          line-height: 33px;
+          font-weight: 400;
+          letter-spacing: -0.015em;
+          margin-bottom: 16px;
+          color: #FA6624 !important;
+        }
+      }
+      .home-form-subtitle {
+        h4 {
+          font-size: 18px;
+          line-height: 21px;
+          letter-spacing: -0.0025em;
+          color: #313638;
+          margin-bottom: 0;
+        }
+      }
+    }
+    .home-form-wrapper {
+      display: block;
+      form.contact-sales-form {
+        margin-top: 24px;
+        margin-bottom: 0;
+        padding: 0;
+        box-shadow: none !important;
+        background: #F4F6F8 !important;
+
+        .mktoFormRow {
+          margin: 0;
+          &.mktoFormRow-twoCol {
+            margin: 0;
+            display: flex;
+            .mktoFormCol {
+              margin: 0;
+              padding: 0 15px;
+              width: 50%;
+              margin-bottom: 24px !important;
+              padding-top: 8px;
+
+              &:first-child {
+                padding-left: 0;
+              }
+
+              &:nth-child(2) {
+                padding-right: 0;
+              }
+              .mktoFieldWrap {
+                margin: 0;
+                width: 100%;
+                label {
+                  display: none;
+                }
+                .mktoGutter {
+                  display: none;
+                }
+                input.mktoField,
+                select.mktoField {
+                  padding: 12px 16px;
+                  font-size: 16px;
+                  line-height: 22px;
+                  letter-spacing: 0.005em;
+                  background: #fff;
+                  color: #313638;
+                  border: 1px solid #D6D7D7 !important;
+                  border-radius: 4px;
+                }
+                .mktoError {
+                  .mktoErrorMsg {
+                    margin-left: 16px;
+                    font-size: 11px !important;
+                  }
+                }
+                input[type=email] + .mktoError {
+                  bottom: -32px !important;
+                }
+              }
+            }
+            &:first-of-type {
+              .mktoFormCol {
+                padding-top: 0;
+              }
+            }
+          }
+
+          &.mktoFormRow-oneCol {
+            .mktoFieldWrap {
+              .mktoLogicalField {
+                padding-left: 0;
+                padding-bottom: 0;
+                label {
+                  margin-left: 40px !important;
+                  margin-bottom: 0;
+                  p {
+                    span {
+                      font-size: 16px;
+                      line-height: 22px;
+                      letter-spacing: 0.005em;
+                    }
+                  }
+                }
+                // @media (min-width: 768px) and (max-width: 1024px) {
+                //   label {
+                //     margin-left: 30px;
+                //     p {
+                //       span {
+                //         font-size: 12px;
+                //         line-height: 14px !important;
+                //       }
+                //     }
+                //   }
+                // }
+              }
+            }
+            .mktoPrivacy {
+              margin-bottom: 0 !important;
+            }
+          }
+        }
+        .mktoButtonRow {
+          margin-top: 32px;
+          display: flex;
+          justify-content: center;
+          .mktoButtonWrap {
+            button.mktoButton {
+              background: #FA6624;
+              color: #FFFFFF;
+              border-radius: 50px;
+              padding: 12px 50px;
+              font-size: 16px;
+              line-height: 20px;
+              letter-spacing: 0.015em;
+              text-transform: uppercase;
+              border: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .home-form-image-container {
+      width: 100%;
+    }
+    .home-form-container {
+      width: 100%;
+    }
+  }
+}

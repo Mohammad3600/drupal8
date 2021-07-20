@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '8.9.2',
-        'version' => '8.9.2.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '7a0a867a3086d3358aa54a7da3a79ca75e9adc02',
         'name' => 'drupal/recommended-project',
         'dev' => true,
     ),
@@ -445,6 +445,15 @@
                 0 => '8.9.2',
             ),
         ),
+        'drupal/entity_reference_revisions' => array(
+            'pretty_version' => '1.9.0',
+            'version' => '1.9.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/entity_reference_revisions',
+            'aliases' => array(),
+            'reference' => '8.x-1.9',
+            'dev_requirement' => false,
+        ),
         'drupal/field' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -625,6 +634,15 @@
                 0 => '8.9.2',
             ),
         ),
+        'drupal/paragraphs' => array(
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/paragraphs',
+            'aliases' => array(),
+            'reference' => '8.x-1.2',
+            'dev_requirement' => false,
+        ),
         'drupal/path' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -650,12 +668,12 @@
             ),
         ),
         'drupal/recommended-project' => array(
-            'pretty_version' => '8.9.2',
-            'version' => '8.9.2.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '7a0a867a3086d3358aa54a7da3a79ca75e9adc02',
             'dev_requirement' => false,
         ),
         'drupal/responsive_image' => array(

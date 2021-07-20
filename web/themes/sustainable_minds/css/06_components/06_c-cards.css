@@ -1,0 +1,276 @@
+/* ==========================================================================
+   Style 01
+   ========================================================================== */
+.xo-col__cards--flex {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-left: -0.75rem ;
+	margin-right: -0.75rem ;
+}
+.xc-card {
+  grid-column: span 3;
+  padding : 2rem 3rem;
+  margin-bottom: 1.5rem;
+  border : 1px solid rgba( #null, 0.5 );
+  ;
+  ;
+}
+
+.xc-card__block { flex-direction: row; align-items: center; }
+.xc-card__block img { max-width: 100px; margin-right: 2rem; }
+.xc-card__block p { margin-top: 0; color: ; font-weight: 500; }
+
+.xc-card--linked { cursor: pointer; }
+
+.xc-card--raised.xc-card--linked:hover, 
+.xc-card--raised.xc-card--linked:active,
+.xc-card__circle.xc-card--linked:hover .xc-card__image img, 
+.xc-card__circle.xc-card--linked:active .xc-card__image img,
+.xc-news .xc-card:hover, .xc-news .xc-card:active { 
+  transform: scale(1.025);
+   ;
+}
+
+.xc-card > :last-child,
+.xc-card__text > :last-child, 
+.xc-card__image > :last-child { margin-bottom: 0; }
+
+.xc-card--raised {
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0; 
+  border: 0px;
+	 ;
+   ;
+}
+
+.xc-card--raised--s1 {
+  color: ;
+  margin-bottom: 0;
+}
+
+.xc-card--raised .xc-card__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 1.25rem ;
+  border-top-left-radius: 1.25rem ;
+  width: 100%;  
+  text-align: center;
+	position: relative;
+}
+
+.xc-card--raised--s1 .xc-card__image  {
+  min-height: 240px;
+  max-height: 240px;
+	border-bottom: 1px solid rgba( #null, .3) ;
+  overflow: hidden;
+  position: relative;
+}
+
+.xc-card__hover-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, .98);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    ;
+}
+
+.xc-card:hover .xc-card__hover-content { opacity: 1; }
+
+.xc-card__circle { 
+	margin-bottom: 0;
+  border: 0; 
+} 
+
+.xc-card__image { text-align: center; }
+
+.xc-card__circle .xc-card__image img {
+  width: 100%;
+   ;
+   ;
+  ;
+}
+
+.xc-card__text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 1rem 1.5rem;
+  height: 100%;
+  width: inherit;
+  color: ;
+  text-align: center;
+}
+
+.xc-card__text p { font-weight: 500; }
+.xc-card__text > :first-child { margin-top: 0; }
+.xc-card--raised--s1 .xc-card__text { 
+	justify-content: space-around; 
+  min-height: 92px;
+}
+
+.xc-card__circle .xc-card__text {	padding: 1em; }
+.xc-card__circle .xc-card__text { justify-content: flex-end; }
+
+/* This handles the alignment of items with circular card blocks if there
+ * more than three for a row / odd/even numbering */
+.xc-col__3 .xc_cards--1 .xo-block__ie-4 { grid-column: 3 / span 4; }
+.xc-col__3 .xc_cards--2 .xo-block__ie-4 { grid-column: 5 / span 4; }
+.xc_cards--3 .xo-block__ie-3.xc-card__related-asset { grid-column: 4 / span 6; }
+/* Related Resources Card Styles */
+
+.xc-card__related-asset { grid-column: span 6; margin-bottom: 0; }
+
+.xc-card__related-asset .xc-card__image {
+  padding: 2rem 2rem 0;
+  justify-content: flex-start;
+}
+.xc-card__related-asset .xc-card__image img { 
+  max-height: 150px;
+  width: auto; 
+  padding-right: 1rem; 
+}
+
+.xc-card__related-asset .xe-header--tiny { 
+	margin-top: 0; 
+	letter-spacing: 4px;}
+.xc-card__related-asset .xc-card__text {
+  color: #fff;
+  justify-content: space-between;
+  padding: 0 2rem 2rem;
+  width: 100%;
+  flex-direction: row;
+  text-align: left;
+}
+.xc-card__related-asset .xc-card__text h4 { font-weight: 700; letter-spacing: 1px; }
+.xc-card__related-asset .xc-button__text { padding-right: 1rem; }
+.xc-card__related-asset .xc-button__icon { max-width: 80px; width: 100%; }
+.xc-card__related-asset .xc-button__icon img { border-radius: 50px; box-shadow: 5px 5px 6px rgba(0,0,0,.1); transition: all 300ms ease-in-out}
+.xc-card__related-asset:hover .xc-button__icon img { box-shadow: 8px 8px 10px rgba(0,0,0,.25); transform: scale(1.1);}
+
+.xc-customers .xc-card {  }
+.xc-customers .xc-card img { padding: 2rem; }
+
+.xc-news .xc-card{
+  padding: 1.5rem ; 
+  padding-right: 22%;
+  position: relative;
+  grid-column: span 12;
+  background-color:  ;
+  border: 0px;
+   ;
+   ;
+  ; 
+}
+
+.xc-news .xc-card p:first-of-type { margin-top: 0; }
+.xc-news .xc-card p:nth-of-type(2) { color: ; }
+
+.xc-news .xe-icon {
+  position: absolute;
+  top: 1rem; 
+  right: 1rem;
+  background-color: ;
+  border-radius: 50px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.xc-news .xe-icon i { color: ; }
+.xc-news a {
+  color:   ;
+  margin-top: 1.5rem;
+}
+.xc-news a:hover { color: ; }
+
+@media screen and ( max-width: 900px ) {
+  .xc_cards--1 .xo-block__ie-4.xc-card,
+  .xc_cards--2 .xo-block__ie-4.xc-card,
+  .xc-customers .xc-card { grid-column: span 4; }
+	.xc_cards--3 .xo-block__ie-3.xc-card__related-asset,
+	.xc-card.xc-card__related-asset { grid-column: span 12; }
+}
+
+@media screen and ( max-width:  ) {
+  .xc-card,
+  .xc_cards--1 .xo-block__ie-4.xc-card,
+  .xc_cards--2 .xo-block__ie-4.xc-card,
+  .xc-customers .xc-card { grid-column: span 6 }
+}
+
+@media screen and ( max-width:  ) {
+  .xc-card,
+  .xc_cards--1 .xo-block__ie-4.xc-card,
+  .xc_cards--2 .xo-block__ie-4.xc-card,
+  .xc-customers .xc-card  { grid-column: span 12 }
+
+  .xc-card__related-asset .xc-card__image {
+    flex-direction: column;
+    margin-bottom: 2rem;
+  } 
+}
+
+
+
+@-moz-document url-prefix() {
+  .xc-card__image img {
+      transform: initial;
+      top: initial;
+  }
+}
+
+@supports (-ms-ime-align:auto) {
+  .xc-card__image img {
+      transform: initial;
+      top: initial;
+  }
+}
+
+
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  /* Converts card elements to flexbox for IE11 */
+  .xc-card--raised {
+    margin: 0.75rem;
+    max-width: calc(33% - 12px);
+  	min-width: calc(33% - 24px);
+  }
+  
+  /* Fixes broken vertical alignment in IE11*/
+  .xc-card--raised--s1 .xc-card__image { height: 280px; }
+  .xc-card--raised--s1 .xc-card__image img { height: inherit ; }
+  
+  /* Converts card elements to flexbox for IE11 */
+  .xc-cards__circle { justify-content: center; }
+  .xc-card__circle {
+  	padding: 0;
+    margin: 1.5rem;
+    max-width: calc(33% - 24px);
+  	min-width: calc(33% - 48px);
+  }
+  
+  /* Fixes annoying non-inheritence of text in flexbox elements in IE11 */
+  .xc-card__text {
+    width: calc(100% - 4rem);
+  }
+  .xc-card__text > * {
+  	width: 100%;
+  }
+}
+
+.xo-col__cards--flex .xc-card {
+    min-width: calc(25% - 1.5rem);
+	  min-width: 267px;
+    max-width: calc(25% - 1.5rem);
+    margin: 0 .75rem 1.5rem;
+}

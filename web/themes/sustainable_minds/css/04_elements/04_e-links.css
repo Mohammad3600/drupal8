@@ -1,0 +1,103 @@
+/* ==========================================================================
+   # LINKS
+   ========================================================================== */
+
+a { 
+  line-height : ; 
+  color : ;
+  text-decoration: none;
+  ;
+}
+
+a:hover, a:active{
+  color : ;
+}
+
+
+.xc-link--inline {    
+  display: inline-block;
+  font-weight: 500;
+  font-size: 1.325rem;
+  color: ;
+  position: relative;
+}
+.xc-link--inline:hover {
+  color: 
+}
+
+/* text-underline effect */
+.xc-link--inline:before, 
+.xc-link--inline:after  {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: ;
+}
+
+  
+.xc-link--inline:before {
+    opacity: 0;
+    -webkit-transform: translateY(-8px);
+            transform: translateY(-8px);
+    transition: opacity 0s, -webkit-transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s;
+    transition: transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s, -webkit-transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .xc-link--inline:after {
+    opacity: 0;
+    -webkit-transform: translateY(4px);
+            transform: translateY(4px);
+    transition: opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .xc-link--inline:hover:before,
+  .xc-link--inline:hover:after, 
+  .xc-link--inline:focus:before, 
+  .xc-link--inline:focus:after {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  .xc-link--inline:hover:before, 
+  .xc-link--inline:focus:before {
+    transition: opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .xc-link--inline:hover:after, 
+  .xc-link--inline:focus:after {
+    transition: opacity 0s 0.2s, -webkit-transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s 0.2s;
+    transition: transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s 0.2s, -webkit-transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+
+
+
+
+.u-bg--primary, .u-bg--primary * a,
+.u-bg--secondary-1, .u-bg--secondary-1 * a,
+.u-bg--secondary-2, .u-bg--secondary-2 * a,
+.u-bg--tertiary-1, .u-bg--tertiary-1 * a,
+.u-bg--tertiary-2, .u-bg--tertiary-2 * a,
+.u-bg--medium-gray, .u-bg--medium-gray * a,
+.u-bg--dark-gray, .u-bg--dark-gray * a {
+  color: ;
+}
+
+
+/* Highlighted Text */
+::-moz-selection {
+    color: #fff;
+  background: ;
+    text-shadow: none;
+}
+::selection {
+    color: #fff;
+    background:  ;
+    text-shadow: none;
+}

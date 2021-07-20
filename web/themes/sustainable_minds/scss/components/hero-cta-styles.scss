@@ -1,0 +1,124 @@
+.hero-cta-section {
+  .container {
+    @media (max-width: 768px) {
+      margin-top: 25px;
+      padding-top: 0 !important;
+      .row {
+        .col-md-5 {
+          flex: unset;
+          max-width: unset;
+        }
+        .col-md-7 {
+          flex: unset;
+          max-width: unset;
+          padding-bottom: 0;
+        }
+      }
+    }
+    @media (min-width: 576px) and (max-width: 768px) {
+      max-width: 540px;
+      padding: 0;
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      max-width: unset;
+      padding: 0 35px;
+      padding-top: 50px !important;
+    }
+  }
+  .non-hero-title {
+    @media (max-width: 1200px) {
+      font-size: 29px;
+      margin-bottom: 17px;
+    }
+    @media (min-width: 767px) and (max-width: 1024px) {
+      font-size: 26px;
+      margin-bottom: 14px;
+    }
+  }
+  .non-hero-description {
+    p {
+      @media (max-width: 1200px) {
+        font-size: 22px !important;
+      }
+      @media (min-width: 767px) and (max-width: 1024px) {
+        font-size: 20px !important;
+      }
+    }
+  }
+  .link {
+    button {
+      @media (max-width: 1200px) {
+        font-size: 14px;
+        margin: 20px 0;
+      }
+      @media (min-width: 767px) and (max-width: 1024px) {
+        font-size: 12px;
+        margin: 16px 0;
+      }
+    }
+  }
+  .hero-container {
+    .row {
+      .col-md-7 {
+        .wistia_click_to_play {
+          .video-img {
+            cursor: pointer;
+          }
+        }
+      }
+      @media (min-width: 769px) {
+        .col-md-5 {
+          flex: 0 0 50% !important ;
+          max-width: 50% !important ;
+          padding-left: 50px !important;
+        }
+        .col-md-7 {
+          flex: 0 0 50% !important ;
+          max-width: 50% !important ;
+        }
+      }
+      @media (max-width: 768px) {
+        .col-md-5 {
+          flex: unset;
+          max-width: unset;
+        }
+        .col-md-7 {
+          flex: unset;
+          max-width: unset;
+          padding: 20px;
+        }
+      }
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .col-md-7 {
+          .video-img {
+            img {
+              min-height: 300px;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+    }
+    @media (min-width: 767px) and (max-width: 1024px) {
+      margin-left: 0;
+      padding-left: 0;
+    }
+    @media (min-width: 576px) and (max-width: 768px) {
+      max-width: 540px;
+      padding: 0;
+    }
+    @media (max-width: 768px) {
+      margin-top: 25px;
+      margin: auto;
+      .video-img {
+        img {
+          max-height: 300px;
+        }
+      }
+    }
+  }
+  // .title {
+  // }
+  // .description {
+  // }
+}

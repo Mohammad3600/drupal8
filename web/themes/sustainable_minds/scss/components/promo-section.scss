@@ -1,0 +1,37 @@
+.item-image.pad-left {
+  padding-left: 100px !important;
+}
+.item-image.pad-right {
+  padding-right: 100px !important;
+}
+@media (max-width: 767px) {
+  .item-image.pad-left {
+    padding-left: 50px !important;
+  }
+  .item-image.pad-right {
+    padding-right: 50px !important;
+  }
+}
+@media (max-width: 615px) {
+  .item-image.pad-left {
+    padding-left: 0 !important;
+  }
+  .item-image.pad-right {
+    padding-right: 0 !important;
+  }
+}
+
+/* @todo review original 'left justify content' and confirm any lasting effects in relation to new promo-section-default padding-left.
+.promo-section-default {
+  @media (min-width: 615px) {
+    .promo-item {
+      &.row-reverse {
+        flex-direction: row-reverse;
+        text-align: left;
+        .item-content {
+          padding-left: 30px;
+        }
+      }
+    }
+  }
+} */

@@ -1,0 +1,183 @@
+{#
+/**
+ * @file
+ * Theme override for the basic structure of a single Drupal page.
+ *
+ * Variables:
+ * - logged_in: A flag indicating if user is logged in.
+ * - root_path: The root path of the current page (e.g., node, admin, user).
+ * - node_type: The content type for the current node, if the page is a node.
+ * - head_title: List of text elements that make up the head_title variable.
+ *   May contain one or more of the following:
+ *   - title: The title of the page.
+ *   - name: The name of the site.
+ *   - slogan: The slogan of the site.
+ * - page_top: Initial rendered markup. This should be printed before 'page'.
+ * - page: The rendered page markup.
+ * - page_bottom: Closing rendered markup. This variable should be printed after
+ *   'page'.
+ * - db_offline: A flag indicating if the database is offline.
+ * - placeholder_token: The token for generating head, css, js and js-bottom
+ *   placeholders.
+ *
+ * @see template_preprocess_html()
+ */
+#}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>.:: Sustainable Minds ::.</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body{{ attributes }}>
+{#
+Keyboard navigation/accessibility link to main content section in
+page.html.twig.
+#}
+<a href="#main-content" class="visually-hidden focusable">
+  {{ 'Skip to main content'|t }}
+</a>
+{{ page_top }}
+{{ page }}
+{{ page_bottom }}
+<js-bottom-placeholder token="{{ placeholder_token|raw }}">
+
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WSQCNRF');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <!-- Hushly -->
+  <!-- Begin of Hushly Embed Code -->
+  {#<script defer async type="text/javascript">
+    (function (win, doc, src, name, accountId) {
+      win[name] = win[name] || {
+        whenReady: function () {
+          (win[name].queue = win[name].queue || []).push(arguments)
+        }
+      };
+      win['__hly_embed_object'] = {name: name};
+      win[name].accountId = accountId;
+      var hws = doc.createElement('script');
+      hws.type = 'text/javascript';
+      hws.async = true;
+      hws.src = src;
+      var node = doc.getElementsByTagName('script')[0];
+      node.parentNode.insertBefore(hws, node);
+    })(window, document, 'https://hubfront.hushly.com/embed.js', 'HushlyEmbed', '9635');
+  </script>#}
+  <!-- End of Hushly Embed Code -->
+
+  <!-- Begin of Hushly Code -->
+  {#<script defer async type="text/javascript">
+    (function (win, doc, src, name, aid) {
+      win[name] = win[name] || function () {
+        (win[name].queue = win[name].queue || []).push(arguments)
+      }
+      win['__hly_widget_object'] = {name: name};
+      win[name].accountId = aid;
+      src += '?aid=' + aid;
+      var hws = doc.createElement('script');
+      hws.type = 'text/javascript';
+      hws.async = true;
+      hws.src = src;
+      var node = doc.getElementsByTagName('script')[0];
+      node.parentNode.insertBefore(hws, node);
+    })(window, document, 'https://app.hushly.com/runtime/widget.js', 'hushly', '9635');
+  </script>#}
+  <!-- End of Hushly Code -->
+
+  <!-- Lucky Orange -->
+  {#<script defer async type='text/javascript'>
+    window.__lo_site_id = 84925;
+
+    (function() {
+      var wa = document.createElement('script'); wa.type = 'text/javascript'; wa.async = true;
+      wa.src = 'https://d10lpsik1i8c69.cloudfront.net/w.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(wa, s);
+    })();
+  </script>#}
+
+
+  <!-- Drift -->
+  <!-- Start of Async Drift Code -->
+  {#<script>
+    "use strict";
+
+    !function() {
+      var t = window.driftt = window.drift = window.driftt || [];
+      if (!t.init) {
+        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
+        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ],
+          t.factory = function(e) {
+            return function() {
+              var n = Array.prototype.slice.call(arguments);
+              return n.unshift(e), t.push(n), t;
+            };
+          }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
+          var i = document.getElementsByTagName("script")[0];
+          i.parentNode.insertBefore(o, i);
+        };
+      }
+    }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('dpi4cm6gyadt');
+  </script>#}
+  {#<script>
+    "use strict";
+
+    function DriftBot() {
+      var t = window.driftt = window.drift = window.driftt || [];
+      var facade = document.getElementById('drift_facade_container');
+      facade.parentNode.removeChild(facade);
+      console.log(t);
+      if (!t.init) {
+        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
+        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ],
+          t.factory = function(e) {
+            return function() {
+              var n = Array.prototype.slice.call(arguments);
+              return n.unshift(e), t.push(n), t;
+            };
+          }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
+          o.type = "text/javascript", o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
+          var i = document.getElementsByTagName("script")[0];
+          i.parentNode.insertBefore(o, i);
+          console.log(o);
+        };
+      }
+      drift.SNIPPET_VERSION = '0.3.1';
+      drift.load('dpi4cm6gyadt');
+    }
+  </script>#}
+  <!-- End of Async Drift Code -->
+{#<div id="drift_facade_container" style="position:fixed;right:20px;bottom:20px;height:56px;width:56px;">
+  <div id="drift_facade" onclick="DriftBot();" style="cursor:pointer;border-radius:50%;height:56px;width:56px;background-size:cover;background-position: 50%; background-image:url('https://driftt.imgix.net/https%3A%2F%2Fdriftt.imgix.net%2Fhttps%253A%252F%252Fs3.amazonaws.com%252Fcustomer-api-avatars-prod%252F1757690%252Fcfc2df8a3832ef51e52b58c3541884e888zufmrzaxyx%3Ffit%3Dmax%26fm%3Dpng%26h%3D200%26w%3D200%26s%3Def2cedaacd3b0126e365d581ab621d14?fit=max&fm=png&h=200&w=200&s=6b0fd3f97872a2504a5f47fd683a4b8a');">
+
+  </div>
+</div>#}
+
+</body>
+</html>

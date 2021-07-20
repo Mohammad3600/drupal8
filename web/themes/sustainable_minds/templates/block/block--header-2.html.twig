@@ -1,0 +1,31 @@
+<header class="blue_darkbg">
+        <nav class="navbar navbar-light navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src= "{{ file_url(content.field_logo['#items'].entity.uri.value ) }}" alt="logo" title="Sustainable Logo">
+                </a>
+                <div class="collapse navbar-collapse align-self-end justify-content-center" id="navbarNav">
+                {# {{drupal_menu('main-navigation')}} #}
+                    {# <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a  {% if isCurrentUrl == true %} class="nav-link active" {% endif %}  aria-current="page" href="{{ content.main[i]['#url'] }}" role="button">{{ content.main[i]['#title'] }}</a>
+                        </li> #}
+                        {# <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="projects.html" role="button">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="learning-center.html" role="button">Learning Center</a>
+                        </li> #}
+                    </ul>
+                </div>
+                <div class="welcome_details pr-2">
+                    <p>{{ content.field_welcome_text.0 }}</p>
+                    <ul class="d-flex flex-wrap"> 
+                    <li><a href="{{ content.field_profile_link.0['#url']}}" title="{{ content.field_profile_link.0['#title'] }}" >My Account</a></li>
+                    <li><a href="{{ content.field_logout.0['#url']}}" title="{{ content.field_logout.0['#title'] }}" role="button">Logout</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </header>

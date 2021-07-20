@@ -1,0 +1,35 @@
+.hero-form {
+  .contact-sales-form {
+    &.mktoForm {
+      margin-top: 0;
+      margin-bottom: 0;
+      .mktoFieldWrap {
+        width: 90% !important;
+        margin: auto 5%;
+      }
+      .mktoGutter {
+        float: unset;
+        margin-top: 15px;
+      }
+      .mktoPrivacy {
+        .mktoFieldWrap {
+          width: 95% !important;
+          margin: 0 2.5%;
+        }
+      }
+      @media (max-width: 480px) {
+        .mktoFormRow-twoCol {
+          .mktoFormCol {
+            width: 100% !important;
+          }
+        }
+        .mktoPrivacy {
+          .mktoFieldWrap {
+            width: 95% !important;
+            margin: 0 2.5%;
+          }
+        }
+      }
+    }
+  }
+}

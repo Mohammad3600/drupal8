@@ -1,0 +1,28 @@
+/* new addition. master CSS for product-highlight is in homepage.css */
+.product-highlight {
+  .tab-description {
+    .tab-bullet{
+      h3 {
+        font-weight: 700;
+        text-transform: none;
+        color: #313638;
+        letter-spacing: -1.5px;
+        font-family: "Gotham Bold",sans-serif;
+        margin-top: 0;
+        margin-bottom: 5px;
+        line-height: 24px;
+        font-size: 22px;
+      }
+      p {
+        font-size: 18px;
+        line-height: 22px;
+        color: #5a5e60;
+      }
+    }
+  }
+  .tab-image {
+    @media (max-width: 768px) {
+      display: none !important;
+    }
+  }
+}

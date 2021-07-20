@@ -1,0 +1,1096 @@
+/* ==========================================================================
+Navigation
+========================================================================== */
+.header-container-wrapper {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+}
+.body-container-wrapper {
+    margin-top: 130px;
+}
+
+.xc-nav { 
+	background-color: rgba( 255,255,255,0.98); 
+	transform: box-shadow 300ms ease-in-out; 
+}
+.xc-nav.scrolled {
+	box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.12);
+}
+.xc-nav .xc-section__container{
+    position: relative;
+    position: static !important;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    align-items: center; 
+    justify-content: space-between;
+    }
+
+.hs-menu-wrapper.hs-menu-flow-horizontal > ul li a  {
+    padding-top: .75rem !important;
+    width: 100%;
+}
+.xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li {
+    float: none;
+}
+.xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li.hs-item-has-children ul.hs-menu-children-wrapper {
+    visibility: visible;
+    opacity:  1;
+    -webkit-transition: all 300ms ease-in-out;
+    position: unset;
+}
+.xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li.hs-item-has-children ul.hs-menu-children-wrapper li a, 
+.hs-menu-wrapper.hs-menu-flow-horizontal > ul li a {
+    display: inline-block;
+    white-space: nowrap;
+    width: auto;
+	  max-width: 100%;
+    overflow: visible;
+    text-overflow: initial;
+}
+.xc-nav li.hs-item-has-children > a { 
+    font-size: .75rem;
+    color: ;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    user-select: none;
+    cursor: default;
+}
+.xc-nav li a { 
+    color: ; 
+    font-weight: 500;
+}
+
+.xc-nav__logo {
+    position: relative; /* creates slight adjustment for logo placement */
+    top: 10px;
+    margin-right: 6% ;
+    width: 190px;
+}
+
+/*================================
+Cludo Search Form Integration
+===================================*/
+.xc-search__container {
+    width: 30%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    /* to get the contents aligned with the nav items */
+    position: relative;
+    top: -8px;
+}
+
+.xc-search {
+    background-color: transparent;
+    cursor: pointer;
+    padding: 1rem;
+	margin-left: 0;
+}
+
+.xc-search i {
+	color: ;
+	padding: 1rem;
+} 
+
+.xc-search-toggle.xc-search-inactive {
+    padding: 1rem;
+    text-align: center;
+    position: static;
+}
+
+.xc-section__container.xc-section__container--md.xc-search__wrapper {
+    position: absolute!important;
+    width: 100%;
+    /* bottom: 12px; */
+}
+.xc-nav-overlay {
+    display: none;
+    width: 58%;
+    position: absolute;
+    height: 105px;
+    background: white;
+    top: -20px;
+    right: calc(205px + 7%);
+    font-size: 18px;
+    z-index: 10;
+    transition: all 300ms ease-in-out;
+    transform-origin: center right;
+}
+
+#cludo-search-form {
+    width: 50%;
+    position: absolute;
+    height: 81px;
+    background: transparent;
+    top: 9px;
+    right: calc(205px + 10%);
+    font-size: 18px;
+    z-index: 10;
+  /* Animate these instead of show/hide
+/*     opacity: 0; */
+    transition: all 300ms ease-in-out;
+/*     transform: scaleX(0); */
+    transform-origin: center right;
+  
+}
+
+button#search-button {
+    position: absolute;
+    right: 5px;
+    padding: 4px;
+    z-index: 100;
+}
+label.xc-search:focus, button:focus, a:focus, .ham:focus{
+    outline: none;
+/*     border: none; */
+}
+label.xc-search span {
+    display: none;
+}
+.xc-search-active {
+    position: relative;
+    right: 50px;
+    z-index: 20
+}
+.powered-by-cludo {
+    display: none !important; 
+}
+#cludo-search-form input {
+    z-index: 11;
+    border: 1px solid #C1BED3;
+    padding: 0 70px 0 25px;
+    line-height: 56px;
+}
+.search_autocomplete {
+    position: absolute;
+    width: 100% !important;
+    top: 0px;
+    padding: 20px;
+    z-index: 9 !important;
+    padding: 15px 25px;
+    
+    -webkit-border-bottom-left-radius: 28.5px;
+    -moz-border-bottom-left-radius: 28.5px;
+    -o-border-bottom-left-radius: 28.5px;
+    -ms-border-bottom-left-radius: 28.5px;
+    border-radius : 28.5px;
+    border: 0px;
+    color: #888899;
+    -webkit-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -moz-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -o-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -ms-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+
+.search_autocomplete li {
+    border: none !important;
+    padding: 10px 30px !important;
+    cursor: pointer;
+    font-family: 'Texta', sans-serif;
+    font-size: 20px;
+    transition: .25s all ease;
+}
+.search_autocomplete li:hover {
+    background-color: #F7F8FA;
+}
+.search_autocomplete li:first-child {
+    margin-top: 60px !important;
+}
+.search_autocomplete li:last-child {
+    padding-bottom: 20px !important;
+    border-radius: 0 0 28.5px 28.5px;
+}
+.xc-search-toggle.xc-search-inactive {
+    position: static;
+    left: unset;
+    padding: 9px 20px;
+}
+
+
+
+
+/* ==========================
+* Hamburger Menu Styles 
+==================================*/
+
+.ham {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 400ms;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: none;
+}
+.hamRotate.active {
+    transform: rotate(45deg);
+}
+.hamRotate180.active {
+    transform: rotate(180deg);
+}
+.line {
+    fill:none;
+    transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
+    stroke:#000;
+    stroke-width:5.5;
+    stroke-linecap:round;
+}
+.ham1 .top {
+    stroke-dasharray: 40 139;
+}
+.ham1 .bottom {
+    stroke-dasharray: 40 180;
+}
+.ham1.active .top {
+    stroke-dashoffset: -98px;
+}
+.ham1.active .bottom {
+    stroke-dashoffset: -138px;
+}
+.ham {
+    display: none;
+}
+/* =================================== */
+
+.xc-nav .xc-section.primary-menu{
+    /* box-shadow: 0px 2px 0px 1px rgba(55, 55, 55, .1); */
+    z-index: 10;
+}
+.xc-nav__links { 
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+}
+.xc-nav__link {
+    transition: all 150ms;
+    flex: 1 0%;
+}
+.xc-nav__link > a {
+ color: ;
+ font-weight: 500;
+ transition: all 150ms;
+ text-align: center;
+ padding: 1rem 0 2rem;
+ position: relative;
+ display: flex;
+ justify-content: center;
+ font-size: 1.25rem;
+}
+
+
+.xc-nav__link:first-child {    
+ margin-left: 2%;
+}
+
+.xc-nav  .xc-nav__extra-links {
+ justify-content: flex-end;
+
+}
+.xc-nav__extra-links .xc-nav__link {
+  flex: none;
+}
+.xc-nav__extra-links .xc-nav__link > a {
+ color: #999;
+ padding: 0;
+ margin: 0 1rem;
+ font-size: 1.15rem;
+}
+.xc-nav__extra-links .xc-nav__link:last-child {    
+margin-right: 0;
+}
+.xc-nav__extra-links .xc-nav__link:last-child a {
+  margin-right: 0;
+}
+#js-nav-extra-links {
+    margin-bottom: 2px;
+}
+
+.xc-nav__link > a:hover, 
+.xc-nav__link > a:active, 
+.xc-nav__link > a:focus,
+.xc-nav__link:hover > a, 
+.xc-nav__link:active > a, 
+.xc-nav__link:focus > a {
+    color: ;
+    transition: 200ms all ease;
+}
+
+.xc-nav__link:hover .xc-nav__arrow, 
+.xc-nav__link:active .xc-nav__arrow, 
+.xc-nav__link:focus .xc-nav__arrow,
+.xc-nav__dropdown.xc-nav__link--hover:hover .xc-nav__arrow, 
+.xc-nav__dropdown.xc-nav__link--hover:active .xc-nav__arrow, 
+.xc-nav__dropdown.xc-nav__link--hover:focus .xc-nav__arrow,
+.xc-nav__link--hover .xc-nav__arrow {
+    color: ;
+    transform: rotate(180deg);
+    transition: 200ms all ease;
+}
+
+.xc-nav__link--dropdown .xc-nav__arrow {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f078";
+    font-size: .8rem;
+    position: relative;
+    top: -18px;
+    left: calc(50% - 4.875px);
+    color: ;
+    transition: 200ms all ease;
+}
+
+.xc-nav .xc-nav__link li {
+    text-indent: 0;
+    font-size: 1.125rem;
+    margin-top: 0;
+}
+
+.xc-nav .xc-nav__link li a:hover, 
+.xc-nav .xc-nav__link li a:active, 
+.xc-nav .xc-nav__link li a:focus {
+    color: ;
+}
+
+.xc-nav .xc-nav__link li:first-child a:hover, 
+.xc-nav .xc-nav__link li:first-child a:active, 
+.xc-nav .xc-nav__link li:first-child a:focus {
+    color: inherit;
+}
+
+.xc-nav .xc-nav__link li:before {
+    content: none; 
+    padding: 0;
+}
+
+.submenu-about .xc-nav__dropdown > span,
+.submenu-resources .xc-nav__dropdown > span {
+    flex: 1 0%;
+}
+
+.xc-nav__dropdown-wrapper {
+    background-color: rgba(250, 250, 250, .97);
+     
+    justify-content: space-evenly;
+    align-items: flex-start;
+/*     border-top: 1px solid rgba(55,55,55,.1); */
+    display: block;
+    visibility: hidden;
+    left: 0; 
+    position: absolute;
+    -webkit-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+    opacity: 0;
+    -webkit-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transform-origin: center top;
+    -ms-transform-origin: center top;
+    transform-origin: center top;
+    width: 100%;
+    -webkit-backdrop-filter: blur(135px);
+    backdrop-filter: blur(135px);
+}
+
+.xc-nav__dropdown {
+    max-width: 1020px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start; 
+}
+
+.xc-nav__dropdown > span {
+    margin-right: 10%;
+}
+
+.xc-nav__dropdown > span:last-child {
+    margin-right: 0;
+}
+
+#submenu-resources .hide-link {
+	display: none;
+}
+
+
+@media (min-width: 893px ) {
+	.xc-section--vr-sm.xc-nav__dropdown-wrapper {
+			padding: 34px 0 50px;
+	}
+    .xc-nav__link--dropdown:hover .xc-nav__dropdown-wrapper,
+    .xc-nav__link--dropdown:focus .xc-nav__dropdown-wrapper,
+    .xc-nav__link--dropdown:active .xc-nav__dropdown-wrapper,
+    .xc-nav__link--dropdown a:hover + .xc-nav__dropdown-wrapper,
+    .xc-nav__link--dropdown a:focus + .xc-nav__dropdown-wrapper,
+    .xc-nav__link--dropdown a:active + .xc-nav__dropdown-wrapper,
+    .xc-nav__link--dropdown.xc-nav__link--hover .xc-nav__dropdown-wrapper {
+        display:block;  
+        visibility: visible;
+        position: absolute;
+        top: 117px;
+        opacity: 1;
+        width: 100%;
+        transition: all 300ms ease-in-out;
+        transform: scaleY(1);
+    }
+
+    /* CSS solution for tabbing through the navigation with keyboard. 
+    * - Must be declared separate so hover nav doesn't break on Edge.
+    * - Works great for all major browsers minus Edge & IE. */
+    .xc-nav__link--dropdown:focus-within .xc-nav__dropdown-wrapper {
+        display:block;  
+        visibility: visible;
+        position: absolute;
+        top: 118px;
+        opacity: 1;
+        width: 100%;
+        transition: all 300ms ease-in-out;
+        transform: scaleY(1);
+    }
+
+    /* text-underline effect */
+	  .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a,
+		.xc-nav__dropdown .hs-menu-children-wrapper a,
+		.xc-nav__extra-links a,
+	  .xc-footer li.hs-menu-depth-1:not(:first-of-type) a {
+				position: relative;
+				/* padding-bottom: 8px; */
+			}
+		.xc-nav__dropdown .hs-menu-children-wrapper a:before, 
+		.xc-nav__dropdown .hs-menu-children-wrapper a:after,
+	  .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:before,
+	  .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:after,
+	  .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:before,
+	  .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:after,
+		.xc-nav__extra-links a:before,
+		.xc-nav__extra-links a:after  {
+				content: '';
+				position: absolute;
+				bottom: -4px;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: ;
+		}
+	
+		.xc-nav__extra-links a:before,
+		.xc-nav__extra-links a:after {
+				background-color: 
+		}  
+		.xc-nav__dropdown .hs-menu-children-wrapper a:before,
+	  .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:before,
+	  .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:before,
+		.xc-nav__extra-links a:before {
+				opacity: 0;
+				-webkit-transform: translateY(-8px);
+								transform: translateY(-8px);
+				transition: opacity 0s, -webkit-transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition: transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s;
+				transition: transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s, -webkit-transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			}
+			.xc-nav__dropdown .hs-menu-children-wrapper a:after,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:after,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:after,
+			.xc-nav__extra-links a:after {
+				opacity: 0;
+				-webkit-transform: translateY(4px);
+								transform: translateY(4px);
+				transition: opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+				transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			}
+			.xc-nav__dropdown .hs-menu-children-wrapper a:hover:before,
+			.xc-nav__dropdown .hs-menu-children-wrapper a:hover:after, 
+			.xc-nav__dropdown .hs-menu-children-wrapper a:focus:before, 
+			.xc-nav__dropdown .hs-menu-children-wrapper  a:focus:after,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:hover:before,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:hover:after,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:focus:before,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:focus:after,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:hover:before,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:hover:after,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:focus:before,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:focus:after,
+			.xc-nav__extra-links a:hover:before,
+			.xc-nav__extra-links a:hover:after,
+			.xc-nav__extra-links a:focus:before,
+			.xc-nav__extra-links a:focus:after {
+				opacity: 1;
+				-webkit-transform: translateY(0);
+								transform: translateY(0);
+			}
+			.xc-nav__dropdown .hs-menu-children-wrapper a:hover:before, 
+			.xc-nav__dropdown .hs-menu-children-wrapper a:focus:before,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:hover:before,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:focus:before,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:hover:before,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:focus:before,
+			.xc-nav__extra-links a:hover:before,
+			.xc-nav__extra-links a:focus:before {
+				transition: opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+				transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			}
+			.xc-nav__dropdown .hs-menu-children-wrapper a:hover:after, 
+			.xc-nav__dropdown .hs-menu-children-wrapper a:focus:after,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:hover:after,
+	    .xc-nav__dropdown li.hs-menu-depth-1:not(:first-of-type) a:focus:after,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:hover:after,
+	    .xc-footer li.hs-menu-depth-1:not(:first-of-type) a:focus:after,
+			.xc-nav__extra-links a:hover:after,
+			.xc-nav__extra-links a:focus:after {
+				transition: opacity 0s 0.2s, -webkit-transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition: transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s 0.2s;
+				transition: transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s 0.2s, -webkit-transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			}
+
+}
+
+
+@media (max-width: 1062px) {
+    .xc-nav__link {
+        font-size: .8rem;
+    }
+    .xc-nav__link--dropdown .xc-nav__arrow {
+        font-size: .9rem;
+        top: -28px;
+        left: calc(50% - 6.3px);
+    } 
+
+}
+
+
+@media screen and (max-width: ) {
+    body {
+        overflow-x: hidden;
+    }
+    .header-container-wrapper {
+        position: fixed;
+        width: 100%;
+        }
+    .body-container-wrapper {
+        margin-top: 68px;
+    }
+
+    /* ==========================
+    Hamburger Menu Controls 
+    ================================*/
+    .ham {
+        display: block;
+        color: ;
+        width: 55px;
+        height: 54px;
+        /* margin-left: 10px; */
+        z-index: 20;
+    }
+	
+
+    .ham path {
+        stroke: ;
+    }
+
+    .ham.active path {
+        stroke: ;
+    }
+    .ham:focus + div > .xc-nav__links {
+        display: block;
+        position: static;
+        opacity: 1;
+        width: 100%;
+    }
+    
+    /*=======================
+    Primary Mobile Nav Styles 
+    =======================*/
+
+    .xc-nav {
+        height: 0; /* creates expand down effect on active */
+        transition: all 500ms ease-in-out;
+    }
+    .xc-nav.expanded {
+        height: 100vh;
+        transition: all 500ms ease-in-out;
+    }
+    .xc-nav.search {
+        height: 170px;
+        box-shadow: 0px 6px 9px rgba(0,0,0,.08);
+        transition: all 500ms ease-in-out;
+    }
+    .xc-nav .primary-menu {
+/*       box-shadow: 0px 1px 1px 2px rgba(55,55,55,.1); */
+			background-color: #fff;
+			padding-top: .75rem;
+    }
+    .xc-nav__link--dropdown .xc-nav__dropdown-wrapper {
+        box-shadow: none;
+    }
+    .xc-nav .primary-menu.mobile-menu {
+        background-color: rgba(250,250,250,.95);
+        height: calc(100% - 66px);
+        width: 100vw;
+        overflow-y: scroll;
+        overflow-x: hidden;
+					padding-top: 0;
+    }
+    .xc-nav__logo {
+        display: inline-block;
+        padding: 16px 0;
+        top: 0;
+        width: 135px;
+    }
+    .xc-nav .xc-section__container, 
+    .xc-nav__links {
+        position: relative ;
+    }
+    .xc-nav-overlay {
+    right: 9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    background: transparent !important;
+    }
+  
+    /* ============================
+    Mobile Menu Dropdown Styles
+    ===============================*/
+    .xc-nav__link--dropdown .xc-nav__dropdown-wrapper {
+        display: block;
+        position: absolute;
+        opacity: 1;
+        width: 100%;
+        transform: scaleY(1);
+        visibility: visible;
+    }
+/*     .xc-nav__dropdown-wrapper {
+        border-top: 1px solid rgba(55,55,55,.1);
+    } */
+    .xc-nav__dropdown,
+    .xc-nav__dropdown > span {
+        display: block;
+    }
+
+    #js-nav-links {
+        padding-top: 1rem;
+    }
+    
+    /* This corrects for Hubspots standard treatment of children nav items */
+    .xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li.hs-item-has-children {
+        position: initial;
+        position: unset;
+    }
+    .xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li.hs-item-has-children ul.hs-menu-children-wrapper {
+        left: 100vw;
+        transition: 400ms all ease-in-out;
+    }
+
+    .xc-nav__dropdown-wrapper, 
+    .xc-nav .hs-menu-wrapper ul.hs-menu-children-wrapper {       
+        background-color: rgba(250, 250, 250, .97);
+        height: calc(100vh - 4rem);
+        width: 100%;
+        padding: 1.5rem 2rem;
+        position: absolute !important;
+        top: 0 ;
+        left: 100vw;
+        z-index: 11;
+        transition: 400ms all ease-in-out;
+    }
+    
+    .xc-nav .hs-menu-children-wrapper {
+        top: -1rem;
+    }
+    .xc-nav__dropdown-wrapper.mobile-active, 
+    .hs-menu-children-wrapper.mobile-active, 
+    .xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li.hs-item-has-children ul.hs-menu-children-wrapper.mobile-active {
+        left: 0;
+    }
+
+    /* This gets rid of the arrow turn on hover/active/focus */
+    .xc-nav__link:hover .xc-nav__arrow, 
+    .xc-nav__link:active .xc-nav__arrow, 
+    .xc-nav__link:focus .xc-nav__arrow, 
+    .xc-nav__dropdown.xc-nav__link--hover:hover .xc-nav__arrow, 
+    .xc-nav__dropdown.xc-nav__link--hover:active .xc-nav__arrow, 
+    .xc-nav__dropdown.xc-nav__link--hover:focus .xc-nav__arrow, 
+    .xc-nav__link--hover .xc-nav__arrow,
+    .xc-nav__link--dropdown .xc-nav__arrow {
+        position: relative;
+        transform: rotate(-90deg) !important;
+        color: ;
+        transform-origin: center;
+        left: 10px;
+        top: -1px;
+    } 
+
+    /* Gives arrows to children with children */
+    .xc-nav .hs-item-has-children > a:first-of-type:after {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f054";
+        padding-left: 10px;
+        font-size: .9rem;
+        position: relative;
+        top: -1px;
+        color: ;
+    }
+    .xc-nav__links {
+        align-items: stretch;
+        flex-direction: column;
+        width: 100%;
+    }
+    .xc-nav__link > a, 
+    .xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li a {
+        color: #1e2a6e;
+        font-size: 1.5rem !important;
+        line-height: 1.25;
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        padding: 0;
+        justify-content: left;
+        width: auto;
+    }
+    .xc-nav__link {
+        display: none;
+        text-align: left;
+        padding: .5rem 2rem;
+        margin: 3px 0;
+    }
+    .xc-nav__link:first-child {
+        margin-left: 0;
+    }
+
+    .xc-nav li.hs-item-has-children > a {
+        text-transform: none;
+    }
+
+    .xc-nav .xc-nav__extra-links {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .xc-nav__extra-links .xc-nav__link > a {
+        color: ;
+    }
+
+    .js-mobile-menu-active {
+        overflow: hidden;
+    }
+/*     #js-test-drive-cta-2 {
+        line-height: 50px;
+        padding-top: 0;
+        padding-bottom: 0;
+    } */
+
+    /* Mobile Menu Paging Control Styles */
+    .js-back {
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 500;
+        display: flex;
+        align-items: baseline;
+			  color: ;
+        margin-bottom: 1rem;
+    }
+
+    .js-back i {
+        display: inline-block;
+        font-size: .8rem;
+        width: 16px;
+    }
+    .js-back span {
+        text-align: center;
+        margin-left: 0;
+        font-size: .95rem;
+    }
+
+    
+    /*===============================
+    SEARCH FORM ELEMENTS -- MOBILE 
+    ==================================*/
+    .xc-section__container.xc-section__container--md.xc-search__wrapper {
+        position: absolute!important;
+        width: calc(100vw - 3rem);
+        bottom: 12px;
+    }
+    #cludo-search-form { 
+        top: 39px;
+        width: 100%;
+        left: 0;
+        padding: 0; 
+    }
+    .search_autocomplete {
+        position: absolute;
+        width: 100% !important;
+        top: 10px;
+    }
+    button#search-button {
+        right: 8px;
+    }
+    .xc-search-toggle.xc-search {
+        padding: 0 !important;
+    }
+}
+
+/* ============================
+* IE11 specific CSS
+* ============================*/
+@media all and (-ms-high-contrast:none), all and (-ms-high-contrast:active) {
+
+    .header-container-wrapper {
+        overflow: visible !important;
+    }
+
+    .header-container-wrapper {
+        position: fixed;
+        top: 0;
+        height: auto; 
+        width: 100%;
+        overflow: visible !important;
+        background-color: ;
+    }
+	  .xc-nav__logo { height: 48px}
+    .xc-nav__blurrer{ display: none; }
+
+    .xc-nav .hs-menu-wrapper.hs-menu-flow-horizontal > ul li.hs-item-has-children ul.hs-menu-children-wrapper {
+			position: relative;
+	  }
+	.hs-menu-wrapper.hs-menu-flow-horizontal > ul li a {
+		padding: 0;
+	}
+}
+
+
+/* ============================
+* Search Listings Page CSS. Will need to make this it's own section.
+* ============================*/
+.search-container-wrapper {
+  background: linear-gradient(42deg, #1E226E 13.22%, #00A1E0 88.87%), #F7F8FA;
+  margin-bottom: 35px;
+  padding: 38px 0;
+}
+.search-container-wrapper #cludo-search-form {
+    display: block !important;
+    top: unset;
+    left: unset;
+    right: unset;
+    width: 100%;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: transparent;
+    position: relative;
+    max-width: 780px;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  height: 56px;
+}
+.search-container-wrapper #cludo-search-form input {
+    width: 100%;
+    background-color: #fff;
+    position: relative;
+    z-index: 10 !important;
+    padding-right: 80px;
+    font-size: 20px;
+    color: #8C8C8C;
+    overflow: hidden;
+    line-height: 52px;
+    padding-top: 0;
+    padding-bottom: 4px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.search-container-wrapper button#search-button {
+    position: absolute;
+    bottom: 28px;
+    right: 5px;
+    padding: 18px 18px;
+    z-index: 10 !important;
+    background-color: transparent;
+    font-size: 20px;
+    color: #8A8899;
+}
+.search-result-count {
+    color: #404048;
+    font-size: 22px;
+    line-height: 24px;
+}
+
+.search-container-wrapper .xc-search__container #cludo-search-form input[type="search"] {
+  padding: 10px 25px !important;  
+  padding-right: 75px !important;
+  height: 50px !important;
+}
+
+.powered-by-cludo {
+  display: none !important; 
+}
+
+.search-container-wrapper .search_autocomplete {
+  position: absolute;
+  z-index: 5 !important;
+  width: 100% !important;
+  top: 30px;
+  padding: 20px;
+  padding: 15px 25px;
+  background-color: #fff;
+  
+    -webkit-border-radius: 28.5px;
+    -moz-border-radius: 28.5px;
+    -o-border-radius: 28.5px;
+    -ms-border-radius: 28.5px;
+    border-radius: 28.5px;
+    border: 0px;
+    color: #888899;
+    -webkit-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -moz-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -o-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -ms-box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    box-shadow: 0 6px 10px 0 rgba(38,38,38,0.15);
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+.xc-search__relative #cludo-search-form input {
+    z-index: 11;
+    border: 1px solid #c1bed3;
+    padding: 18px 70px 19px 25px;
+    line-height: 18px;
+}
+.search-container-wrapper .search_autocomplete li {
+  border: none !important;
+  padding: 10px 30px !important;
+  cursor: pointer;
+  font-family: 'Texta', sans-serif;
+  font-size: 20px;
+  transition: .25s all ease;
+}
+.search-container-wrapper .search_autocomplete li:hover {
+background-color: #F7F8FA;
+}
+.search-container-wrapper .search_autocomplete li:first-child {
+  margin-top: 55px !important;
+}
+.search-container-wrapper .search_autocomplete li:last-child {
+  padding-bottom: 20px !important;
+  border-radius: 0 0 28.5px 28.5px;
+}
+
+/* Results Page */
+.results-container-wrapper {
+    padding-bottom: 55px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+  #cludo-search-results .loading,
+  .cludo-search-results .loading {
+    margin: 40px auto !important;
+    max-width: 100px !important;
+  }
+.cludo-no-search-term {
+    color: #404048;
+    font-size: 22px;
+}
+#cludo-search-results ul .search-results-item, .cludo-search-results ul .search-results-item {
+    margin-bottom: 35px !important;
+    margin-top: 35px !important;
+    padding-bottom: 0px;
+    padding-top: 25px;
+    border-top: 1px solid #cac7e0;
+}
+#cludo-search-results h2 {
+    color: #637881;
+    font-size: 28px;
+  transition: .2s all ease;
+    font-weight: 600;
+}
+
+.results-container-wrapper a  {
+transition: .2s all ease;
+}
+
+#cludo-search-results a:hover h2 {
+    text-decoration: underline;
+}
+
+#cludo-search-results p {
+    color: #515151;
+    margin-top: 24px;
+    font-size: 20px;
+}
+
+#cludo-search-results .path {
+    display: none;
+}
+.search_page_list a {
+    color: #515151;
+  transition: .2s all ease
+}
+.results-container-wrapper #cludo-search-results ul.search_page_list, .results-container-wrapper .cludo-search-results ul.search_page_list {
+    text-align: center;
+    width: 100%;
+}
+#cludo-search-results ul.search_page_list li a {
+    font-size: 28px;
+    color: #8A8899;
+    transition: .2s all ease;
+}
+#cludo-search-results ul.search_page_list li a:hover {
+    color: #515151;
+}
+#cludo-search-results ul.search_page_list li.active {
+    font-weight: 600;
+  color: #515151;
+  text-decoration: underline;
+  font-size: 28px;
+  transition: .2s all ease
+}
+li.search-results-item {
+    width: calc(100% - 100px);
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block;
+}
+li.search-results-item a {
+    margin-left: -50px;
+    margin-right: -50px;
+    display: block;
+}
+
+@media (max-width: 892px) {
+ .search-container-wrapper #cludo-search-form input {
+    line-height: 50px;
+    padding-bottom: 0;
+
+} 
+  .search-container-wrapper button#search-button {
+
+  }
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+.xc-search__relative .xc-search__wrapper .search_autocomplete {
+  display: none !important;
+  right: 9999px;
+  height: 0;
+  padding: 0;
+  z-index: -9999
+  }
+ .xc-search__relative #cludo-search-form {
+   top: 15px;
+  }
+}
+
+
+

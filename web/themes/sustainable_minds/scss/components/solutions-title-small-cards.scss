@@ -1,0 +1,73 @@
+.solutions-section {
+  .solutions-section-title {
+    h2 {
+      font-size: 30px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: none;
+      margin-bottom: 30px;
+      text-align: center;
+      letter-spacing: -1.5px;
+      @media (max-width: 1200px) {
+        font-size: 28px;
+      }
+      @media (max-width: 1024px) {
+        font-size: 26px !important;
+      }
+    }
+    &.orange-hdg {
+      h2 {
+        color: #fa6624;
+      }
+    }
+    &.blue-hdg {
+      h2 {
+        color: #1a59d1;
+      }
+    }
+    &.orange-grad-hdg {
+      h2 {
+        background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+    &.blue-grad-hdg {
+      h2 {
+        background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+
+  .solutions-section-subtitle {
+    h4,
+    p {
+      font-family: "Gotham Book", sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #fff;
+      text-transform: none;
+      text-align: center;
+      letter-spacing: -1px;
+      @media (max-width: 1200px) {
+        font-size: 24px;
+      }
+      @media (max-width: 1024px) {
+        font-size: 22px !important;
+      }
+    }
+    &.dark-text {
+      h4,
+      p {
+        color: #313638;
+      }
+    }
+  }
+  .solutions-container {
+    .solutions-item {
+      text-decoration: none;
+    }
+  }
+}

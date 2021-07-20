@@ -1,0 +1,429 @@
+// LP Header Promo Section Paragraph
+.lp-header-promo-section {
+    .item-content {
+        h1,
+        h2,
+        h3 {
+            text-align: left;
+            color: #fff;
+            display: block;
+            margin-bottom: 20px;
+            font-family: "Gotham Bold", sans-serif;
+        }
+        h1 {
+            font-size: 39px;
+        }
+        h2 {
+            font-size: 36px;
+        }
+        h3 {
+            font-size: 33px;
+        }
+        h4 {
+            font-size: 30px;
+            text-align: left;
+            color: #fff;
+            display: block;
+            margin-bottom: 20px;
+            font-family: "Gotham Book", sans-serif;
+        }
+        p {
+            text-align: left;
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+        }
+        &.orange-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                color: #fa6624;
+            }
+        }
+        &.blue-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                color: #1a59d1;
+            }
+        }
+        &.orange-grad-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+        &.blue-grad-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+        &.dark-text {
+            p {
+                color: #313638;
+            }
+            ul {
+                li {
+                    color: #313638;
+                }
+            }
+        }
+    }
+}
+
+// LP Hero Form - Paragraph
+.lp-hero-form {
+    .promo-item {
+        .item-content {
+            h1,
+            h2,
+            h3 {
+                text-align: left;
+                color: #fff;
+                display: block;
+                margin-bottom: 20px;
+                font-family: "Gotham Bold", sans-serif;
+            }
+            h1 {
+                font-size: 39px;
+            }
+            h2 {
+                font-size: 36px;
+            }
+            h3 {
+                font-size: 33px;
+            }
+            h4 {
+                font-size: 30px;
+                text-align: left;
+                color: #fff;
+                display: block;
+                margin-bottom: 20px;
+                font-family: "Gotham Book", sans-serif;
+            }
+            p {
+                text-align: left;
+                color: #fff;
+                display: block;
+                margin-bottom: 10px;
+            }
+            &.orange-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    color: #fa6624;
+                }
+            }
+            &.blue-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    color: #1a59d1;
+                }
+            }
+            &.orange-grad-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+            &.blue-grad-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+            &.dark-text {
+                p {
+                    color: #313638;
+                }
+            }
+        }
+    }
+}
+
+// Edge Form
+.edge-form {
+    .sustainable_minds-blue-gradient-bg {
+        background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+    }
+    .sustainable_minds-grey-gradient-bg {
+        background: linear-gradient(34deg, #e0e0e0 0%, #f0f0f0 100%);
+    }
+    .sustainable_minds-solid-grey-bg {
+        background: linear-gradient(225deg, #313638 0%, #313638 100%);
+    }
+    .sustainable_minds-orange-gradient-bg {
+        background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+    }
+    .title {
+        h1,
+        h2,
+        h3 {
+            text-align: left;
+            color: #fff;
+            display: block;
+            margin-bottom: 20px;
+            font-family: "Gotham Bold", sans-serif;
+        }
+        h1 {
+            font-size: 39px;
+        }
+        h2 {
+            font-size: 36px;
+        }
+        h3 {
+            font-size: 33px;
+        }
+        h4 {
+            font-size: 30px;
+            text-align: left;
+            color: #fff;
+            display: block;
+            margin-bottom: 20px;
+            font-family: "Gotham Book", sans-serif;
+        }
+        p {
+            text-align: left;
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+        }
+        &.orange-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                color: #fa6624;
+            }
+        }
+        &.blue-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                color: #1a59d1;
+            }
+        }
+        &.orange-grad-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+        &.blue-grad-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    }
+    .description {
+        &.dark-text {
+            p {
+                color: #313638;
+            }
+        }
+    }
+}
+
+// Hero 2-Col CTA
+.hero-2-col-cta-wrapper {
+    .hero-text-container {
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+            color: #fff;
+            display: block;
+            margin-bottom: 20px;
+            font-family: "Gotham Bold", sans-serif;
+        }
+        h1 {
+            font-size: 39px;
+        }
+        h2 {
+            font-size: 36px;
+        }
+        h3 {
+            font-size: 33px;
+        }
+        h4 {
+            font-size: 30px;
+            text-align: center;
+            color: #fff;
+            display: block;
+            margin-bottom: 20px;
+            font-family: "Gotham Book", sans-serif;
+        }
+        p {
+            text-align: center;
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+        }
+        &.orange-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                color: #fa6624;
+            }
+        }
+        &.blue-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                color: #1a59d1;
+            }
+        }
+        &.orange-grad-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+        &.blue-grad-hdg {
+            h1,
+            h2,
+            h3,
+            h4 {
+                background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+        &.dark-text {
+            p {
+                color: #313638;
+            }
+        }
+    }
+}
+
+// Hero Subnav
+.hero-section {
+    &.hero-section-subnav {
+        &.sustainable_minds-blue-gradient-bg {
+            background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+        }
+        &.sustainable_minds-grey-gradient-bg {
+            background: linear-gradient(34deg, #e0e0e0 0%, #f0f0f0 100%);
+        }
+        &.sustainable_minds-solid-grey-bg {
+            background: linear-gradient(225deg, #313638 0%, #313638 100%);
+        }
+        &.sustainable_minds-orange-gradient-bg {
+            background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+        }
+        .hero-text-container {
+            h1,
+            h2,
+            h3 {
+                text-align: center;
+                color: #fff;
+                display: block;
+                margin-bottom: 20px;
+                font-family: "Gotham Bold", sans-serif;
+            }
+            h1 {
+                font-size: 40px;
+            }
+            h2 {
+                font-size: 36px;
+            }
+            h3 {
+                font-size: 33px;
+            }
+            h4 {
+                font-size: 30px;
+                text-align: center;
+                color: #fff;
+                display: block;
+                margin-bottom: 20px;
+                font-family: "Gotham Book", sans-serif;
+            }
+            p {
+                text-align: center;
+                color: #fff;
+                display: block;
+                margin-bottom: 10px;
+            }
+            &.orange-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    color: #fa6624;
+                }
+            }
+            &.blue-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    color: #1a59d1;
+                }
+            }
+            &.orange-grad-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    background: linear-gradient(225deg, #cd2500 0%, #fa6624 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+            &.blue-grad-hdg {
+                h1,
+                h2,
+                h3,
+                h4 {
+                    background: linear-gradient(225deg, #011b8a 0%, #1a59d1 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+            &.dark-text {
+                p {
+                    color: #313638;
+                }
+            }
+        }
+    }
+}

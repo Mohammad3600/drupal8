@@ -1,0 +1,23 @@
+.orange-cta-header-button {
+  font-family: "Gotham A", "Gotham B", sans-serif;
+  font-weight: 700;
+  background-color: #fa6624;
+  color: #fff;
+  border-radius: 50px;
+  border: 0;
+  margin: 0;
+  float: right;
+  padding: 12px 20px;
+  text-shadow: none;
+  width: auto;
+  height: auto;
+  font-size: 14px!important; /* alt style 12px */
+  line-height: 16px!important; /* alt style 16px */
+  letter-spacing: 2px;
+}
+button.orange-cta-header-button:hover { opacity: 1; }
+
+.orange-cta-header-button:hover,
+.orange-cta-header-button:active,
+.orange-cta-header-button:focus,
+a.hs-button.large.primary:hover { background-color: #E55515; }

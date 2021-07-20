@@ -1,0 +1,25 @@
+.layout-container {
+  header {
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    top: 0;
+
+    .header-container {
+      position: sticky !important;
+
+      @media (min-width: 300px) {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+}
+
+.body-container-wrapper {
+  top: 0 !important;
+}
+
+@media (min-width: 368px) and (max-width: 1024px) {
+  .body-container-wrapper {
+    top: 0;
+  }
+}
