@@ -25,6 +25,7 @@
 #}
 <div{{ attributes }}>
   {{ title_prefix }}
+  {% set foo = {'foo': 'bar'} %}
   {% if name and not page %}
     <h2 style="display:none"><a href="{{ url }}">{{ name }}</a></h2>
   {% endif %}
