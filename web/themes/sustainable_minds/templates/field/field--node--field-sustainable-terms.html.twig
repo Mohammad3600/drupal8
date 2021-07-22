@@ -45,7 +45,7 @@
 
 {% if label_hidden %}
   {% if multiple %}
-    <div{{ attributes }}>
+    <div{{ attributes }} class="mb-3">
       {% for key,item in items %}
         <div{{ item.attributes }}>
         {{ item.content }}
