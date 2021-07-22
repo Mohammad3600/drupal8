@@ -65,3 +65,29 @@
   #{$property}: -webkit-calc(#{$expression});
   #{$property}: calc(#{$expression});
 }
+
+@mixin dot_ul {
+    ul{
+        li{
+            position: relative;padding-left: 10px;
+            &:before{content: '•'; font-size: 18px; position: absolute; left: 0; top: -1px; line-height: normal; vertical-align: middle;}
+        }
+    }
+}
+
+@mixin btn_green {
+            background-color: #7AB455;
+            border: 1px solid $color_white;
+            color: $color_white;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 0;
+            overflow: visible;
+            padding: 3px 8px;
+            text-decoration: none;
+            &:hover{
+                background-color: $color_white;
+                border-color: #7AB455;
+                color: #7AB455;
+            }
+}

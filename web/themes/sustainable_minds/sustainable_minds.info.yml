@@ -10,7 +10,7 @@ regions:
   header: Header
   content: Content
   footer: Footer
-  side_bar: Side bar
+  side_bar: Side Bar
   main_navigation: Main Navigation
 
 

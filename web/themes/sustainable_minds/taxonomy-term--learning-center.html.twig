@@ -1,3 +1,20 @@
+<style>
+  #lc-section-header-1{
+    color:#a9c640;
+  }
+  #lc-section-header-2{
+    color:#5ac083;
+  }
+  #lc-section-header-3{
+    color:#00bcac;
+  }
+  #lc-section-header-4{
+    color:#549ec5;
+  }
+  #lc-section-header-5{
+    color:#3550b4;
+  }
+</style>
 {#
 /**
  * @file
@@ -25,23 +42,23 @@
 #}
 <div{{ attributes }}>
   {{ title_prefix }}
-  {% set foo = {'foo': 'bar'} %}
   {% if name and not page %}
     <h2 style="display:none"><a href="{{ url }}">{{ name }}</a></h2>
   {% endif %}
   {{ title_suffix }}
   <div class="lc-section-wrapper">
+      <hr>
       <div class="row">
-        <div class="col-md-1 lc-section-number"><p class="heading_6">1</p></div>
-        <div class="col-md-8 lc-section-content">
-            <h2 class="heading_6"><a href="{{ content.field_learnmore.0['#url'] }}" role="button">{{content.field_title.0['#title']}}</a></h2>
+        <div class="col-md-1 lc-section-number"><p class="heading_6">{{ term.id }}.</p></div>
+        <div class="col-md-7 lc-section-content">
+            <h2 class="heading_6"><a id="lc-section-header-{{term.id}}" href="{{ content.field_learnmore.0['#url'] }}" role="button">{{content.field_title.0['#title']}}</a></h2>
             <div class="lc-section-teaser">
-                <h3>{{ content.field_subtitle }}</h3>
-                <p> {{ content.field_content.0 | raw }}</p>
-                {{ content.field_learnmore }}
+                <h3 style="font-weight:bold;">{{ content.field_subtitle.0 | raw }}</h3>
+                 {{ content.field_content.0 | raw }}
+                <a href="{{ content.field_learnmore.0['#url'] }}" style="text-decoration:none;" class="chevron_right" role="button">{{content.field_learnmore.0['#title']}}</a>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <a href="{{ content.field_learnmore.0['#url'] }}" role="button">
               {{ content.field_image}}
             </a>

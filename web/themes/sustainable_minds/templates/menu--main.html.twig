@@ -24,19 +24,28 @@
   We call a macro which calls itself to render the full tree.
   @see https://twig.symfony.com/doc/1.x/tags/macro.html
 #}
+<style>
+   #main-navigation li a {
+     text-decoration: none;
+   } 
+</style>
 {{ menus.menu_links(items, attributes, 0) }}
 {% macro menu_links(items, attributes, menu_level) %}
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
-     <ul class="navbar-nav mb-2 mb-lg-0">
-       {% for item in items %}
+     <ul id="main-navigation" class="navbar-nav mb-2 mb-lg-0">
+       {% for key, item in items %}
         <li class="nav-item">
             <a  {% if isCurrentUrl == true %} class="nav-link active" {% endif %}  aria-current="page" href="{{ item.url }}" role="button">{{ item.title }}</a>
         </li> 
         {% endfor %}
-    </ul>  
+    </ul>
      {% endif %}
+     {% for key, item in content.field_tags if key|first != '#' %}
+  <div class="item-{{ key + 1 }}">{{ item }}</div>
+{% endfor %}
+
       {# <ul{{ attributes }} >
     {% else %}
       <ul>
@@ -52,3 +61,14 @@
     </ul> #}
   {% endif %}
 {% endmacro %}
+
+
+<script>
+  let menu_dropdown = document.querySelectorAll("#main-navigation > li");
+ console.log(menu_dropdown);
+  menu_dropdown[2].classList.add("active");
+   
+</script>
+
+
+
