@@ -13,6 +13,7 @@ $color_darkblue:#002438;
 $color_darkgreen:#62a566;
 $color_lightgreen:#68bf7b;
 $color_lightdarkgreen:#74b748;
+$color_maingreen: #7bb456;
 $color_body:#0D004C;
 $color_gray666: #666;
 $color_grayccc: #ccc;
@@ -27,6 +28,7 @@ a:hover{color: $color_darkskyblue;}
 .lightgreen_bg{background-color: #CDE6C4;}
 .chevron_right{padding-right: 0px; position: relative;}
 .chevron_right:after { content: ''; width: 7px; height: 7px; border: solid 1.5px $color_link; display: inline-block;  border-bottom: 0; border-left: 0; transform: rotate( 45deg ) translateY(-1px);margin-right: 5px; font-weight: inherit; }
+
 @media (min-width: 1400px){
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
         max-width: 890px;
@@ -34,10 +36,10 @@ a:hover{color: $color_darkskyblue;}
 }
 
 // Fonts
-$font_arial: 'Arial', sans-serif;
+$font_arial: Arial, Verdana, Tahoma, Helvetica, Arial;
 
 html{font-size: 16px;min-height: 100%;position: relative;}
-body{margin-bottom: 27px;background: url(../images/body_bg.png);background-repeat: repeat;font-family: $font_arial;}
+body{background: url(../images/body_bg.png);background-repeat: repeat;font-family: $font_arial;}
 h1, .heading_1{font-size: 2.8125rem;font-weight: bold;line-height: 50px;}/*45*/
 h2, .heading_2{font-size: 2.5rem;font-weight: bold;line-height: 45px;}/*40*/
 h3, .heading_3{font-size: 2.125rem;font-weight: bold;line-height: 40px;}/*34*/
@@ -48,3 +50,4 @@ p,span,li,div,a,em,strong, label, .col-form-label{font-size: 0.715rem;padding: 0
 ol,ul,dt{list-style: none; margin: 0; padding: 0;}
 // .row{margin: 0 -12px;}
 //Implimenting
+.font_11{font-size: 11px;line-height: normal;}
