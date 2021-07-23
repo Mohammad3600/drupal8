@@ -584,3 +584,19 @@ function sustainable_minds_preprocess_node__workshop(&$variables, $hook){
    
   }
 }
+
+/**
+ * sustainable_minds_theme_suggestions_views_view_alter
+ *
+ * @paramarray $suggestions
+ * @paramarray $variables
+ * @returnvoid
+ */
+function sustainable_minds_theme_suggestions_views_view_alter(array &$suggestions, array $variables) {
+  // Add content type suggestions.
+  if ($node = \Drupal::request()->attributes->get('node')) {
+        $suggestions[] = sprintf('views_view__%s', $variables['view']->id());
+  }
+}
+
+
