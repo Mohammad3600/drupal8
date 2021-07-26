@@ -44,6 +44,12 @@
       background-image: none;
       font-weight: bold;
       list-style: none; }
+      .lc-navigation-items ul li>a{
+        padding: 8px 0 8px 5px;
+        font-weight: bold; 
+        color: #fff;
+        font-size: 12px;
+      }
 
 </style>
 {#
@@ -77,7 +83,8 @@
  * @see template_preprocess_views_view_fields()
  */
 #}
-{% for field in fields -%}
+
+{% for key,field in fields -%}
   {{ field.separator }}
   {%- if field.label -%}
     {%- if field.label_element -%}
@@ -88,8 +95,6 @@
   {%- endif %}
   {%- if field.element_type -%}
   {{debug}}{% set formatted_title = field.content[0]  %}
-      {{ field.content }}
-      {{ field.view }}
       {{ field.content }}
     {{ drupal_view('users_guide_conducting_an_sm_lcaa', 'block_1') }}
   {%- else -%}
