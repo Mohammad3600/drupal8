@@ -1,7 +1,9 @@
 @import "variable";
 @import "mixin";
 // CSS
-body{background: #5DABBF url(../images/body-bg.jpg) repeat-x;}
+body.light_blue_bdygrd{background: #5DABBF url(../images/body-bg.jpg) repeat-x;background-size: contain;}
+// body{background: #5B6F72 url(../images/background.png) repeat-x;}
+body{background: url(../images/body_bg.png);background-repeat: repeat;background-size: contain;}
 #wrapper {
     width: 100%;
     max-width: 940px;
@@ -275,8 +277,8 @@ div#navbarNav
 }
 
 .project_btn{
-    width: 100%; background: $color_lightdarkgreen;border-color:$color_lightdarkgreen ;display: block; font-size: 0.815rem;   font-weight: 600; position: relative; padding-right: 30px;    
-    img{position: absolute; top: -1px; right: -1px; width: 29px; background: #9fd26a; height: 29.2px; padding: 8px; border-top-right-radius: inherit; border-bottom-right-radius: inherit; @include transition(all .15s ease-in-out);}
+    width: 100%; background: $color_lightdarkgreen;border-color:$color_lightdarkgreen ;display: block; font-size: 0.6875rem;   font-weight: 600; position: relative; padding-right: 30px;overflow: hidden;border:0;    
+    img{position: absolute; top: -1px; right: -1px; width: 25px;height: 25px; background: #9fd26a;  padding: 8px; border-top-right-radius: inherit; border-bottom-right-radius: inherit; @include transition(all .15s ease-in-out);}
     &:hover {
         img{background-color: #157347;}
     }
@@ -325,8 +327,9 @@ div#navbarNav
     @include dot_ul;
 }
 .my_project_leftcol{
+    padding: 20px 8px;
     .my_project_list{
-        .project_btn{max-width: 200px;}
+        .project_btn{max-width: 160px;}
         h2{
             a{
                 font-size: inherit;text-decoration: none; 
@@ -829,14 +832,53 @@ div#navbarNav
 --------------------------*/
 
 .lc_table_content{
-    h1{padding: 6px 0 6px 20px; margin: 0; background-color: #A9CFF5; font-size: 0.815rem;}
-    .list-group-item{text-decoration: none; font-size: 12px;font-weight: bold;color: $color_link;background-color: #EEE;
-        border: 1px solid $color_white;padding: 7px 0 7px 20px;
-        &:hover{
-            background-color: #f5f5f5;
+    // h1{padding: 6px 0 6px 20px; margin: 0; background-color: #A9CFF5; font-size: 0.815rem;}
+    // .list-group-item{text-decoration: none; font-size: 12px;font-weight: bold;color: $color_link;background-color: #EEE;
+    //     border: 1px solid $color_white;padding: 7px 0 7px 20px;
+    //     &:hover{
+    //         background-color: #f5f5f5;
+    //     }
+    // }
+    .view-content-topics{
+        table{
+            width: 100%;
+            margin-top: 20px;
+            tr{
+                
+                    background-color: #EEEEEE;
+                    border-top: 1px solid $color_white;
+                    border-bottom: 1px solid $color_white;
+                    padding: 6px 0 6px 20px;
+                    th{
+                        border-top: 1px solid $color_white;
+                        border-bottom: 1px solid $color_white;
+                        padding: 6px 0 6px 20px;
+                        background-color: #A9CFF5;
+                        color: #225770;
+                        text-align: left;
+                        font-size: 13px;
+                    }
+                    td{
+                        background-color: #EEE;
+                        border: 1px solid $color_white;
+                        padding: 7px 0 7px 20px;
+                        a{
+                            text-decoration: none;
+                            font-size: 12px;
+                            font-weight: bold;
+                        }
+                        &:hover{
+                            background-color: #f5f5f5;
+                        }
+                    }
+                }
+                tbody{
+                    border: none;
+                }
+            }
         }
     }
-}
+
 .lc_navigation_items {
     a{text-decoration: none;display: block;}
     ul{
@@ -903,15 +945,16 @@ div#navbarNav
         margin-bottom: 10px;
         &:last-child{margin-bottom: 0;}
     }
-    .emphbox {
-        padding: 10px 15px;
-        font-weight: bold;
-        font-size: 0.715rem;
-        background-color: #DDF8B2;
-        margin: 15px 0;
-        border: 1px solid #67C52F;
-        
-    }
+   
+}
+.emphbox {
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 0.715rem;
+    background-color: #DDF8B2;
+    margin: 15px 0;
+    border: 1px solid #67C52F;
+    
 }
 .lc-lifestyle-stages-fig {
     figcaption{font-size: 0.815rem;color: #0099FF;font-weight: 600; padding: 0 20px;}
@@ -951,4 +994,191 @@ footer {
         }
         a{display: inline-block;}
     }
+}
+
+/*--------------------------
+  assessment-process-overview Page
+--------------------------*/
+table#when-table {
+    width: 100%;
+    max-width: 620px;
+    margin-top: 15px;
+    margin-left: 20px;
+    thead{
+        border: none;
+        background-color: #333;
+        color: white;
+    }
+        tr{
+            &.phase-1{
+                th{ background-color: #C9E06E;}
+                td{background-color: #EDF5E4;}
+            }
+            &.phase-2{
+                th{ background-color: #73C37E;}
+                td{background-color: #DDFFE4;}
+            }
+            &.phase-3{
+                th{ background-color: #1FB7AB;}
+                td{background-color: #DFF2F6;}
+            }
+            &.phase-4{
+                th{ background-color: #1691B3;}
+                td{background-color: #E1EAF4;}
+            }
+            &.phase-5{
+                th{ background-color: #0D6AAD;}
+                td{background-color: #CFE0F4;}
+            }
+           
+
+        }
+    
+    th{
+        font-size: 11px;
+        color: white;
+        border: none;
+        padding: 5px;
+    }
+    td{
+        color: black;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+    h3{padding-left: 3px;
+        font-size: 14px;
+        line-height: 18px;
+        color: white;
+    }
+    p, ul{
+        padding-top: 0px;
+        padding-bottom: 4px;
+    }
+    .fineprint {
+        margin: 1em 0;
+        color: white;
+    }
+    .result {
+        color: yellow;
+        font-size: 11px !important;
+    }
+    *{
+        padding-left: 0px;
+        padding-right: 0px;
+        font-size: 10px;
+        }
+}
+
+.blue_heading{font-size: 13px;  color: #0099FF; line-height: 13px;}
+.mt-15{margin-top: 15px;}
+.list-style_number{list-style-type: number;}
+
+.footnote{
+    margin: 7px 20px;
+    padding: 0px;
+    border: 1px solid $color_grayccc;
+    ol{
+        font-size: 11px;
+    padding: 5px;
+    margin: 0px;
+    color: $color_gray666;
+    list-style-type: number;
+        li{
+            padding: 3px 0px 3px 0px;
+            margin-left: 23px;
+            line-height: normal;
+        }
+   }
+}
+
+#table-incontent {
+    margin: 10px 20px;
+    &.table-base{
+        background-color: #71ACD1;
+        border-collapse: separate;
+        border-spacing: 1px;
+        clear: both;
+        th.table-intro {
+            background-color: #8EBAC5;
+            text-align: left;
+        }
+        th{
+            background-color: #D2FBFE;
+            line-height: normal;
+        }
+        td{
+            background-color: $color_white;
+            line-height: normal;
+        }
+        th,td{
+            margin: 0;
+            padding: .4em;
+        }
+    }
+}
+
+.comparing-concepts-table{
+    margin: 10px 10px 10px 20px;  background-color: #CBE1EA;
+    tr{
+        td{
+            padding: 5px; border-right:1px solid #fff; vertical-align: top;
+        }
+    }
+}
+
+.ecodesign-strategies-tbl{
+    width: 100%;
+    text-align: right;
+    border-collapse: collapse;
+    th{
+        font-size: 12px;
+        color: #fff;
+        text-align: left;
+        height: 30px;
+        background-color: #03708B;
+        padding-left: 10px;
+    }
+    td{
+        width: 25%;
+        padding-bottom: 20px;
+        img{
+            padding-right: 15px;
+        }
+        p{
+            text-align: left;
+            padding: 5px 0;
+            font-size: 11px;
+            line-height: 1.35em;
+        }
+        h2{
+            font-size: 11px;
+            color: #03708B;
+            text-align: left;
+            padding: 0px;
+            margin: 0px;
+            line-height: normal;
+        }
+    }
+}
+
+.impcat_intro{
+    width: 100%;
+    background-color: #f0f0f0;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    h2{
+        font-size: 13px;
+        color: #003399;
+        margin-top: 15px;
+        line-height: normal;
+    }
+    p{
+        font-size: 11px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        line-height: 1.35em;
+        color: #003399;
+    }
+    
+    p, h2{    padding-left: 20px; padding-right: 20px;}
 }

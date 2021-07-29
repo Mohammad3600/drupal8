@@ -21,7 +21,7 @@
       color: #fff;
       padding: 0 2px; }
   .lc-navigation-items ul li.active {
-    background-image: url("../images/nav_top_active.jpg");
+    background-image: url("http://localhost:8082/drupal8/web/themes/sustainable_minds/images/nav_top_active.jpg");
     background-color: transparent;
     background-position: left top;
     background-repeat: no-repeat; }
@@ -50,6 +50,21 @@
         color: #fff;
         font-size: 12px;
       }
+      .lc-navigation-items ul > li.active > a{
+        color:#000;
+      }
+      .lc-navigation-items ul ul li.active a{
+        color:#000 !important;
+      }
+
+.lc-navigation-items > ul {counter-reset: section;}
+.lc-navigation-items > ul > li > a::before {  counter-increment: section;
+  content: counter(section) ".";
+}
+
+.lc_table_content .view-content-topics table tr td a {
+    color: #083081;
+}
 
 </style>
 {#
@@ -94,9 +109,33 @@
     {%- endif %}
   {%- endif %}
   {%- if field.element_type -%}
-  {{debug}}{% set formatted_title = field.content[0]  %}
-      {{ field.content }}
-    {{ drupal_view('users_guide_conducting_an_sm_lcaa', 'block_1') }}
+     {{field.content}}
+      {% set formatted_title = field.content|striptags | lower | replace({' ': "-", ":" : "","’" : ""}) | raw %}
+       {% if formatted_title | trim == "why-sustainable-minds?" %}
+       <div class ="why_sustainable_minds_ lc_taxanomy">
+          {{ drupal_view("why_sustainable_minds_", 'block_1') }}
+       </div>
+      {% endif %} 
+      {% if formatted_title | trim == 'users-guide-conducting-an-sm-lca' %}
+      <div class ="users_guide_conducting_an_sm_lcaa lc_taxanomy">
+          {{ drupal_view("users_guide_conducting_an_sm_lcaa", 'block_1') }}
+      </div>
+      {% endif %} 
+      {% if formatted_title | trim == 'ecodesign-and-lca' %}
+       <div class ="ecodesign_and_lca lc_taxanomy">
+          {{ drupal_view("ecodesign_and_lca", 'block_1') }}
+       </div>
+      {% endif %} 
+      {% if formatted_title | trim == 'ecodesign_strategies' %}
+      <div class ="ecodesign_strategies lc_taxanomy">
+          {{ drupal_view("ecodesign_strategies", 'block_1') }}
+      </div>
+      {% endif %} 
+      {% if formatted_title | trim == 'sm2013-impact-assessment-methodology' %}
+      <div class ="sm2013_impact_assessment_methodology lc_taxanomy">
+          {{ drupal_view("sm2013_impact_assessment_methodology", 'block_1') }}
+      </div>
+      {% endif %} 
   {%- else -%}
     {{ field.content }}
   {%- endif %}

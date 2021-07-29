@@ -599,4 +599,17 @@ function sustainable_minds_theme_suggestions_views_view_alter(array &$suggestion
   }
 }
 
+/**
+ * Implements sustainable_minds_theme_theme_suggestions_HOOK().
+ *
+ * Add views field template suggestions.
+ * 
+ * @inheritdoc
+ */
+function sustainable_minds_theme_theme_suggestions_views_view_field(array $variables) {
+  return [
+    'views_view_field__' . $variables['field']->field
+  ];
+}
+
 
