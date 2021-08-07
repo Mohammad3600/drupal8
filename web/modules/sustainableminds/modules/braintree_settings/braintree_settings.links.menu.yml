@@ -1,0 +1,6 @@
+braintree_settings.admin_settings_form:
+  title: 'Sustainable Minds registration'
+  route_name: braintree_settings.admin_settings_form
+  description: 'Sustainable Minds Registration Form settings.'
+  parent: system.admin_config_system
+  weight: 99

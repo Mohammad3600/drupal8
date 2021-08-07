@@ -1,0 +1,3 @@
+services:
+  setup_project.project_service:
+    class: Drupal\setup_project\Services\ProjectService

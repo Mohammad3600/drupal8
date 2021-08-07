@@ -1,0 +1,6 @@
+email_notification.admin_settings_form:
+  title: 'Email Notification Settings'
+  route_name: email_notification.admin_settings_form
+  description: 'Displays Email Notification Settings'
+  parent: system.admin_config_system
+  weight: 98

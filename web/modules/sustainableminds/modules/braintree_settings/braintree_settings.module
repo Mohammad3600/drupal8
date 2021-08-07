@@ -1,0 +1,8 @@
+<?php
+
+function braintree_settings_user_login() {
+  $response = new Drupal\braintree_settings\Controller\BraintreeSettingsController();
+	$val = $response->showValues();
+	echo $val;
+   return;
+}

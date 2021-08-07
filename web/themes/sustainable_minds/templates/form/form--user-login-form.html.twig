@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ */
+#}
+<style>
+#edit-pass--description,#edit-name--description {
+    display: none;
+}
+</style>
+<div class="row justify-content-center login_row">
+    <form  class="col-md-10 col-lg-7 login_form text-center" {{ attributes }} >
+    <h1 class="heading_6 mb-3">Welcome to SM Eco-concept + Life Cycle Assessment Software</h1>
+        <div class="login-form__top">
+            {{ element.messages }}
+            
+          <div class="form_group mb-2">  {{ element.name }}  </div>{# username element #}
+          <div class="form_group mb-2">  {{ element.pass }} </div>{# password element #}
+            <div class="btn-align-start btn-control text-start">
+                {{ element.actions.submit }}
+            </div>
+            {{ element.form_build_id }} {# required #}
+            {{ element.form_id }} {# required #}
+
+        </div>
+         <div class="form_group">
+                <a href="/user/password" class="mb-2">Retrieve lost password</a>
+                <p><strong>Not a Sustainble Minds user yet?</strong></p>
+                <p class="mb-2">Try it out with a risk free 1 day trial. <a href="index.html" title="SignUp">Sign up</a></p>
+                <p>Looking to log in to your SM Transparency Catalog Project Library? <a href="index.html" title="Go Here">Go here</a></p>
+         </div>
+    </form>
+</div>

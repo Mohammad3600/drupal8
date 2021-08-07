@@ -1,0 +1,5 @@
+services:
+ sm_registration.login:
+   class: Drupal\sm_registration\SMLoginServices
+ sm_registration.register:
+   class: Drupal\sm_registration\SMRegistrationServices

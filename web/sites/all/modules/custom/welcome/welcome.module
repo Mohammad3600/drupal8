@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains welcome.module..
+ */
+
+function welcome_user_login() {
+  $config = \Drupal::config('welcome.adminsettings');
+  drupal_set_message($config->get('welcome_message'));
+  $url = "/drupal8/web/homepage";
+  $response = new Symfony\Component\HttpFoundation\RedirectResponse($url);
+  $response->send();
+  return;
+}

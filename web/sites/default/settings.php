@@ -793,7 +793,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
    include $app_root . '/' . $site_path . '/settings.local.php';
  }
 $databases['default']['default'] = array (
-  'database' => 'mydb',
+  'database' => 'cloud_db_sm',
   'username' => 'root',
   'password' => '',
   'prefix' => '',

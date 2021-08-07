@@ -1,0 +1,42 @@
+setup_project.definition_form:  
+  path: '/project/add/definition'  
+  defaults:  
+    _form: '\Drupal\setup_project\Form\ProjectDefinitionForm'  
+    _title: 'Definition'  
+  requirements:  
+    _permission: 'access pages'    
+setup_project.goals_form:  
+  path: '/project/add/goals'  
+  defaults:  
+    _form: '\Drupal\setup_project\Form\AssessmentGoalsForm'  
+    _title: 'Assessment goals'  
+  requirements:  
+    _permission: 'access pages'    
+setup_project.scope_form:  
+  path: '/project/add/scope'  
+  defaults:  
+    _form: '\Drupal\setup_project\Form\AssessmentScopeForm'  
+    _title: 'Assessment Scope'  
+  requirements:  
+    _permission: 'access pages'    
+setup_project.concepts_form:  
+  path: '/project/add/concepts'  
+  defaults:  
+    _form: '\Drupal\setup_project\Form\ConceptsForm'  
+    _title: 'Concepts'  
+  requirements:  
+    _permission: 'access pages'    
+setup_project.add_concept:  
+  path: '/project/concept/add'  
+  defaults:  
+    _form: '\Drupal\setup_project\Form\CreateConcept'  
+    _title: 'Create Concept'  
+  requirements:  
+    _permission: 'access pages'    
+setup_project.my_project:  
+  path: '/project/list/user'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\MyProject::myProjectMarkup'  
+    _title: 'My Project'  
+  requirements:  
+    _permission: 'access pages'    

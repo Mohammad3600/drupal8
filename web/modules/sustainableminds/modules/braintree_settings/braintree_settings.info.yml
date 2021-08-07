@@ -1,0 +1,5 @@
+name: Braintree Settings
+type: module  
+description: Displays Braintree Settings
+core: 8.x  
+package: Custom

@@ -10,8 +10,8 @@
     "license": "ISC",
     "devDependencies": {
         "browser-sync": "^2.26.3",
-        "gulp": "^4.0.2",
-        "gulp-sass": "^4.1.1",
+        "gulp": "^4.0.0",
+        "gulp-sass": "^4.0.2",
         "gulp-sourcemaps": "^2.6.5",
         "nunjucks": "^3.2.0",
         "prettify-html": "0.0.2"

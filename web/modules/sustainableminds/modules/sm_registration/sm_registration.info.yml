@@ -1,0 +1,6 @@
+name: SMRegistration Module
+type: module
+description: 'custom registration Module.'
+package: Custom
+version: 1.0
+core: 8.x

@@ -39,7 +39,7 @@ a:hover{color: $color_darkskyblue;}
 $font_arial: Arial, Verdana, Tahoma, Helvetica, Arial;
 
 html{font-size: 16px;min-height: 100%;position: relative;}
-body{background: url(../images/body_bg.png);background-repeat: repeat;font-family: $font_arial;}
+body{font-family: $font_arial;}
 h1, .heading_1{font-size: 2.8125rem;font-weight: bold;line-height: 50px;}/*45*/
 h2, .heading_2{font-size: 2.5rem;font-weight: bold;line-height: 45px;}/*40*/
 h3, .heading_3{font-size: 2.125rem;font-weight: bold;line-height: 40px;}/*34*/

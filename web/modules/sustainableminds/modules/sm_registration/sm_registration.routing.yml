@@ -1,0 +1,15 @@
+sm_registration.registration:
+  path: '/registration/page'
+  defaults:
+    _controller: 'Drupal\sm_registration\Controller\SMRegistrationController::registration'
+    _title: 'custom SM Registration module'
+  requirements: 
+    _permission: 'access content'
+sm_registration_form.registrationForm:
+  path: '/trial_plan'
+  defaults:
+    _title: 'SM registration form'
+    _form: 'Drupal\sm_registration\Form\SMRegistrationForm'
+  requirements:
+    _permission: 'access content'
+    

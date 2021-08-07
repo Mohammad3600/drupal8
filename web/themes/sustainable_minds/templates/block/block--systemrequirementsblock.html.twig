@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+<div{{ attributes }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+  <div class="sbwide sbblue_top clearfix">
+    <div class="sbblue_body_mid">
+    <h4>{{ content.field_title_1.0 }}</h4>
+    {{ content.field_description_1.0}}
+    <h4>{{ content.field_title_1.0 }}</h4>
+      <img src="{{ file_url(content.field_lock_image['#items'].entity.uri.value) }}" width="47" height="53" align="right">
+      {# {{ content.field_lock_image.0 }} #}
+      {{ content.field_description_2.0 }}
+  {% endblock %}
+</div>

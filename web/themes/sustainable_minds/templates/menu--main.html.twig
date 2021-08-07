@@ -64,9 +64,22 @@
 
 
 <script>
-  let menu_dropdown = document.querySelectorAll("#main-navigation > li");
+  let menu_dropdown = document.querySelectorAll("#main-navigation > li > a");
  console.log(menu_dropdown);
-  menu_dropdown[2].classList.add("active");
+  let url = window.location.href;
+  let urlpaths = url.split("/");
+  for (let i in menu_dropdown)
+  {
+    let url_link = menu_dropdown[i].getAttribute("href").split("/");
+    for(let j in urlpaths)
+    {
+      if(url_link[url_link.length -1 ] == urlpaths[j] )
+      {
+        menu_dropdown[i].parentElement.classList.add("active");
+      }
+    }
+  }
+
    
 </script>
 
