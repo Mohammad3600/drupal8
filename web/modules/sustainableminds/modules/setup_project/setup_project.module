@@ -1,0 +1,34 @@
+<?php
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+define('SM_PATH', drupal_get_path('module', 'setup_project'));
+function setup_project_form_open_div($divid){
+	return array(
+				'#type'=>'markup',
+				'#value' => '<div class="'.$divid.'">'
+			);
+}
+
+function setup_project_form_close_div(){
+	return array(
+				'#type'=>'markup',
+				'#value' => divclear().'</div>'
+			);
+}
+function divclear() {
+	return '<div class="clear"></div>';
+}
+function sustainable_minds_clear_db($result=NULL){
+	if($result && $result !== true && $result !== false)
+		mysqli_free_result($result);
+	global $active_db;
+	while(mysqli_next_result($active_db));
+	return;
+}
+function sustainable_minds_access_denied() {
+	/*global $user;
+	if (!$user->uid) sustainable_minds_set_error_goto('You must log in to have access to this area.','');
+	else */
+	//sustainable_minds_set_error_goto('','access-denied');
+	// drupal_access_denied();
+	throw new AccessDeniedHttpException();
+} 

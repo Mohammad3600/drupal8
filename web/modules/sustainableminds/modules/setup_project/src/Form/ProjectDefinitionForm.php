@@ -30,7 +30,7 @@ class ProjectDefinitionForm extends FormBase {
     $config = $this->config('setup_project.definition_form'); 
     // $categories = array('(not entered)','Air & Environment','Aircraft,Bath','Bedding', 'Beverage Packaging','Children Vehicles','Clothing',
     // 'Computer Equipment','Construction', 'Mining & Materials Handling','Consumer equipment','Dining') ;
-    $categories = \Drupal::service('setup_project.project_service')->getCategories();
+    $categories = \Drupal::service('setup_project.sbom_db')->getCategories();
 
     $form['project_name']=[
       '#type' => 'textfield',

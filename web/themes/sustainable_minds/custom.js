@@ -259,16 +259,16 @@ jQuery(function($) {
         }
     }
 });
-$('#NewProject').click(()=>{
+function new_project(){
 	jQuery.ajax({
 		type: "GET",
-		url: "/drupal8/web/ajax/actions/newproject",
+		url: "/"+URL_AJAX_PROJECT_NEW,
 		success: function (pid){
-			if (pid) top.location.href = '/drupal8/web/project/add'+'/'+pid+'/'+'definition';
+			if (pid) top.location.href = '/'+URL_PROJECT_ADD+'/'+pid+'/'+PROJECT_PAGE_NAME_DEFINITION;
 			else alert('Issues creating new project.');
 		}
 	});
-});
+}
 
 function project_edit_add_to_page(page) {
 	jQuery('form #edit-to-page').val(page);
@@ -280,7 +280,7 @@ var default_funame = "1 hour of use";
 	var default_fudesc = "Hour of use is a standard unit of measure when service delivered is measured by time.";
         */
 /* default functional unit updated by K.L. 2-27-2012 */
-        var default_funame = "1 Year of use";
+        var default_funame = "1 Year of service";
 	var default_fudesc = "Year of use is a standard unit of measure when service delivered is measured by time.";
 	
 	jQuery('#product-functional-unit-value').html(jQuery('#edit-funame').val());
@@ -328,4 +328,4 @@ var default_funame = "1 hour of use";
 		jQuery('#product-functional-unit-edit .error').hide().html('');
 		jQuery('#product-functional-unit-change').fadeIn();
 		jQuery('#product-functional-unit-edit').hide();
-    });
+	});

@@ -1,0 +1,7 @@
+TRUNCATE SM_LCA_MatProcs;
+TRUNCATE SM_LCA_MPCLinks;
+TRUNCATE SM_LCA_MatProcCategories;
+TRUNCATE SM_LCA_MatProcCategories_Temp;
+TRUNCATE SM_LCA_MatProcLinks;
+TRUNCATE SM_LCA_MatProcImpacts;
+TRUNCATE SM_LCA_Units;

@@ -802,4 +802,14 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
+$databases['d5_dump']['default'] = array (
+  'database' => 'd5_dump',
+  'username' => 'root',
+  'password' => '',
+  'prefix' => '',
+  'host' => 'localhost',
+  'port' => '3306',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'driver' => 'mysql',
+);
 $settings['config_sync_directory'] = 'sites/default/files/config_ZRJtbFoawfIuVMWxyZs8WgbEgbV7l1oVxAXLgLl3V4YQJ7L1VDckNfDAe2fuFAE98e5Dx4vKXw/sync';

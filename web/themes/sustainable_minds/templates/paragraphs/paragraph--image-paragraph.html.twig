@@ -41,6 +41,7 @@
 {%
   set classes = [
     'paragraph',
+    'ms-3',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished'
@@ -50,9 +51,7 @@
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
       {{ content.field_img_para.0 }}
-       <div class='lc-intro-detail'>
-            <p class="caption">{{ content.field_caption.0 }}</p>
-        </div>
+        <p class="caption">{{ content.field_caption.0 }}</p>    
     {% endblock %}
   </div>
 {% endblock paragraph %}
