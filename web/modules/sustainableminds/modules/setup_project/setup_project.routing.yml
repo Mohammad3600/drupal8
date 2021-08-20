@@ -1,63 +1,71 @@
-# setup_project.definition_form:  
-#   path: '/project/add/definition'  
-#   defaults:  
-#     _form: '\Drupal\setup_project\Form\ProjectDefinitionForm'  
-#     _title: 'Definition'  
-#   requirements:  
-#     _permission: 'access pages'    
-# setup_project.goals_form:  
-#   path: '/project/add/goals'  
-#   defaults:  
-#     _form: '\Drupal\setup_project\Form\AssessmentGoalsForm'  
-#     _title: 'Assessment goals'  
-#   requirements:  
-#     _permission: 'access pages'    
-# setup_project.scope_form:  
-#   path: '/project/add/scope'  
-#   defaults:  
-#     _form: '\Drupal\setup_project\Form\AssessmentScopeForm'  
-#     _title: 'Assessment Scope'  
-#   requirements:  
-#     _permission: 'access pages'    
-# setup_project.concepts_form:  
-#   path: '/project/add/concepts'  
-#   defaults:  
-#     _form: '\Drupal\setup_project\Form\ConceptsForm'  
-#     _title: 'Concepts'  
-#   requirements:  
-#     _permission: 'access pages'    
-# setup_project.add_concept:  
-#   path: '/project/concept/add'  
-#   defaults:  
-#     _form: '\Drupal\setup_project\Form\CreateConcept'  
-#     _title: 'Create Concept'  
-#   requirements:  
-#     _permission: 'access pages'    
 setup_project.project:  
-  path: '/project/add/{pid}/{page}'  
+  path: '/project/{mode}/{pid}/{page}'  
   defaults:  
     _form: '\Drupal\setup_project\Form\SetupProject'  
-    _title: 'Create Concept'  
+    _title: 'Create Project'  
   requirements:  
     _permission: 'access pages'    
-setup_project.my_project:  
+setup_project.projectMarkup:  
   path: '/project/list/user'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\MyProject::myProjectMarkup'  
-    _title: 'My Project'  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::projectMarkup'  
+    _title: 'Project'  
   requirements:  
-    _permission: 'access pages'       
-setup_project.ajaxCall:  
+    _permission: 'access pages'         
+setup_project.ajaxNewProject:  
   path: '/ajax/actions/newproject'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\MyProject::newProject'  
-    _title: 'My Project'  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::newProject'  
+    _title: 'New Project'  
   requirements:  
     _permission: 'access pages'       
-setup_project.my_project:  
-  path: '/project/list/user'  
+setup_project.ajaxCopyProject:  
+  path: '/ajax/actions/copy_project'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\MyProject::myProjectMarkup'  
-    _title: 'My Project'  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_copy_project'  
+    _title: 'Copy Project'  
+  options:
+      query:
+        token: ""
   requirements:  
     _permission: 'access pages'       
+setup_project.ajaxCopyToProject:  
+  path: '/ajax/actions/copy_to_project'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_copy_to_project'  
+    _title: 'Copy To Project'  
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access pages'       
+setup_project.ajaxDeleteProject:  
+  path: '/ajax/actions/delete_project'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_delete_project'  
+    _title: 'Delete Project'  
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access pages'
+setup_project.ajaxUploadFile:  
+  path: '/ajax/actions/upload_file'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::uploadFile'  
+    _title: 'upload file'  
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access pages'
+setup_project.viewProject:  
+  path: '/project/{page}/{pid}'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::productView'  
+    _title: 'View Project'
+  requirements:  
+    _permission: 'access pages'
+
+       
+     

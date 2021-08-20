@@ -1,0 +1,3 @@
+; $Id$
+name = Uploadify
+description = "Uploadify allows files to be uploaded without submitting a form by using Flash."

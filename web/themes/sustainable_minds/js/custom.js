@@ -1,3 +1,4 @@
+let siteBasePath = "/drupal8/web";
 jQuery(function($) {
     console.log("custom js file loaded");
     $('#messages').hide();
@@ -259,73 +260,223 @@ jQuery(function($) {
         }
     }
 });
-$('#NewProject').click(()=>{
-	jQuery.ajax({
-		type: "GET",
-		url: "/drupal8/web/ajax/actions/newproject",
-		success: function (pid){
-			if (pid) top.location.href = '/drupal8/web/project/add'+'/'+pid+'/'+'definition';
-			else alert('Issues creating new project.');
-		}
-	});
-});
 
 function project_edit_add_to_page(page) {
 	jQuery('form #edit-to-page').val(page);
 	jQuery('form #edit-submit').click();
 }
-var default_funame = "1 hour of use";
+    
+    // $('#Product-Page').change(()=>{
+    //     alert('hello');
+    // });
+    
+
+    $('#NewProject').click(()=>{
+        jQuery.ajax({
+            type: "GET",
+            url: `${siteBasePath}/ajax/actions/newproject`,
+            success: function (pid){
+                if (pid) top.location.href = `${siteBasePath}/project/add`+'/'+pid+'/'+'definition';
+                else alert('Issues creating new project.');
+            }
+        });
+    });
+    function copy_project(pid) {
+        jQuery.ajax({
+            type: "GET",
+            url: `${siteBasePath}/ajax/actions/copy_project`,
+            data: "pid="+pid,
+            success: function (){
+                alert('A copy of this project has been created.');
+                top.location.href = `${siteBasePath}/project/list/user`;
+            }
+        });
+    }
+    
+    function copy_update_project(pid, version) {
+        jQuery.ajax({
+            type: "GET",
+            url: `${siteBasePath}/ajax/actions/copy_update_project`,
+            data: "pid="+pid+"&version="+version,
+            success: function (){
+                alert('A copy of this project has been created with an updated methodology.');
+                top.location.href = `${siteBasePath}/project/list/user`;
+            }
+        });
+    }
+    function delete_project(pid){
+        if(confirm("Deleting this project will also delete all concepts within it. Are you sure you want to proceed?")){
+            jQuery.ajax({
+                type: "GET",
+                url: `${siteBasePath}/ajax/actions/delete_project`,
+                data: "pid="+pid,
+                success: function (){
+                    alert('Project was deleted.');
+                    top.location.href = `${siteBasePath}/project/list/user`;
+        
+                }
+            });
+        }
+    }
+    
+    function copy_to_project(pid) {
+        var target = prompt("Please enter the username", "username");
+        if (target != null) {
+            jQuery.ajax({
+                type: "GET",
+                url: `${siteBasePath}/ajax/actions/copy_to_project`,
+                data: "pid="+pid+"&target="+target,
+                success: function (tError){
+                    console.log(tError);
+                    if (tError == "noname") {
+                        alert('The specified username does not exist - copy aborted.');
+                    } else {
+                        alert('A copy of this project has been created in '+target+' project folder.');
+                    }
+                    top.location.href = `${siteBasePath}/project/list/user`;
+                }
+            });
+        }
+    }
+    $(document).ready(function () {
+        jQuery('#product-functional-unit-edit').hide();
+        var default_funame = "1 hour of use";
 	/* 
         var default_funame = "1 hour of use";
 	var default_fudesc = "Hour of use is a standard unit of measure when service delivered is measured by time.";
         */
 /* default functional unit updated by K.L. 2-27-2012 */
-        var default_funame = "1 Year of use";
-	var default_fudesc = "Year of use is a standard unit of measure when service delivered is measured by time.";
-	
-	jQuery('#product-functional-unit-value').html(jQuery('#edit-funame').val());
-	if (jQuery('#edit-funame').val() == default_funame)
-		jQuery('#product-functional-unit-value-note').html("&nbsp;(default)");
-	else
-		jQuery('#product-functional-unit-value-note').html("");
-	jQuery('#product-functional-unit-desc').html(jQuery('#edit-fudesc').val());
-	jQuery('#edit-product-functional-unit-edit-value').val(jQuery('#edit-funame').val());
-	jQuery('#edit-product-functional-unit-edit-desc').val(jQuery('#edit-fudesc').val());
-	
-	
-	jQuery('#product-functional-unit-change-button').click(function() {
-		jQuery('#product-functional-unit-change').hide();
-		jQuery('#product-functional-unit-edit').fadeIn();
-		jQuery('#edit-product-functional-unit-edit-value').val(jQuery('#edit-funame').val());
-		if (jQuery('#edit-fudesc').val() == default_fudesc) //Terry doesn't want default desc to populate textbox
-			jQuery('#edit-product-functional-unit-edit-desc').val('');
-		else
-			jQuery('#edit-product-functional-unit-edit-desc').val(jQuery('#edit-fudesc').val());
-	});
-	
-	jQuery('#product-functional-unit-edit-save').click(function() {
-		if(jQuery('#edit-product-functional-unit-edit-value').val()) {
-			jQuery('#edit-funame').val(jQuery('#edit-product-functional-unit-edit-value').val());
-			jQuery('#edit-fudesc').val(jQuery('#edit-product-functional-unit-edit-desc').val());
-			jQuery('#product-functional-unit-change').fadeIn();
-			jQuery('#product-functional-unit-edit').hide();
-			jQuery('#product-functional-unit-value').html(jQuery('#edit-funame').val());
-			if (jQuery('#edit-funame').val() == default_funame)
-				jQuery('#product-functional-unit-value-note').html("&nbsp;(default)");
-			else
-				jQuery('#product-functional-unit-value-note').html("");
-			jQuery('#product-functional-unit-desc').html(jQuery('#edit-fudesc').val());
-			jQuery('#edit-product-functional-unit-edit-value').css('border', '1px gray solid');
-			jQuery('#product-functional-unit-edit .error').hide().html('');
-		} else {
-			jQuery('#edit-product-functional-unit-edit-value').css('border', '1px red solid');
-			jQuery('#product-functional-unit-edit .error').fadeIn(400).append('Impact per functional unit is required.');
-		}
-	});
-	
-	jQuery('#product-functional-unit-edit-cancel').click(function() {
-		jQuery('#edit-product-functional-unit-edit-value').css('border', '1px gray solid');
-		jQuery('#product-functional-unit-edit .error').hide().html('');
-		jQuery('#product-functional-unit-change').fadeIn();
-		jQuery('#product-functional-unit-edit').hide();
-    });
+        var default_funame = "1 unit of service";
+	    var default_fudesc = "Unit of serivice is a generic unit of measure for service delivered.";
+        
+        jQuery('#product-functional-unit-value').html(jQuery('#edit-funame').val());
+        if (jQuery('#edit-funame').val() == default_funame){
+            jQuery('#product-functional-unit-value-note').html("&nbsp;(default)");
+        }
+        else{
+        jQuery('#product-functional-unit-value-note').html("");
+        jQuery('#product-functional-unit-desc').html(jQuery('#edit-fudesc').val());
+        jQuery('#edit-product-functional-unit-edit-value').val(jQuery('#edit-funame').val());
+        jQuery('#edit-product-functional-unit-edit-desc').val(jQuery('#edit-fudesc').val());
+        }
+        jQuery('#product-functional-unit-edit-cancel').click();
+        jQuery('#product-functional-unit-change-button').click(function() {
+            jQuery('#product-functional-unit-change').hide();
+            jQuery('#product-functional-unit-edit').fadeIn();
+            jQuery('#edit-product-functional-unit-edit-value').val(jQuery('#edit-funame').val());
+            if (jQuery('#edit-fudesc').val() == default_fudesc) //Terry doesn't want default desc to populate textbox
+                jQuery('#edit-product-functional-unit-edit-desc').val('');
+            else
+                jQuery('#edit-product-functional-unit-edit-desc').val(jQuery('#edit-fudesc').val());
+        });
+        
+        jQuery('#product-functional-unit-edit-save').click(function() {
+            if(jQuery('#edit-product-functional-unit-edit-value').val()) {
+                jQuery('#edit-funame').val(jQuery('#edit-product-functional-unit-edit-value').val());
+                jQuery('#edit-fudesc').val(jQuery('#edit-product-functional-unit-edit-desc').val());
+                jQuery('#product-functional-unit-change').fadeIn();
+                jQuery('#product-functional-unit-edit').hide();
+                jQuery('#product-functional-unit-value').html(jQuery('#edit-funame').val());
+                jQuery('#product-functional-unit-desc').html(jQuery('#edit-fudesc').val());
+                if (jQuery('#edit-funame').val() == default_funame)
+                    jQuery('#product-functional-unit-value-note').html("&nbsp;(default)");
+                else
+                    jQuery('#product-functional-unit-value-note').html("");
+                jQuery('#edit-product-functional-unit-edit-value').css('border', '1px gray solid');
+                jQuery('#product-functional-unit-edit .error').hide().html('');
+            } else {
+                jQuery('#edit-product-functional-unit-edit-value').css('border', '1px red solid');
+                jQuery('#product-functional-unit-edit .error').fadeIn(400).append('Impact per functional unit is required.');
+            }
+        });
+        
+        jQuery('#product-functional-unit-edit-cancel').click(function() {
+            jQuery('#edit-product-functional-unit-edit-value').css('border', '1px gray solid');
+            jQuery('#product-functional-unit-edit .error').hide().html('');
+            jQuery('#product-functional-unit-change').fadeIn();
+            jQuery('#product-functional-unit-edit').hide();
+        });
+        jQuery('#Browse-img').click(()=>{
+            jQuery('#edit-img-upload-upload').click();
+        });
+        function uploadFile(){
+            console.log('ha');
+            var input = document.getElementById("edit-img-upload-upload");
+            file = input.files[0];
+            console.log(file)
+            if(file != undefined){
+              formData= new FormData();
+              if(!!file.type.match(/image.*/)){
+                formData.append("img_upload", file);
+                console.log(formData);
+                $.ajax({
+                  url: `${siteBasePath}/ajax/actions/upload_file`,
+                  type: "POST",
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  success: function(data){
+                      alert('success');
+                  }
+                });
+              }else{
+                alert('Not a valid image!');
+              }
+            }else{
+              alert('Input something!');
+            }
+          }
+        jQuery('#edit-img-upload-upload').change(()=>{
+            // uploadFile();
+            var src = document.querySelector("#edit-img-upload-upload");
+            var target = document.querySelector("#ShowImage");
+            showImage(src, target);
+        });
+        jQuery('#Default-img').click(()=>{
+            console.log('hee');
+            document.querySelector("#ShowImage").src = jQuery("#defaultPath").val();
+            // jQuery("#Icon").val(jQuery("#defaultPath").val());
+        });
+      
+        function showImage(src, target) {
+            var fr = new FileReader();
+            fr.readAsDataURL(src.files[0]);
+            fr.onload = function(e){
+                //Initiate the JavaScript Image object.
+                var image = new Image();
+
+                //Set the Base64 string return from FileReader as source.
+                image.src = e.target.result;
+
+                //Validate the File Height and Width.
+                image.onload = function () {
+                    var width = this.width;
+                    if (width > 675) {
+                    alert("Image width should be less than 670px.");
+                    return false;
+                    }
+                    else{
+                        target.src = fr.result;
+                        console.log(fr.result);
+                        // jQuery("#Icon").val(fr.result);
+                        return true;
+                    }
+                };
+            }    
+        }
+        if(jQuery('#Product-Page')?.val()){
+            jQuery('.nav-middle').addClass('active');
+            jQuery('#blue_grid').addClass('d-none');
+        }
+        jQuery('#'+jQuery('#Product-Page')?.val()+'-tab').addClass('active');
+        var pathArray = window.location.pathname.split('/');
+        if(pathArray[3] === 'project' && ['view','goal','scope','concepts'].includes(pathArray[4])){
+            document.querySelector('#overview-tab').href = `${siteBasePath}/project/view/${pathArray[5]}`;
+            document.querySelector('#assessment-goals-tab').href = `${siteBasePath}/project/goal/${pathArray[5]}`;
+            document.querySelector('#assessment-scope-tab').href = `${siteBasePath}/project/scope/${pathArray[5]}`;
+            document.querySelector('#concepts-tab').href = `${siteBasePath}/project/concepts/${pathArray[5]}`;
+            jQuery('#blue_grid').addClass('d-none');
+            jQuery('.nav-middle').addClass('active');
+        }
+        // Execute code once the DOM is ready.
+      });

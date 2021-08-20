@@ -514,10 +514,9 @@ function sustainable_minds_dataload_results_form_submit($form_id, $edit) {
  * Build list of dataset versions
  **/
 function sustainable_minds_list_versions() {
-  global $user;
-
+	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
   $is_admin = false;
-  if (in_array("superadmin", $user->roles) || in_array("lca data manager", $user->roles)) {
+  if (in_array("superadmin", $user->getRoles()) || in_array("lca data manager", $user->getRoles())) {
     $is_admin = true;
   }
    

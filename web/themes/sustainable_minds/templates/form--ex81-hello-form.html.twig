@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ * Available variables
+ * - idibutes: A list of HTML idibutes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ */
+#}
+<form method="post" action="#" id="registration_trail_plan">
+ <div class="registration-content">
+                                <div id="messages" class="">
+                                    <div class="alert alert-danger alert-border">
+                                        <ul>
+                                            <li data-id="firstname">First name field is required.</li>
+                                            <li data-id="lastname">Last name field is required.</li>
+                                            <li data-id="email">Email field is required.</li>
+                                            <li  data-id="phone">Phone field is required.</li>
+                                            <li  data-id="jobtitle">Title or role field is required.</li>
+                                            <li data-id="companyname">Business or school name field is required.</li>
+                                            <li data-id="state">State/province field is required.</li>
+                                            <li  data-id="username">User name field is required.</li>
+                                            <li data-id="pw1">Create password field is required.</li>
+                                            <li data-id="pw2">Repeat password field is required.</li>
+                                            <li data-id="accept">You must accept terms of service and privacy policy to continue.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <h1 class="step-1">Create a free 1-day trial account.</h1>
+                                <h1 class="step-2">Please confirm the following.</h1>
+                                <h3  class="font-size-14 mb-3 step-1">
+                                    In exchange for a free trial account, we require valid information about you<br> and your organization. Trial accounts created with a generic email address,<br> fictional names and/or no business or school affiliation
+                                    will not be honored.<br>
+                                </h3>
+
+<div class="registration_fields celarfix">
+  {{ children }}
+  </div>
+  </div>
+</form>

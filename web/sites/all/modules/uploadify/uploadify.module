@@ -1,0 +1,148 @@
+<?
+/*	This module is rather specific to SM: for example it checks whether the image is for a concept or a product.
+	Will try to generalize someday. Maybe.
+	Or maybe should be module inside SM?
+*/
+
+define('UPLOADIFY_PATH', drupal_get_path('module', 'uploadify'));
+define('URL_AJAX_UPLOAD_IMAGE', 'ajax/actions/upload_image');
+define('URL_AJAX_USE_DEFAULT_IMAGE', 'ajax/actions/use_default_image');
+
+
+function uploadify_perm() {
+	return array('use uploadify');
+}
+
+function uploadify_menu($may_cache) {
+	if ($may_cache) {
+		$items[] = array (
+			'path' => URL_AJAX_UPLOAD_IMAGE,
+			'title' => t('GetProc'),
+			'access' => user_access('edit/add concept') && user_access('edit/add project'),
+			'callback' => 'uploadify_upload_image',
+			'type' => MENU_CALLBACK
+		);
+	
+		$items[] = array (
+			'path' => URL_AJAX_USE_DEFAULT_IMAGE,
+			'title' => t('GetProc'),
+			'access' => user_access('edit/add concept') && user_access('edit/add project'),
+			'callback' => 'uploadify_use_default_image',
+			'type' => MENU_CALLBACK
+		);
+	}
+	return $items;
+}
+
+
+function uploadify_elements() {
+	$type['uploadify_uploader'] = array(
+		'#input'=>true,
+		'#process' => array('_uploadify_process'=>array())
+	);
+	return $type;
+}
+
+function _uploadify_process($element) {
+	global $user;
+	drupal_add_js('USER_ID = ' . $user->uid, 'inline');
+	drupal_add_css(UPLOADIFY_PATH.'/jquery.uploadify-v2.1.0/uploadify.css');
+	drupal_add_js(UPLOADIFY_PATH.'/jquery.uploadify-v2.1.0/jquery.uploadify.v2.1.0.js');
+	drupal_add_js(UPLOADIFY_PATH.'/jquery.uploadify-v2.1.0/swfobject.js');
+	drupal_add_js(UPLOADIFY_PATH.'/uploadify.js');
+
+	//'#default_value'
+	$element['uploadify_image'] = array(
+		'#value' => '<img id="uploadify_current_img" src="'.$element['#default_value'].'" /><br />'
+	);
+
+	if (arg(0) == 'project' && arg(1) == 'concept' && (arg(2) == 'add' || arg(2) == 'edit')) {
+		$conceptID = arg(3);
+		$element['uploadify_useDefault'] = array(
+			//'#value' => '<div id="useDefault" style="background-color:#555;color:#FFF;height:30px;width:110px;" onclick="useDefaultImage(\'concept\', '.$conceptID.')" >Use default image</div>'
+            // greg tried this, does not work.
+            //'#value' => '<input type="image" src="/sites/all/themes/sm_theme_01/images/buttons/use_default_image.gif" name="uploadify_useDefault" id="uploadify_useDefault" value="Use default image"
+			/*'#value' => '<input type="button" name="uploadify_useDefault" id="uploadify_useDefault" value="Use default image"
+			onclick="useDefaultImage(\'concept\', '.$conceptID.')" />'*/
+            '#value' => '<img src="/sites/all/themes/sm_theme_01/images/buttons/use_default_image.gif" name="uploadify_useDefault" id="uploadify_useDefault" onclick="useDefaultImage(\'concept\', '.$conceptID.')" />'
+		);
+	} elseif (arg(0) == 'project' && (arg(1) == 'add' || arg(1) == 'edit') && arg(3) == 'scope') {
+		$productID = arg(2);
+		$element['uploadify_useDefault'] = array(
+			//'#value' => '<div id="useDefault" style="background-color:#555;color:#FFF;height:30px;width:110px;" onclick="useDefaultImage(\'product\', '.$productID.')" >Use default image</div>'
+            // greg tried thi, does not work.
+            //'#value' => '<input type="image" src="/sites/all/themes/sm_theme_01/images/buttons/use_default_image.gif"  name="uploadify_useDefault" id="uploadify_useDefault" value="Use default image" 
+			/*'#value' => '<input type="button"  name="uploadify_useDefault" id="uploadify_useDefault" value="Use default image" 
+			onclick="useDefaultImage(\'product\', '.$productID.')" />'*/
+            '#value' => '<img src="/sites/all/themes/sm_theme_01/images/buttons/use_default_image.gif"  name="uploadify_useDefault" id="uploadify_useDefault" onclick="useDefaultImage(\'product\', '.$productID.')" />'
+		);
+	}
+
+	//product form submit handling requires this field to be 'icon'
+	$element['icon'] = array(
+		'#type' => 'hidden',
+		//'#value' => $element['#default_value'],
+		//'#default_value' => '',
+		'#default_value' => $element['#default_value']
+	);
+
+	//Uploadify looks for this when inserting the Flash
+	$element['uploadify_fileInput'] = array(
+		'#value' => '<input type="file" name="uploadify_fileUpload" id="uploadify_fileUpload" width="110" height="30" />'
+	);
+
+	return $element;
+}
+
+function theme_uploadify_uploader($element) {
+	$output = theme(
+		'form_element',
+		array(
+			'#title' => $element['#title'],
+			'#description' => $element['#description'],
+			'#id' => $element['#id'],
+			'#required' => $element['#required'],
+			'#error' => $element['#error'],
+		),
+		'<div class="container-inline">'. $element['#children'] .'</div>'
+	);
+
+	return $output;
+}
+
+
+//returns name of most recently modified file
+/* this may have been an overly complicated way to do it -- now using js
+function uploadify_upload_image() {
+	$latest_time = 0;
+	$latest_file = '';
+
+	$dir = $_SERVER['DOCUMENT_ROOT'] . $_GET['folder'] . '/u' .$_GET['userID'] . '/';
+	
+	if ($handle = opendir($dir)) {
+		while (false !== ($f = readdir($handle))) {
+			if ($f != "." && $f != ".." && ($t = filemtime("$dir/$f")) > $latest_time) {
+				$latest_time = $t;
+				$latest_file = $f;
+			}
+		}
+	}
+	
+	clearstatcache();
+
+	//echo '/'.$_GET['folder'] . '/u' .$_GET['userID'] . '/'. $latest_file;
+	echo '/'.$_GET['folder'] . '/u' .$_GET['userID'] . '/'. $_GET['filename']; //$latest_file;
+	exit();
+}*/
+
+function uploadify_use_default_image() {
+	switch ($_GET['type']) {
+		case 'concept':
+			echo DEFAULT_IMAGE;
+			break;
+		case 'product':
+			echo DEFAULT_SCOPE_IMAGE;
+			break;
+	}
+	exit();
+}

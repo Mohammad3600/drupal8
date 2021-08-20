@@ -24,7 +24,7 @@ class emailSettings extends ConfigFormBase {
     return 'email_notification_form';  
   }  
   /**  
-   * {@inheritdoc}  
+   * returns admin form for Email Settings
    */  
   public function buildForm(array $form, FormStateInterface $form_state) {  
     $config = $this->config('email_notification.adminsettings'); 

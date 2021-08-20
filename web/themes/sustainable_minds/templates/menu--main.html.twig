@@ -36,7 +36,9 @@
     {% if menu_level == 0 %}
      <ul id="main-navigation" class="navbar-nav mb-2 mb-lg-0">
        {% for key, item in items %}
-        <li class="nav-item">
+        <li class="nav-item {% if loop.index == 1 %} nav-left {% endif %}
+        {% if loop.index == 2 %} nav-middle {% endif %}
+        {% if loop.index == 3 %} nav-right {% endif %}">
             <a  {% if isCurrentUrl == true %} class="nav-link active" {% endif %}  aria-current="page" href="{{ item.url }}" role="button">{{ item.title }}</a>
         </li> 
         {% endfor %}

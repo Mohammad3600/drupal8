@@ -23,8 +23,9 @@ class settingsForm extends ConfigFormBase {
   public function getFormId() {  
     return 'braintree_settings_form';  
   }  
+
   /**  
-   * {@inheritdoc}  
+   * returns admin form for Braintree Settings
    */  
   public function buildForm(array $form, FormStateInterface $form_state) {  
     $config = $this->config('braintree_settings.adminsettings');  
@@ -117,10 +118,11 @@ class settingsForm extends ConfigFormBase {
     $config->set('braintree_settings.time_period', 15 );  
     $config->save();
     drupal_set_message('The configuration options have been reset to their default values.');
-    }     
-    /**  
-   * { To save the values of submitted form }  
-   */  
+    }
+
+  /**  
+  * { To save the values of submitted form }  
+  */  
   public function submitForm(array &$form, FormStateInterface $form_state) {  
     parent::submitForm($form, $form_state);  
     $config = $this->config('braintree_settings.adminsettings');

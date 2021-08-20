@@ -237,6 +237,7 @@ define('URL_NODE_VIEW','nodeview');
 define('IMPACT_TO_IGNORE', 10);
 
 define('SESSION_CONCEPT_ADD','concept_create');
+define('SITE_PATH','/drupal8/web');
 
 
 

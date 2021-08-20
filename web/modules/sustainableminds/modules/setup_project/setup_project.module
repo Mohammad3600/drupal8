@@ -1,27 +1,117 @@
 <?php
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 define('SM_PATH', drupal_get_path('module', 'setup_project'));
+
+function sustainable_minds_product_list($product) {
+	// $db = new sbom_db($userid);
+	$db = \Drupal::service('setup_project.sbom_db');
+	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+	$is_admin = false;
+	if (in_array("superadmin", $user->getRoles()) || in_array("lca data manager", $user->getRoles())) {
+	  $is_admin = true;
+	}
+	// $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+	//need to do it later
+	// if (!$product['reference_okala'] || !$product['refConcept'] ) {
+	//   $concept = $db->get_reference_concept($product['productID']);
+	//   $product['reference_okala'] = '---';
+	//   if ($concept['conceptID']) {
+	// 	$product['reference_okala'] = $concept['okala'];
+	//   }
+	// }
+	//need to do it later
+	// if (!$product['best_okala']) {
+	//   $concept = $db->get_best_concept($product['productID']);
+	//   $product['best_okala'] = '---';
+	//   if ($concept['conceptID']) {
+	// 	$product['best_okala'] = $concept['okala'];
+	//   }
+	// }
+	
+	// if (!$product['concept_count']) {
+	//   $concepts = $db->list_concepts($product['productID']);
+	//   $product['concept_count'] = count($concepts);
+	// }
+	
+	if ($product['description']) {
+	  $projectDescription = $product['description'];
+	} else {
+	  $projectDescription = TEXT_DEFAULT_PROJECT_DESCRIPTION;
+	}
+	
+	$projectClient = $product['client'];
+	if (empty($projectClient))
+	  $projectClient = TEXT_DEFAULT_PROJECT_CLIENT;
+	if (empty($projectDescription))
+	  $projectDescription = '<br/>';
+	if (empty($projectClient))
+	  $projectClient = '<br/>';
+  
+  
+	// determine whether to show option to update project  
+	if ($is_admin) {
+	  $status = 'any';
+	  $latest_version = $db->get_latest_version($status);
+	} else {
+	  $status = 'published';
+	  $latest_version = $db->get_latest_version($status);
+	}
+  
+	$version_map_exists = $db->find_version_map($product['version'], $latest_version);
+	if (in_array("superadmin", $user->getRoles()) || in_array("sales", $user->getRoles()) || in_array("group", $user->roles)) {
+		$copy_to_link = ' | <a href="" onclick="copy_to_project(' . $product['productID'] . ');return false;">Copy to</a>';
+	}
+	if ($version_map_exists) {
+	  $update_project_link = ' | <a href="" onclick="copy_update_project('.$product['productID'].',\''.$latest_version.'\');return false;">Copy and update to SM2013</a>';
+	}
+	// $update_project_link = 
+	$output = '<hr><div class="my_project_list d-flex flex-wrap justify-content-space-between align-items-center">'
+			  .'<div class="col-lg-8">'
+			  .'<h2 class="heading_6 mb-1"><a class="fs-6" href="'.base_path().URL_PROJECT_VIEW.'/'.$product['productID'].'">'.$product['name'].'</a></h2>'
+			  .'<span class="description">'.nl2br($projectDescription).'</span>'
+			  .'</div>'
+			  .'<div class="concept-info-wrap col-lg-4">'
+				.'<div class="concept-info"><ul>'
+				  .'<li><strong>Client or group:</strong> '.$projectClient.'</li>'
+				  .'<li>'.$product['concept_count'].' concept(s) </li>'
+				  .'<li class="action">'
+				  .'<a href="JavaScript:void(0);" onclick="copy_project('.$product['productID'].');return false;">Copy</a> | '
+				  .'<a href="JavaScript:void(0);" onclick="delete_project('.$product['productID'].');return false;">Delete</a>'
+				  . $copy_to_link
+				  .$update_project_link.'</li>'
+				//.'<li> Lowest impact '. nice_exponential_notation(scientific_notation($product['best_okala'], 2, SN_LOWER, SN_UPPER)).' mpts</li>'
+				//.'<li> Reference score '. nice_exponential_notation(scientific_notation($product['reference_okala'], 2, SN_LOWER, SN_UPPER)).' mpts</li>'
+				.'</ul></div>'
+				  // Disable the delete links from the Projects page 
+				  //.'<div class="project-list-button project-delete"><a href="JavaScript:void(0);" onclick="javascript: delete_project('.$product['productID'].');return false;">'. DEFAULT_PROJECT_ICON_DELETE .'</a></div>'
+			  .'</div>'
+			  .'<div class="clear"></div>'
+			  .'</div>';
+  
+	return $output;
+  }
+  
+function sustainable_minds_product_empty() {
+	  $output = '<div class="product-view">There are currently no projects.</div><div class="clear"></div>';
+	  return $output;
+  }
 function setup_project_form_open_div($divid){
 	return array(
-				'#type'=>'markup',
-				'#value' => '<div class="'.$divid.'">'
+				'#markup' => '<div class="'.$divid.'">'
 			);
 }
 
 function setup_project_form_close_div(){
 	return array(
-				'#type'=>'markup',
-				'#value' => divclear().'</div>'
+				'#markup' => '</div>'
 			);
 }
-function divclear() {
-	return '<div class="clear"></div>';
-}
+
 function sustainable_minds_clear_db($result=NULL){
-	if($result && $result !== true && $result !== false)
-		mysqli_free_result($result);
-	global $active_db;
-	while(mysqli_next_result($active_db));
+	// if($result && $result !== true && $result !== false)
+	// 	mysqli_free_result($result);
+	// $active_db = Drupal\Core\Database\Database::setActiveConnection();
+	// while(mysqli_next_result($active_db));
 	return;
 }
 function sustainable_minds_access_denied() {
@@ -32,3 +122,243 @@ function sustainable_minds_access_denied() {
 	// drupal_access_denied();
 	throw new AccessDeniedHttpException();
 } 
+function sustainable_minds_project_view_wizard($page, $pid, $pname){
+	// $SITE_PATH = '/drupal8/web';
+	$view_path = SITE_PATH.'/project'.'/view'.'/'.$pid;
+	$scope_path = SITE_PATH.'/project'.'/scope'.'/'.$pid;
+	$goal_path = SITE_PATH.'/project'.'/goal'.'/'.$pid;
+	$concepts_path = SITE_PATH.'/project'.'/concepts'.'/'.$pid;
+	$all_pages = ['view' => '', 'goal' => '', 'scope' => '', 'concepts' => ''];
+	$all_pages[$page] = 'active';  
+	return '<div class="light_blue_grd" style="width: calc(100% + 38.4%);"><div class="col-lg-12">
+	<h1 class="heading_6 font_11">'.$pname.'</h1>
+	<div class="setup_tabs">
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item">
+			  <a href="'.$view_path.'" class="nav-link text-align-center '.$all_pages['view'].'" id="overview-tab"><span>Overview</span></a>
+			</li>
+			<li class="nav-item">
+			  <a href="'.$goal_path.'" class="nav-link text-align-center '.$all_pages['goal'].'" id="assessment-goals-tab"><span>Assessment goals</span></a>
+			</li>
+			<li class="nav-item">
+			  <a href="'.$scope_path.'" class="nav-link text-align-center '.$all_pages['scope'].'" id="assessment-scope-tab"><span>Assessment scope</span></a>
+			</li>
+			<li class="nav-item">
+				<a href="'.$concepts_path.'" class="nav-link text-align-center '.$all_pages['concepts'].'" id="concepts-tab"><span>Concepts</span></a>
+			  </li>
+		  </ul>
+	</div>
+</div></div>';
+}
+
+function sustainable_minds_product_view($product, $productid, $page)
+{
+	if ($product['description']) {
+		$projectDescription = nl2br($product['description']);
+	} else {
+		$projectDescription = TEXT_DEFAULT_PROJECT_DESCRIPTION;
+	}
+
+	if (empty($product['client']))
+		$product['client'] = TEXT_DEFAULT_PROJECT_CLIENT;
+
+	// $user = user_load(array('uid' => $product['userID']));
+
+	$output .= '<div class="product-view">' . sustainable_minds_product_edit_tab($page, $productid) . '<div class="product-view-main">'
+		. '<div class="pname"><h2>' . $product['name'] . '</h2></div>'
+		. '<div class="pview">'
+		. ' <div><h3>Client or group</h3><p>' . $product['client'] . '</p></div>'
+		. ' <div><h3>Category</h3><p>' . $product['pcategory'] . '</p></div>'
+		. '</div>'
+		. '<div class="pview">'
+		// . ' <div><h3>Methodology</h3><div class="method">' . theme('sustainable_minds_methodology', $product['version']) . '</div></div>'
+		. ' <div><h3>Methodology</h3><div class="method">' . 'SM 2013' . '</div></div>'
+		. '</div>'
+		. '<div class="pview">'
+		. ' <div><h3>Description</h3><p>' . $projectDescription . '</p></div>'
+		. '</div>'
+		. '<div class="pview">'
+		//.' <div><h3>Created by</h3><p>'.$user->name.'</p></div>'
+		. ' <div><h3>Created on</h3><p>' . date('j F, Y', strtotime($product['date_created'])) . '</p></div>'
+		. '</div>'
+		. '</div>';
+		// . '<table class="product-view-concept">'
+		// . '<caption></caption>'; /* previously class="product-view-concept-head"*/
+
+	// $db = new sbom_db();
+	// $referenceconcept = $db->get_reference_concept($productid);
+	// $finalconcept = $db->get_final_concept($productid);
+	// $bestconcept = $db->get_best_concept($productid);
+
+	// $conceptArray = array();
+	// $conceptArray['reference'] = array('concept' => $referenceconcept, 'title' => 'Reference');
+	// $conceptArray['final'] = array('concept' => $finalconcept, 'title' => 'Final concept');
+	// $conceptArray['best'] = array('concept' => $bestconcept, 'title' => 'Lowest impact');
+
+	// if (!count($conceptArray)) {
+	// 	$output .= TEXT_DEFAULT_PROJECT_CONCEPTS;
+	// }
+
+	// foreach ($conceptArray as $key => $concept) {
+	// 	$supress = false;
+	// 	//if (!$concept['concept']['conceptID']) continue;
+	// 	if (!$concept['concept']['conceptID']) {
+	// 		$concept['concept']['name'] = 'The ' . strtolower($concept['title']) . ' has not been designated.';
+	// 		$supress = true;
+	// 	}
+
+	// 	if (!$supress && $key != 'reference') {
+	// 		$ochange = $concept['concept']['ref_compare_okala'];
+	// 		if ($ochange > 0) {
+	// 			$classChange = 'positive';
+	// 			$ochange = '<div class="gl-emphesis gl-no-color">' . nice_exponential_notation(scientific_notation($ochange, 2, SN_LOWER, SN_UPPER)) . '%</div> Performance reduction from reference'; // from Reference
+	// 		} elseif ($ochange === null) {
+	// 			$classChange = '';
+	// 			if ($concept['concept']['conceptID'] == $referenceconcept['conceptID']) $ochange = 'Reference';
+	// 			else $ochange = '';
+	// 		} elseif ($ochange == 0) {
+	// 			//$classChange = 'even';
+	// 			$classChange = '';
+	// 			if ($concept['concept']['conceptID'] == $referenceconcept['conceptID']) $ochange = 'Reference';
+	// 			else $ochange = 'No change'; // from Reference
+	// 		} else {
+	// 			$classChange = 'negative';
+	// 			$ochange = '<div class="gl-emphesis gl-no-color">' . nice_exponential_notation(scientific_notation($ochange * -1, 2, SN_LOWER, SN_UPPER)) . '%</div>Performance improvement from reference'; // from Reference
+	// 		}
+	// 	} else {
+	// 		$ochange = '';
+	// 		$classChange = '';
+	// 	}
+
+	// 	if (!$concept['concept']['icon'])
+	// 		$concept['concept']['icon'] = DEFAULT_IMAGE;
+
+	// 	if ($supress) {
+	// 		$url = $concept['concept']['name'];
+	// 		$mpts = '';
+	// 	} else {
+	// 		$url = '<a href="/' . URL_CONCEPT_VIEW . '/' . $concept['concept']['conceptID'] . '">' . $concept['concept']['name'] . '</a>';
+	// 		$mpts = '<div class="gl-emphesis">' . nice_exponential_notation(scientific_notation($concept['concept']['okala_n'], 2, SN_LOWER, SN_UPPER)) . '</div>' . MPTS_HOURS_USE_LABEL;
+	// 	}
+
+	// 	$icon = '<img src="' . $concept['concept']['icon'] . '" />';
+	// 	$output .=   '<tr class="product-view-concept-title product-view-concept-' . $key . ' ' . $classChange . '">'
+	// 		. '<td colspan="2"><h3>' . $concept['title'] . ':</h3></td>'
+	// 		. '<td style="border-right: 1px solid #fff;border-left: 1px solid #fff;"></td><td></td></tr>'
+	// 		. '<tr class="product-view-concept-' . $key . ' ' . $classChange . '">'
+	// 		. '<td class="product-view-concept-icon"><div>' . $icon . '</div></td>' //div needed for ie 8
+	// 		. '<td class="product-view-concept-name">' . $url . '</td>'
+	// 		. '<td class="product-view-concept-mpts">' . $mpts . '</td>'
+	// 		. '<td class="product-view-concept-change"><div class="gl-' . $classChange . '">' . $ochange . '</div></td>'
+	// 		. '</tr>';
+	// }
+
+	// $output .= '</table><div class="clear"></div></div>'; // clear,end product view
+	return $output;
+}
+
+function sustainable_minds_assessment_goal($productid, $product, $page)
+{
+	// $db = new sbom_db();
+	// $product = $db->get_product(arg(2));
+
+	if ($product['development']) {
+		$development = nl2br($product['development']);
+	} else {
+		$development = TEXT_DEFAULT_PROJECT_GOALS_COMPANY;
+	}
+
+	if ($product['assessment']) {
+		$assessment = nl2br($product['assessment']);
+	} else {
+		$assessment = TEXT_DEFAULT_PROJECT_GOALS_PROJECT;
+	}
+	$output = sustainable_minds_product_edit_tab($page, $productid);
+	$output .=
+		'<div class="product-view">'
+		. '<div class="goals gl-info-box">'
+		. '<div class="goals-title">' . '<h3>Company goals and environmental policies</h3>' . '</div>'
+		. '<div class="gl-data goals-data">' . $development . '</div>'
+		. '</div>'
+		. '<div class="goals gl-info-box">'
+		. '<div class="goals-title">' . '<h3>Project assessment goals</h3>' . '</div>'
+		. '<div class="gl-data goals-data">' . $assessment . '</div>'
+		. '</div>'
+		. '</div>';
+	return $output;
+}
+function sustainable_minds_assessment_scope($productid, $product, $page)
+{
+	// $db = new sbom_db();
+	// $product = $db->get_product(arg(2));
+	//print_r($product);
+	if (empty($product['icon']))
+		$product['icon'] = DEFAULT_SCOPE_IMAGE;
+	$icon = '<img src="' . $product['icon'] . '"/>';
+
+	if (!empty($product['system'])) {
+		$system = $product['system'];
+	} else {
+		$system = 'The product system and boundaries have not been described. To add information, edit the assessment scope.';
+	}
+
+	if (!empty($product['inclusion'])) {
+		$inclusion = $product['inclusion'];
+	} else {
+		$inclusion = 'All materials and transportation values for each lifecycle stage will be included in assessments.';
+	}
+
+	if (!empty($product['exclusion'])) {
+		$exclusion = $product['exclusion'];
+	} else {
+		$exclusion = 'There are no exclusions defined for this product system. To add information, edit the assessment scope.';
+	}
+	$output = sustainable_minds_product_edit_tab($page, $productid);
+	$output .= '<div class="product-view">';
+	//$output = '<div id="assessment-scope">' ; // why is this a unique id? is it related to the form?
+	$output .= '
+		<div class="gl-info-box func">
+			<div class="func-title"><h3>Functional unit</h3></div>
+			<div class="gl-data func-data">Impacts per ' . $product['funame'] . '</div>
+			<div class="fudesc">' . $product['fudesc'] . '</div>
+		</div>
+		<div class="gl-info-box system">
+			<div class="inc-title"><h3>Product system</h3></div>
+            <div class="gl-info-box system-boundaries">
+            <h4>Describe the product system and system boundaries.</h4>
+			<div class="gl-data sys-data">'	. nl2br($system) . '</div>
+            </div>
+            <div class="gl-info-box system-image">
+			<h4>Product system image</h4>
+			<div class="ref-data">' . $icon . '</div>
+            </div>
+            <div class="gl-info-box system-exclusions">
+			<h4>Product system exclusions</h4>
+			<div class="gl-data ex-data">' . nl2br($exclusion) . '</div>
+            </div>
+		</div>
+	</div>'; //why does this have divs around the h3s? why notjust style the h3s?
+	return $output;
+}
+function setup_project_block_view_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+	if ($block->getBaseId() === 'mycustomfooterblock') {
+        $build['#pre_render'][] = '_MYMODULE_block_customfooter_prerender';
+    }
+}
+
+// function setup_project_preprocess_block(&$variables)
+// {
+// 	$body = '';
+// 	if (isset($variables['content']['#block_content']))
+// 	{
+// 	$content = $variables['content']['#block_content'];
+// 	if( method_exists($content,'id') && $content->id() == 'productviewtabs')
+// 	/*
+// 	* Block Id represents id of coressponding block which contains the placeholder.
+// 	*/
+// 	{
+// 	$body = $variables['content']['body'][0]['#text'];
+// 	}}
+// 	return $body;
+// }
+

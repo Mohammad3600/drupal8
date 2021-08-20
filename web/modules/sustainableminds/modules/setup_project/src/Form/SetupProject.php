@@ -7,8 +7,9 @@ namespace Drupal\setup_project\Form;
 use Drupal\Core\Form\FormBase; 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormState;
-include(dirname(__FILE__).'\..\..\init.inc');
-include(dirname(__FILE__).'\..\..\products.inc');
+use Drupal\file\Entity\File;
+include_once(dirname(__FILE__).'\..\..\init.inc');
+include_once(dirname(__FILE__).'\..\..\products.inc');
 
 class SetupProject extends FormBase {  
     /**  
@@ -29,149 +30,123 @@ class SetupProject extends FormBase {
   public $page;
 
   /**  
-   * {@inheritdoc}  
+   * Creates Setup project Form  
    */  
-  public function buildForm(array $form, FormStateInterface $form_state, $pid=null, $page=null) { 
-	return sustainable_minds_product_edit($pid, $form_state, $page);
-}
-
-public function nextToGoal(array &$form, FormStateInterface $form_state){
-	$this->page = 'goals';
-	$form_state -> setRebuild(TRUE);
-}
-public function validateForm(array &$form, FormStateInterface $form_state)
-  {
-    if ($form_state->getValue('op') == 'Cancel') {
-      $goto = URL_PROJECT_LIST_USER;
-      // if (arg(1) == 'edit' ) {
-      //   switch (arg(3)) {
-      //     case PROJECT_PAGE_NAME_DEFINITION:
-      //       $goto = URL_PROJECT_VIEW  ; 
-      //       break;
-      //     case PROJECT_PAGE_NAME_GOALS:
-      //       $goto = URL_PROJECT_GOAL ; 
-      //       break ;
-      //     case PROJECT_PAGE_NAME_SCOPE:
-      //       $goto = URL_PROJECT_SCOPE ; 
-      //       break;
-      //   }
-      //   // $goto .='/' . sustainable_minds_arg_set(2);
-      // } 
-      /*elseif ($form_values['funame']) {
-      
-      }*/
-  
-      
-      // drupal_goto($goto);
-      $form_state->setRedirect('setup_project.my_project');
-      drupal_set_message();
-      // die();
-    }
-  
-    switch ($form_state->getValue('page')) {
-      case PROJECT_PAGE_NAME_DEFINITION:
-        if ($form_state->getValue('pcategoryID') == 0) {
-          // setError('pcategoryID', t('You must select a category'));
-          drupal_set_message(t('You must select a category'), 'error');
-        }
-        if (!$form_state->getValue('name')) {
-          // setError('name', t(TEXT_ERROR_PROJECT_NAME));
-          drupal_set_message(t(TEXT_ERROR_PROJECT_NAME), 'error');
-        }
-      break;
-      case PROJECT_PAGE_NAME_SCOPE:
-        if (!$form_state->getValue('funame')) {
-          // setError('funame', t(TEXT_ERROR_PROJECT_FUNAME));
-          drupal_set_message(t(TEXT_ERROR_PROJECT_FUNAME), 'error');
-
-        }
-      break;
-    }
-  }
-public function submitForm(array &$form, FormStateInterface $form_state) {  
-    
-	$page = $form_state->getValue('page');
-	/*
-	if ($page==PROJECT_PAGE_NAME_SCOPE) {
-		$current_files = sustainable_minds_edit_multi_image_final($form_values, '/');
-		$form_values['icon'] = $current_files['first'];
-		if (!$form_values['icon']) 
-			$form_values['icon'] = '';
+	public function buildForm(array $form, FormStateInterface $form_state, $mode=null, $pid=null, $page=null) { 
+		$form_state->disableCache();
+		return sustainable_minds_product_edit($pid, $form_state, $page, $mode);
 	}
-	*/
-	$productID = $form_state->getValue('pid');
-	//update product
-	$db = \Drupal::service('setup_project.sbom_db');
-	// $product = $db->get_product($productID);
-	// foreach ($product as $key=>$value) {
-	// 	if ($form_state->getValue($key)!==null)
-	// 		$product[$key] = $form_state->getValue($key);
-	// } 
-  $base_path = '/drupal8/web/';
 
-	// $db->update_product($productID, $product);
-	if ($form_state->getValue('name')) {
-	if ($page == 'edit' ) {
-		switch ($page) {
-			case PROJECT_PAGE_NAME_GOALS:
-				$goto = URL_PROJECT_GOAL;
-				break ;
-			case PROJECT_PAGE_NAME_SCOPE:
-				$goto = URL_PROJECT_SCOPE;
-				break;
-			default:
-				$goto = URL_PROJECT_VIEW;
-				break;
+	public function validateForm(array &$form, FormStateInterface $form_state)
+	{
+		//save uploaded file
+		$file = file_save_upload('img_upload', array(), FALSE, 0, 'rename');
+		$file_data = $form_state->getValue(['img_upload']);
+		// $file = \Drupal\file\Entity\File::load( $file_data[0] );
+		// $file_name = $file->getFilename();
+		// $file->setPermanent();
+		// $file->save();
+		// $uploaddir = '/drupal8/web/sites/default/files/2021-07/';
+		// $uploadfile = $uploaddir . basename($_FILES['img_upload']['name']);
+		// $t = move_uploaded_file($_FILES['file_upload']['tmp_name'], $uploadfile);
+		// $form_state->set('icon',$uploadfile);
+		// $y = $form_state->getValue('icon');
+		$mode = $form_state->getValue('mode');
+		$page = $form_state->getValue('page');
+		$productID = $form_state->getValue('pid');
+		switch ($form_state->getValue('page')) {
+		case PROJECT_PAGE_NAME_DEFINITION:
+			if (!$form_state->getValue('name')) {
+			$form_state->setErrorByName('name',t(TEXT_ERROR_PROJECT_NAME));
+			}
+		break;
+		case PROJECT_PAGE_NAME_SCOPE:
+			if (!$form_state->getValue('funame')) {
+			$form_state->setErrorByName('funame', t(TEXT_ERROR_PROJECT_FUNAME));
+			}
+		break;
 		}
-		$goto.='/'.$productID;
-	} else {
-		if ($form_values['to_page'] && $form_values['to_page'] !=$page) {
-			$to_page = $form_values['to_page'];
-		} else {
-			switch ($form_state->getValue('op')) {
-				case BUTTON_LABEL_NEXT:
-					switch ($page) {
-						case PROJECT_PAGE_NAME_DEFINITION:
-							$to_page = PROJECT_PAGE_NAME_GOALS;
-						break;
-						case PROJECT_PAGE_NAME_GOALS:
-							$to_page = PROJECT_PAGE_NAME_SCOPE;
-						break;
-						case PROJECT_PAGE_NAME_SCOPE:
-							$to_page = PROJECT_PAGE_NAME_CONCEPTS;
-						break;
-					}
-				break;
-				case BUTTON_LABEL_BACK:
-					switch ($page) {
-						case PROJECT_PAGE_NAME_GOALS:
-							$to_page = PROJECT_PAGE_NAME_DEFINITION ;
-						break;
-						case PROJECT_PAGE_NAME_SCOPE :
-							$to_page = PROJECT_PAGE_NAME_GOALS;
-						break;
-						case PROJECT_PAGE_NAME_CONCEPTS:
-							$to_page = PROJECT_PAGE_NAME_SCOPE ;
-						break;
-					}
-				break;
-				case 'Add first concept':
-					$goto = $base_path+URL_CONCEPT_ADD.'/'.$productID;
-				break;
-				default:
-					$goto = $base_path+URL_PROJECT_VIEW.'/'.$productID;
-				break;
+	}
+	public function submitForm(array &$form, FormStateInterface $form_state) {  
+		$mode = $form_state->getValue('mode');
+		$page = $form_state->getValue('page');
+		$productID = $form_state->getValue('pid');
+		//update product
+		if($form_state->getValue('op') == BUTTON_LABEL_CANCEL)
+		{
+			if($mode == 'edit'){
+				$page = $page=='definition'? $page : 'view';
+				$page = $page=='goals'? $page : 'goal';
+				$form_state->setRedirect('setup_project.viewProject',['page'=>$page, 'pid'=>$productID]);
+			}else{
+				$form_state->setRedirect('setup_project.projectMarkup');
 			}
 		}
-		
-		if ($to_page) {
-			$goto = $base_path.URL_PROJECT_ADD . '/'.$productID . '/'. $to_page;
+		else{
+		$db = \Drupal::service('setup_project.sbom_db');
+		$product = $db->get_product($productID);
+		foreach ($product as $key=>$value) {
+			if ($form_state->getValue($key)!==null)
+				$product[$key] = $form_state->getValue($key);
+		} 
+		$base_path = '/drupal8/web/';
+		$pname = $product['name'];
+		if ($pname && $product['funame'] && $form_state->getValue('op') != 'Cancel') {
+		$db->update_product($productID, $product);
+		if ($mode == 'edit' ) {
+			$page = $page=='definition'? $page : 'view';
+			$page = $page=='goals'? $page : 'goal';
+			$form_state->setRedirect('setup_project.viewProject',['page'=>$page, 'pid'=>$productID]);
 		} else {
-			// set project to final
-			// $db->complete_product($productID); 
+			if ($form_state->getValue('to_page') && $form_state->getValue('to_page') !=$page) {
+				$to_page = $form_state->getValue('to_page');
+			} else {
+				switch ($form_state->getValue('op')) {
+					case BUTTON_LABEL_NEXT:
+						switch ($page) {
+							case PROJECT_PAGE_NAME_DEFINITION:
+								$to_page = PROJECT_PAGE_NAME_GOALS;
+							break;
+							case PROJECT_PAGE_NAME_GOALS:
+								$to_page = PROJECT_PAGE_NAME_SCOPE;
+							break;
+							case PROJECT_PAGE_NAME_SCOPE:
+								$to_page = PROJECT_PAGE_NAME_CONCEPTS;
+							break;
+						}
+					break;
+					case BUTTON_LABEL_BACK:
+						switch ($page) {
+							case PROJECT_PAGE_NAME_GOALS:
+								$to_page = PROJECT_PAGE_NAME_DEFINITION ;
+							break;
+							case PROJECT_PAGE_NAME_SCOPE :
+								$to_page = PROJECT_PAGE_NAME_GOALS;
+							break;
+							case PROJECT_PAGE_NAME_CONCEPTS:
+								$to_page = PROJECT_PAGE_NAME_SCOPE ;
+							break;
+						}
+					break;
+					case 'Add first concept':
+						$goto = $base_path . URL_CONCEPT_ADD.'/'.$productID;
+					break;
+					default:
+						$goto = $base_path . URL_PROJECT_VIEW.'/'.$productID;
+					break;
+				}
+			}
+			
+			if ($to_page) {
+				$goto = $base_path.URL_PROJECT_ADD . '/'.$productID . '/'. $to_page;
+				$form_state->setRedirect('setup_project.project',['mode'=>$mode,'pid'=>$productID,'page'=>$to_page]);
+			} else {
+				// set project to final
+				$db->complete_product($productID); 
+				$form_state->setRedirect('setup_project.projectMarkup');
+			}
 		}
+	}}
+		// drupal_goto($goto);
 	}
-  $form_state->setRedirect('setup_project.project',['pid'=>$productID,'page'=>$to_page]);
-	// drupal_goto($goto);
-  }}  
 }  

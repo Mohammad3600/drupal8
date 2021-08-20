@@ -23,7 +23,7 @@
 {% for type, messages in message_list %}
   <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes|without('role', 'aria-label') }}>
     {% if type == 'error' %}
-      <div role="alert">
+      <div role="alert" class="messages alert alert-danger border-danger mt-3" style="border-width: 1px !important;">
     {% endif %}
       {% if status_headings[type] %}
         <h2 class="visually-hidden">{{ status_headings[type] }}</h2>

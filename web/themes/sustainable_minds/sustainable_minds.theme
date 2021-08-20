@@ -14,7 +14,7 @@ use BrightEdge\BEIXFClient;
 
 //NOTE(Elijah): Adds theme suggestion for selection form
 function sustainable_minds_theme_suggestions_select_alter(array &$suggestions, array $variables) {
-  if ($variables["element"]["#context"]["#view_id"] !== null) {
+  if (isset($variables["element"]["#context"]) && $variables["element"]["#context"]["#view_id"] !== null) {
     $suggestions[] = 'select--'.$variables["element"]["#context"]["#view_id"];
     $suggestions[] = 'select--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"];
   }
@@ -30,10 +30,10 @@ function sustainable_minds_theme_suggestions_select_alter(array &$suggestions, a
 }*/
 
 function sustainable_minds_preprocess_select(&$variables, $hook, &$info) {
-  if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'select--'.$variables["element"]["#context"]["#view_id"].'.html.twig'))) {
+  if (isset($variables["element"]["#context"]) && file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'select--'.$variables["element"]["#context"]["#view_id"].'.html.twig'))) {
     $info['template'] = str_replace('_','-','select--'.$variables["element"]["#context"]["#view_id"]);
     $info['path'] = 'themes/custom/sustainable_minds/templates/forms';
-  }else if (file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'select--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"].'.html.twig'))) {
+  }else if (isset($variables["element"]["#context"]) && file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/forms/'.'select--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"].'.html.twig'))) {
     $info['template'] = str_replace('_','-','select--'.$variables["element"]["#context"]["#view_id"].'-'.$variables["element"]["#name"]);
     $info['path'] = 'themes/custom/sustainable_minds/templates/forms';
   }
@@ -589,5 +589,8 @@ function sustainable_minds_theme_suggestions_alter(array &$suggestions, array $v
 
   if ($hook == 'form' & !empty($variables['element']['#id'])) {
     $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
+  }
+  if($hook == 'form_element'){
+    $suggestions[] = 'form-project-elements';
   }
 }

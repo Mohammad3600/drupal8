@@ -44,20 +44,6 @@
  * @see template_preprocess_form_element()
  */
 #}
-<style>
-.inner-button{
-  padding:5px 10px;
-  color:#fff;
-}
-.change-text{
-    color: #0A2A38;
-    font-size: 13px;
-    padding-bottom: 10px;
-    margin-bottom: 0;
-    font-weight: bold;
-    position: relative;
-}
-</style>
 {%
   set classes = [
     'js-form-item',
@@ -77,14 +63,11 @@
     description_display == 'invisible' ? 'visually-hidden',
   ]
 %}
-<div{{ attributes.addClass(classes) }}>
-{% if type != 'managed_file' and label['#title'] != 'Impacts per ' and name != 'product-functional-unit-edit-desc' %}
-  <hr class="mb-1">
-{% endif %} 
+<form{{ attributes.addClass(classes) }}>
   {% if label_display in ['before', 'invisible'] %}
     {# {{ label }} #}
-    <label class="form-label" style={{label['#title'] == 'Impacts per ' ? 'display:inline':'' }}>{{ label['#title'] }}:
-      {% if name in ['name','product-functional-unit-edit-value'] %}
+    <label class="form-label">{{ label['#title'] }}:
+      {% if name in ['name'] %}
             <span class="form-required" title="This field is required.">*</span>
       {% endif %} 
     </label>
@@ -115,4 +98,4 @@
     </div>
   {% endif %}
   
-</div>
+</form>
