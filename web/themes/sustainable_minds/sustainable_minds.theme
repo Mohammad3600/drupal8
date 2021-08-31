@@ -95,14 +95,17 @@ function sustainable_minds_preprocess_fieldset(&$variables, $hook, &$info) {
 //NOTE(Elijah): Adds theme suggestion for form_element
 function sustainable_minds_theme_suggestions_form_element_alter(array &$suggestions, array $variables) {
 
+  if(array_key_exists("#twig_suggestion", $variables["element"]) && $variables["element"]["#twig_suggestion"] !== null){
+    $suggestions[] = 'form_element__'.str_replace('-', '_',$variables["element"]["#twig_suggestion"]);
+  }
   if (array_key_exists("#parents", $variables["element"]) && $variables["element"]["#parents"][0] !== null) {
-    $suggestions[] = 'form-element--'.$variables["element"]["#parents"][0];
+    $suggestions[] = 'form_element__'.str_replace('-', '_',$variables["element"]["#parents"][0]);
   }
 
   if ( array_key_exists("#id", $variables["element"]) && $variables["element"]["#id"] !== null) {
-    $suggestions[] = 'form-element--'.$variables["element"]["#id"];
+    $suggestions[] = 'form_element__'.str_replace('-', '_',$variables["element"]["#id"]);
   }
-
+  
 }
 
 function sustainable_minds_preprocess_form_element(&$variables, $hook, &$info) {
@@ -182,16 +185,14 @@ function sustainable_minds_preprocess_views_view_fields(&$variables, $hook, &$in
 
 //NOTE(Elijah): Adds theme suggestion for form_element_label
 function sustainable_minds_theme_suggestions_form_element_label_alter(array &$suggestions, array $variables) {
-
-  if(
-    strpos($_ENV["REDIRECT_URL"], "events") !== false ||
+  if(array_key_exists("REDIRECT_URL",$_ENV) && strpos($_ENV["REDIRECT_URL"], "events") !== false ||
     //  strpos($_POST["view_path"], "events") !== false ||
      (array_key_exists("view_path", $_POST) && strpos($_POST["view_path"], "events") !== false) || 
-     strpos($_ENV["REQUEST_URI"], "events") !== false ||
-    strpos($_ENV["REDIRECT_URL"], "news") !== false ||
-    strpos($_ENV["REQUEST_URI"], "news") !== false ||
-    strpos($_ENV["REDIRECT_URL"], "resource-center") !== false ||
-    strpos($_ENV["REQUEST_URI"], "resource-center") !== false){
+     strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REQUEST_URI"], "events") !== false ||
+    strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REDIRECT_URL"], "news") !== false ||
+    strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REQUEST_URI"], "news") !== false ||
+    strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REDIRECT_URL"], "resource-center") !== false ||
+    strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REQUEST_URI"], "resource-center") !== false){
 
       $suggestions[] = 'form-element-label--checkboxes';
   }
@@ -245,13 +246,13 @@ function sustainable_minds_preprocess_form_element_label(&$variables, $hook, &$i
     $info['template'] = 'form-element-label--category';
     $info['path'] = 'themes/custom/sustainable_minds/templates/form';
   }else if((
-           strpos($_ENV["REDIRECT_URL"], "events") !== false ||
-           strpos($_ENV["REQUEST_URI"], "events") !== false ||
+           strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REDIRECT_URL"], "events") !== false ||
+           strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REQUEST_URI"], "events") !== false ||
            (array_key_exists("view_path", $_POST) && strpos($_POST["view_path"], "events") !== false) ||
-           strpos($_ENV["REDIRECT_URL"], "news") !== false ||
-           strpos($_ENV["REQUEST_URI"], "news") !== false ||
-           strpos($_ENV["REDIRECT_URL"], "resource-center") !== false ||
-           strpos($_ENV["REQUEST_URI"], "resource-center") !== false) &&
+           strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REDIRECT_URL"], "news") !== false ||
+           strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REQUEST_URI"], "news") !== false ||
+           strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REDIRECT_URL"], "resource-center") !== false ||
+           strpos(array_key_exists("REDIRECT_URL",$_ENV) && $_ENV["REQUEST_URI"], "resource-center") !== false) &&
            file_exists(str_replace('_','-','themes/custom/sustainable_minds/templates/form/'.'form-element-label--checkboxes'.'.html.twig'))){
     $info['template'] = 'form-element-label--checkboxes';
     $info['path'] = 'themes/custom/sustainable_minds/templates/form';
@@ -502,6 +503,7 @@ function sustainable_minds_preprocess_block(&$variables) {
   $be_ixf_client = getBrightedgeClient();
   $variables['bodyString'] = $be_ixf_client->getBodyString('body_1');
   $variables['close'] = $be_ixf_client->close();
+  $variables['bid'] = '123';
 }
 
 //BE Config: add the following method to the theme.theme file
@@ -585,12 +587,25 @@ function sustainable_minds_preprocess_node__workshop(&$variables, $hook){
   }
 }
 
-function sustainable_minds_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+// function sustainable_minds_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
 
-  if ($hook == 'form' & !empty($variables['element']['#id'])) {
-    $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
-  }
-  if($hook == 'form_element'){
-    $suggestions[] = 'form-project-elements';
-  }
-}
+//   if ($hook == 'form' & !empty($variables['element']['#id'])) {
+//     $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
+//   }
+//   if($hook == 'form_element'){
+//     $suggestions[] = 'form-project-elements';
+//   }
+// }
+
+/**
+ * @param array $suggestions
+ * @param array $variables
+ * @param $hook
+ */
+// function sustainable_minds_theme_suggestions_form_element_alter(array &$suggestions, array $variables, $hook)
+// {
+//   if (isset($variables['element']['#id'])) {
+//     $id = str_replace("-", "_", $variables['element']['#id']);
+//     $suggestions[] = $hook . '__' . $id;
+//   }
+// }

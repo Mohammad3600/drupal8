@@ -20,9 +20,10 @@
 // drupal_add_js($path);
 
 // Default image if none is provided
-define('IMAGE_NO_IMAGE_DEFAULT', '/files/default.png');
+define('SITE_PATH','/drupal8/web');
+define('IMAGE_NO_IMAGE_DEFAULT', SITE_PATH.'/sites/default/files/2021-07/no_scope.gif');
 define('DEFAULT_IMAGE', '/files/default.png');
-define('DEFAULT_SCOPE_IMAGE', '/files/no_scope.gif');
+define('DEFAULT_SCOPE_IMAGE', SITE_PATH.'/sites/default/files/2021-07/no_scope.gif');
 
 //Phases PHP and JS
 define('PHASEID_MANUFACTURE', 1);
@@ -237,7 +238,7 @@ define('URL_NODE_VIEW','nodeview');
 define('IMPACT_TO_IGNORE', 10);
 
 define('SESSION_CONCEPT_ADD','concept_create');
-define('SITE_PATH','/drupal8/web');
+
 
 
 

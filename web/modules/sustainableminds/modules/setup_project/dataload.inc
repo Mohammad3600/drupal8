@@ -516,7 +516,7 @@ function sustainable_minds_dataload_results_form_submit($form_id, $edit) {
 function sustainable_minds_list_versions() {
 	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
   $is_admin = false;
-  if (in_array("superadmin", $user->getRoles()) || in_array("lca data manager", $user->getRoles())) {
+  if ($user->hasRole("superadmin") || $user->hasRole("lca data manager")) {
     $is_admin = true;
   }
    

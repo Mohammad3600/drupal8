@@ -56,6 +56,21 @@ class ProjectController{
         exit();
     }
 
+    function sustainable_minds_copy_update_project($str='') {
+        $db = \Drupal::service('setup_project.sbom_db');
+        $new_pid = $db->copy_project($_GET['pid']);
+        $failed_items = $db->update_project_dataset($new_pid, $_GET['version']);
+        
+        foreach ($failed_items as $f) {
+          $message .= $f['name'].'<br />';
+        }
+        
+        if ($message) {
+            //$message = 'The following materials and processes were not updated because they did not have corresponding materials and processes in the new LCA dataset version: <br />'.$message;
+            $message = 'The project was successfully copied and successfully updated to use the most recent methodology.<br /><br /> Due to differences between current and previous methodologies, the following materials and/or processes were not updated, but still remain in the concept SBOMs. Take note of these items, and manually assign new materials and processes in your concepts. <br />'.$message;
+        }
+    }
+
     /**
     * returns html for listing projects 
     */
@@ -97,12 +112,39 @@ class ProjectController{
                 break;
             case 'concepts':
                 // $editStep = 4 ;
-                $output .=  sustainable_minds_product_concepts();
+                $output .=  sustainable_minds_concept_list($pid, $product, $page);
                 break;
         }
+        return [
+            '#children' =>  $wizard . $output ,
+        ];
+    }
+
+    public function viewConcept($conceptid = null){
+        $db = \Drupal::service('setup_project.sbom_db');
+        $concept = $db->get_concept($conceptid);
+        $output = sustainable_minds_concept_view($concept, $conceptid);
+        $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
         return [
             '#children' => $wizard . $output ,
         ];
     }
-
+    public function viewBOM($conceptid = null){
+        // $db = \Drupal::service('setup_project.sbom_db');
+        // $concept = $db->get_concept($conceptid);
+        // $output = sustainable_minds_concept_view($concept, $conceptid);
+        // $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
+        return [
+            '#children' => '' ,
+        ];
+    }
+    public function viewResults($conceptid = null){
+        // $db = \Drupal::service('setup_project.sbom_db');
+        // $concept = $db->get_concept($conceptid);
+        // $output = sustainable_minds_concept_view($concept, $conceptid);
+        // $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
+        return [
+            '#children' => '' ,
+        ];
+    }
 }

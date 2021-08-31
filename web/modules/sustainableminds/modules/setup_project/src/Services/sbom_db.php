@@ -184,7 +184,7 @@ class sbom_db{
 	
 	function update_project_dataset($pid, $dest_version) {
 		if ($this->init_and_check_if_error('update_project_dataset')) return '';
-		$result = db_query("CALL SM_Update_Project_Dataset(%d, '%s', %d);", array($pid, $dest_version, $this->userid));
+		$result = db_query("CALL SM_Update_Project_Dataset(?, ?, ?);", array($pid, $dest_version, $this->userid));
 		$object = array();
 		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
 			$object[]=$currentobject;
@@ -255,24 +255,24 @@ class sbom_db{
 	////////////////////////////////Concepts\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	function get_concept($id){
 		if ($this->init_and_check_if_error('get_concept')) return '';
-		$result = db_query('CALL SM_SBOM_Get_Concept(%d, %d);', array($id, $this->userid));
-		$object = $this->check_for_errors(db_fetch_array($result));
+		$result = db_query('CALL SM_SBOM_Get_Concept(?, ?);', array($id, $this->userid));
+		$object = $this->check_for_errors(($result)->fetchAssoc());
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return $object;
 		//DO PERMISSION CHECKS
-		if($this->userid == $object['userID']){
-			return $object;
-		}else{
-			$this->access_denied();
-		}
+		// if($this->userid == $object['userID']){
+		// 	return $object;
+		// }else{
+		// 	$this->access_denied();
+		// }
 	}
 
 	function list_concepts($productid){
 		if ($this->init_and_check_if_error('list_concepts')) return ''; 
-		$result = db_query('CALL SM_SBOM_List_Concepts(%d, %d);', array($productid, $this->userid));
+		$result = db_query('CALL SM_SBOM_List_Concepts(?, ?);', array($productid, $this->userid));
 		$object = array();
-		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
+		while($currentobject = $this->check_for_errors(($result)->fetchAssoc())){
 			//if($this->userid == $currentobject['userID']){
 				//DO PERMISSION CHECKS
 				$object[]=$currentobject;
@@ -288,7 +288,7 @@ class sbom_db{
 	function add_concept($values){
 		if ($this->init_and_check_if_error('add_concept')) return ''; 
 		//Create product userid, title, description,client, categoryid, icon, assessment, development
-		$lastid = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Add_Concept(%d, '%s', '%s', '%s', %f, '%s', %d);", array($values['productID'], $values['title'], $values['description'], $values['icon'], $values['lifetimefuncunits'], $values['funcunitnote'], $this->userid))));
+		$lastid = $this->check_for_errors((db_query("CALL SM_SBOM_Add_Concept(?, ?, ?, ?, ?, ?, ?);", array($values['productID'], $values['title'], $values['description'], $values['icon'], $values['lifetimefuncunits'], $values['funcunitnote'], $this->userid)))->fetchField());
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		
@@ -298,7 +298,7 @@ class sbom_db{
 	function update_concept($conceptid, $values){
 		if ($this->init_and_check_if_error('update_concept')) return ''; 
 		//Update concept: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Concept(%d, '%s', '%s', '%s', %f, '%s', %d);", array($conceptid, $values['title'], $values['description'], $values['icon'], $values['lifetimefuncunits'], $values['funcunitnote'], $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Concept(?, ?, ?, ?,?, ?, ?);", array($conceptid, $values['title'], $values['description'], $values['icon'], $values['lifetimefuncunits'], $values['funcunitnote'], $this->userid)));
 		Database::setActiveConnection();
 		//drupal_set_message(t('Your concept has been updated!'));
 		
@@ -307,25 +307,25 @@ class sbom_db{
 	
 	function get_reference_concept($pid){
 		if ($this->init_and_check_if_error('get_reference_concept')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Ref_Concept(%d, %d);', array($pid, $this->userid));
-		$object = $this->check_for_errors(db_fetch_array($result));
+		$result = db_query('CALL SM_SBOM_Get_Ref_Concept(?, ?);', array($pid, $this->userid));
+		$object = $this->check_for_errors(($result)->fetchAssoc());
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		
 		//DO PERMISSION CHECKS
 		
 		return $object;
-		if($this->userid == $object['userID']){
-			return $object;
-		}else{
-			$this->access_denied();
-		}
+		// if($this->userid == $object['userID']){
+		// 	return $object;
+		// }else{
+		// 	$this->access_denied();
+		// }
 	}
 	
 	function get_final_concept($pid){
 	 	if ($this->init_and_check_if_error('get_final_concept')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Final_Concept(%d, %d);', array($pid, $this->userid));
-		$object = $this->check_for_errors(db_fetch_array($result));
+		$result = db_query('CALL SM_SBOM_Get_Final_Concept(?, ?);', array($pid, $this->userid));
+		$object = $this->check_for_errors(($result)->fetchAssoc());
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		
@@ -341,8 +341,8 @@ class sbom_db{
 	
 	function get_best_concept($pid){
 		if ($this->init_and_check_if_error('get_best_concept')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Best_Concept(%d, %d);', array($pid, $this->userid));
-		$object = $this->check_for_errors(db_fetch_array($result));
+		$result = db_query('CALL SM_SBOM_Get_Best_Concept(?, ?);', array($pid, $this->userid));
+		$object = $this->check_for_errors(($result)->fetchAssoc());
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		
@@ -799,12 +799,12 @@ class sbom_db{
 		$version = $this->get_version_for_concept($conceptid);
 		if ($this->init_and_check_if_error('okala_concept_by_impact')) return '';
 		if ($version == "SM 2013") {
-			$result = db_query("CALL SM_SBOM_Concept_Okala_Exp(%d, %d);", array($conceptid, $this->userid));
+			$result = db_query("CALL SM_SBOM_Concept_Okala_Exp(?, ?);", array($conceptid, $this->userid));
 		} else {
-			$result = db_query("CALL SM_SBOM_Concept_Okala_Exp_pre2013(%d, %d);", array($conceptid, $this->userid));
+			$result = db_query("CALL SM_SBOM_Concept_Okala_Exp_pre2013(?, ?);", array($conceptid, $this->userid));
 		}
 		$object = array();
-		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
+		while($currentobject = $this->check_for_errors(($result)->fetchAssoc())){
 			$object[]=$currentobject;
 		}
 		sustainable_minds_clear_db($result);
@@ -828,9 +828,9 @@ class sbom_db{
 	
 	function okala_concept_by_phase($conceptid){
 		if ($this->init_and_check_if_error('okala_concept_by_phase')) return '';
-		$result = db_query('CALL SM_SBOM_Concept_Okala_By_Phase(%d, %d);', array($conceptid, $this->userid));
+		$result = db_query('CALL SM_SBOM_Concept_Okala_By_Phase(?, ?);', array($conceptid, $this->userid));
 		$object = array();
-		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
+		while($currentobject = $this->check_for_errors(($result)->fetchAssoc())){
 			$object[]=$currentobject;
 		}
 		sustainable_minds_clear_db($result);
@@ -854,9 +854,9 @@ class sbom_db{
 	
 	function okala_concept_top_okala_impacts($conceptid){
 		if ($this->init_and_check_if_error('okala_concept_top_okala_impacts')) return '';
-		$result = db_query('CALL SM_SBOM_Get_Top_Okala_MatProcs_For_Concept(%d, %d);', array($conceptid, $this->userid));
+		$result = db_query('CALL SM_SBOM_Get_Top_Okala_MatProcs_For_Concept(?, ?);', array($conceptid, $this->userid));
 		$object = array();
-		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
+		while($currentobject = $this->check_for_errors(($result)->fetchAssoc())){
 			$object[]=$currentobject;
 		}
 		sustainable_minds_clear_db($result);
@@ -1440,9 +1440,11 @@ class sbom_db{
 	function get_latest_version($status) {
 		if ($this->init_and_check_if_error('')) return ''; 
         $conn =  Database::getConnection();
-		$result = $statement = $conn->prepare("CALL SM_LCA_Get_Latest_Dataset_Version('%s')", array($status));
+		$result = db_query("CALL SM_LCA_Get_Latest_Dataset_Version(?)", array($status));
+		// $stmt = $conn->query("CALL SM_LCA_Get_Latest_Dataset_Version(?)",[$status],[]);
+		// $ed = $stmt->fetchField();
 		// $exec_result = $statement->execute();
-		$id = $result->fetchField();;
+		$id = $result->fetchField();
 		sustainable_minds_clear_db($result);
 		// Database::setActiveConnection();
 		Database::setActiveConnection();
@@ -1451,8 +1453,8 @@ class sbom_db{
 
 	function get_datasetInfo($version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_DatasetInfo('%s')", array($version));
-		$row = db_fetch_array($result);
+		$result = db_query("CALL SM_LCA_Get_DatasetInfo(?)", array($version));
+		$row = $result->fetchAssoc();  
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return $row;
@@ -1551,8 +1553,8 @@ class sbom_db{
 
 	function get_version_for_concept($cid) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_SBOM_Get_Version_For_Concept(%d)", array($cid));
-		$version = db_result($result);
+		$result = db_query("CALL SM_SBOM_Get_Version_For_Concept(?)", array($cid));
+		$version = ($result)->fetchField();
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return $version;

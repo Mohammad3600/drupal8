@@ -399,33 +399,7 @@ function project_edit_add_to_page(page) {
         jQuery('#Browse-img').click(()=>{
             jQuery('#edit-img-upload-upload').click();
         });
-        function uploadFile(){
-            console.log('ha');
-            var input = document.getElementById("edit-img-upload-upload");
-            file = input.files[0];
-            console.log(file)
-            if(file != undefined){
-              formData= new FormData();
-              if(!!file.type.match(/image.*/)){
-                formData.append("img_upload", file);
-                console.log(formData);
-                $.ajax({
-                  url: `${siteBasePath}/ajax/actions/upload_file`,
-                  type: "POST",
-                  data: formData,
-                  processData: false,
-                  contentType: false,
-                  success: function(data){
-                      alert('success');
-                  }
-                });
-              }else{
-                alert('Not a valid image!');
-              }
-            }else{
-              alert('Input something!');
-            }
-          }
+        
         jQuery('#edit-img-upload-upload').change(()=>{
             // uploadFile();
             var src = document.querySelector("#edit-img-upload-upload");
@@ -433,9 +407,8 @@ function project_edit_add_to_page(page) {
             showImage(src, target);
         });
         jQuery('#Default-img').click(()=>{
-            console.log('hee');
             document.querySelector("#ShowImage").src = jQuery("#defaultPath").val();
-            // jQuery("#Icon").val(jQuery("#defaultPath").val());
+            jQuery("#Icon").val(jQuery("#defaultPath").val());
         });
       
         function showImage(src, target) {
@@ -457,26 +430,19 @@ function project_edit_add_to_page(page) {
                     }
                     else{
                         target.src = fr.result;
-                        console.log(fr.result);
-                        // jQuery("#Icon").val(fr.result);
                         return true;
                     }
                 };
             }    
         }
-        if(jQuery('#Product-Page')?.val()){
+        if(location.href.indexOf('/project') > -1){
             jQuery('.nav-middle').addClass('active');
-            jQuery('#blue_grid').addClass('d-none');
+            if(location.href.indexOf('/project/edit') ==-1 && location.href.indexOf('/project/concept/add') ==-1 && location.href.indexOf('/project/concept/edit') ==-1){
+                jQuery('#blue_grid').addClass('d-none');
+            }else{
+                jQuery('#blue_grid').addClass('p-3');
+            }
         }
         jQuery('#'+jQuery('#Product-Page')?.val()+'-tab').addClass('active');
-        var pathArray = window.location.pathname.split('/');
-        if(pathArray[3] === 'project' && ['view','goal','scope','concepts'].includes(pathArray[4])){
-            document.querySelector('#overview-tab').href = `${siteBasePath}/project/view/${pathArray[5]}`;
-            document.querySelector('#assessment-goals-tab').href = `${siteBasePath}/project/goal/${pathArray[5]}`;
-            document.querySelector('#assessment-scope-tab').href = `${siteBasePath}/project/scope/${pathArray[5]}`;
-            document.querySelector('#concepts-tab').href = `${siteBasePath}/project/concepts/${pathArray[5]}`;
-            jQuery('#blue_grid').addClass('d-none');
-            jQuery('.nav-middle').addClass('active');
-        }
         // Execute code once the DOM is ready.
       });

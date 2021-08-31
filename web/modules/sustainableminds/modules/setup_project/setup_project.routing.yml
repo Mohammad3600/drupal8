@@ -2,23 +2,65 @@ setup_project.project:
   path: '/project/{mode}/{pid}/{page}'  
   defaults:  
     _form: '\Drupal\setup_project\Form\SetupProject'  
-    _title: 'Create Project'  
+    _title: 'Add/Edit Project'  
   requirements:  
-    _permission: 'access pages'    
+    _permission: 'access edit_add_project'    
 setup_project.projectMarkup:  
   path: '/project/list/user'  
   defaults:  
     _controller: '\Drupal\setup_project\Controller\ProjectController::projectMarkup'  
-    _title: 'Project'  
+    _title: 'View User Project'  
   requirements:  
-    _permission: 'access pages'         
+    _permission: 'access view_user_project'
+setup_project.viewProject:  
+  path: '/project/{page}/{pid}'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::productView'  
+    _title: 'View Project'
+  requirements:  
+    _permission: 'access view_project_info'         
+setup_project.createConcept:  
+  path: '/project/concept/{mode}/{pid}'  
+  defaults:  
+    _form: '\Drupal\setup_project\Form\CreateConcept'  
+    _title: 'Create Concept'
+  requirements:  
+    _permission: 'access concept_add'         
+# setup_project.EditConcept:  
+#   path: '/project/concept/edit/{pid}'  
+#   defaults:  
+#     _form: '\Drupal\setup_project\Form\CreateConcept'  
+#     _title: 'Edit Concept'
+#   requirements:  
+#     _permission: 'access concept_add'         
+setup_project.viewConcept:  
+  path: '/project/concept/view/{conceptid}'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::viewConcept'  
+    _title: 'View Concept'
+  requirements:  
+    _permission: 'access concept_add'         
+setup_project.viewBOM:  
+  path: '/project/concept/build/{conceptid}/{mid}'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::viewBOM'  
+    _title: 'System BOM'
+  requirements:  
+    _permission: 'access concept_add'         
+setup_project.viewResults:  
+  path: '/project/concept/build/{conceptid}/scorecard'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::viewResults'  
+    _title: 'View Results'
+  requirements:  
+    _permission: 'access concept_add'         
 setup_project.ajaxNewProject:  
   path: '/ajax/actions/newproject'  
   defaults:  
     _controller: '\Drupal\setup_project\Controller\ProjectController::newProject'  
     _title: 'New Project'  
   requirements:  
-    _permission: 'access pages'       
+    _permission: 'access edit_add_project'       
 setup_project.ajaxCopyProject:  
   path: '/ajax/actions/copy_project'  
   defaults:  
@@ -28,7 +70,7 @@ setup_project.ajaxCopyProject:
       query:
         token: ""
   requirements:  
-    _permission: 'access pages'       
+    _permission: 'access edit_add_project'       
 setup_project.ajaxCopyToProject:  
   path: '/ajax/actions/copy_to_project'  
   defaults:  
@@ -38,7 +80,17 @@ setup_project.ajaxCopyToProject:
       query:
         token: ""
   requirements:  
-    _permission: 'access pages'       
+    _permission: 'access copy_to_project'       
+setup_project.ajaxCopyUpdateProject:  
+  path: '/ajax/actions/copy_update_project'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_copy_update_project'  
+    _title: 'Copy Update Project'  
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access edit_add_project'       
 setup_project.ajaxDeleteProject:  
   path: '/ajax/actions/delete_project'  
   defaults:  
@@ -48,24 +100,9 @@ setup_project.ajaxDeleteProject:
       query:
         token: ""
   requirements:  
-    _permission: 'access pages'
-setup_project.ajaxUploadFile:  
-  path: '/ajax/actions/upload_file'  
-  defaults:  
-    _controller: '\Drupal\setup_project\Controller\ProjectController::uploadFile'  
-    _title: 'upload file'  
-  options:
-      query:
-        token: ""
-  requirements:  
-    _permission: 'access pages'
-setup_project.viewProject:  
-  path: '/project/{page}/{pid}'  
-  defaults:  
-    _controller: '\Drupal\setup_project\Controller\ProjectController::productView'  
-    _title: 'View Project'
-  requirements:  
-    _permission: 'access pages'
+    _permission: 'access delete_project'
+
+
 
        
      

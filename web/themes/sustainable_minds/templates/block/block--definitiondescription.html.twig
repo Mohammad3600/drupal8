@@ -26,16 +26,8 @@
  */
 #}
 <div{{ attributes }}>
-  {{ title_prefix }}
-  {% if label %}
-    <h2{{ title_attributes }}>{{ label }}</h2>
-  {% endif %}
-  {{ title_suffix }}
-  {% block content %}
-  {# <div class="lc_table_content">
-    <div class="view-content view-content-topics"> #}
-    {{ content }}
-    {# </div>
-  </div> #}
-  {% endblock %}
+    <div class="block-sustainable_minds-about lightblue_bg mb-3">
+        <h6>{{content.field_page_title}}</h6>
+        <p>{{content.field_content.0}}</p>
+    </div>
 </div>
