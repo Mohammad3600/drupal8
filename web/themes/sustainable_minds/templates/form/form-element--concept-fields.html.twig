@@ -82,8 +82,8 @@
   <hr class="mb-1">
   {% if label_display in ['before', 'invisible'] %}
     {# {{ label }} #}
-    <label class="form-label" style={{label['#title'] == 'Impacts per ' ? 'display:inline':'' }}>{{ label['#title'] }}:
-      {% if name in ['name','product-functional-unit-edit-value'] %}
+    <label class="form-label">{{ label['#title'] }}:
+      {% if name in ['title','lifetimefuncunits'] %}
             <span class="form-required" title="This field is required.">*</span>
       {% endif %} 
     </label>

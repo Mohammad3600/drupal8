@@ -1,0 +1,6 @@
+indblog.admin_settings_form:
+  title: 'Sustainable Minds registration'
+  route_name: indblog.admin_settings_form
+  description: 'Industry Blog settings.'
+  parent: system.admin_config_system
+  weight: 99

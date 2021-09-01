@@ -444,7 +444,7 @@ function sustainable_minds_product_view($product, $productid, $page)
 
 function sustainable_minds_methodology($version, $short=false) {
 	$meth = sustainable_minds_get_methodology($version, $short);
-	return '<p class="'.$meth['class'].'">'.$meth['text'].'</p>';
+	return '<p class="'.$meth['class'].' p-2 m-0">'.$meth['text'].'</p>';
   }
   
   
@@ -588,15 +588,13 @@ function sustainable_minds_concept_list($productid, $product, $page) {
 	$concepts = $db->list_concepts($productid);
 	// testing moving this
 	// $output .= '<div class="concept-list"><a href="/'.URL_CONCEPT_ADD.'/'. $productid. '">'. DEFAULT_PROJECT_CONCEPT_ICON_CREATE. '</a><br/>';
-	$output .= '<div id="concept-table"><div class="concept-list"><br/>';
 	
 	$meth = sustainable_minds_get_methodology($product['version']);
-	 $meth = $product['version'];
 	if ($meth['class'] == 'prevmethodology') {
-	  $output = '<div class="project-concepts-methodology">' .sustainable_minds_methodology($product['version']) .'</div>';
+	  $output = '<div class="project-concepts-methodology my-3">' .sustainable_minds_methodology($product['version']) .'</div>';
 	} 
   
-	$output .= '<div class="concept-list">';
+$output .= '<div id="concept-table" class="ms-2 my-3"><div class="concept-list">';
 	
 	if (!empty($concepts)) 
 	  $output .= '<table class="project-concepts">
@@ -619,14 +617,29 @@ function sustainable_minds_concept_list($productid, $product, $page) {
 					  //.'<td class="concept-table-blank concept-table-label-actions">&nbsp;</td>'
 					.'</tr>';
 	else
-	  $output .= '<div class="noconcepts">
-			  <div class="create">'
-		  .'<a href="/'.URL_CONCEPT_ADD.'/'. $productid. '">'. DEFAULT_PROJECT_CONCEPT_ICON_CREATE. '</a></div>'
-		  .'<div><p>'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_INTRO.'</p></div>'
-		  .'<div class="inblock-getstart">'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'</div>'
-		  .'<div class="inblock-getstart">'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_FINAL.'</div>'
-		  .'</div>';
-	  
+	$output .='<div class="pro-concept-list">
+	<div class="noconcepts">
+		<div class="create">
+			<!-- <a href="#" class="btn_green">Create a new Concept</a> -->
+			<a href='. SITE_PATH ."/".URL_CONCEPT_ADD.'/'. $productid. ' class="text-start project_btn btn btn-success btn-sm"> Create a new Concept <img src='. SITE_PATH .'/sites/default/files/2021-07/plus.svg alt="plus-icon" title="plus"> </a>
+		</div>
+		<p><strong>'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_INTRO.'</strong></p>
+		<div class="inblock-getstart">
+		'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'
+		</div>
+		<div class="inblock-getstart">
+		'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'
+		</div>
+	</div>
+</div>';
+	//   $output .= '<div class="pro-concept-list">
+	//   			<div class="noconcepts">
+	// 		  <div class="create">'
+	// 	  .'<a href='. SITE_PATH ."/".URL_CONCEPT_ADD.'/'. $productid. ' class="text-start project_btn btn btn-success btn-sm"> Create a new Concept <img src='. SITE_PATH .'/sites/default/files/2021-07/plus.svg alt="plus-icon" title="plus"> </a>'
+	// 	  .'<div><p>'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_INTRO.'</p></div>'
+	// 	  .'<div class="inblock-getstart">'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'</div>'
+	// 	  .'<div class="inblock-getstart">'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'</div>'
+	// 	  .'</div></div>';
 	  // sort so ref/current best/final is on top
 	  $bestConcept = $db->get_best_concept($productid);
 	  
@@ -710,7 +723,7 @@ function sustainable_minds_concept_list($productid, $product, $page) {
 			  $output .='    
 				</td></tr>
 				<tr>
-				  <td class="product-view-concept-icon"><a href="/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'"><div><img src="'.SITE_PATH. $concept['icon'] . '" alt="' . $concept['name'].'" border=0 /></div> </a> </td>
+				  <td class="product-view-concept-icon"><a href="/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'"><div><img src="'. $concept['icon'] . '" alt="' . $concept['name'].'" border=0 /></div> </a> </td>
 				  <td class="name"><a href="'.SITE_PATH.'/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'">'.$concept['name'].'</a></td>
 				</tr>
 				<tr>
@@ -820,7 +833,7 @@ function sustainable_minds_concept_view($concept, $conceptid) {
 	  $concept['okala'] = $concept['okala'] .' '. MPTS_UNIT_LABEL;
 	};
 	
-	$output1 = '<div class="row">
+	$output1 = '<div class="row ps-2 py-4">
 	<div class="col-lg-8">
 		<div class="product-concept-view-main">
 			<h3>'.$concept["name"].'</h3>
@@ -874,10 +887,10 @@ function sustainable_minds_concept_view($concept, $conceptid) {
 					</li>
 					<!-- li end -->
 					<li>
-					<div class="clearfix">
+					<div class="clearfix d-flex">
 						<h4>Methodology</h4>
 						<div class="gl-result impact-score">
-							<p>'.sustainable_minds_methodology($product['version']) .'</p>
+							'.sustainable_minds_methodology($product['version']) .'
 						</div> 
 					</div>
 					</li>

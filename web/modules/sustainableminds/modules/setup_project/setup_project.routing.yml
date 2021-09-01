@@ -48,7 +48,7 @@ setup_project.viewBOM:
   requirements:  
     _permission: 'access concept_add'         
 setup_project.viewResults:  
-  path: '/project/concept/build/{conceptid}/scorecard'  
+  path: '/project/concept/result/{conceptid}/scorecard'  
   defaults:  
     _controller: '\Drupal\setup_project\Controller\ProjectController::viewResults'  
     _title: 'View Results'

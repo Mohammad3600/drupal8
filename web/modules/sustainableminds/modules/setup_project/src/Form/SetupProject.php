@@ -587,6 +587,9 @@ class SetupProject extends FormBase {
 
 	public function validateForm(array &$form, FormStateInterface $form_state)
 	{
+		$image = $form_state->getValue('img_upload');
+		$file = file_load( $image );
+		$file->status = 1;
 		$file_data = $form_state->getValue(['img_upload']);
 		$mode = $form_state->getValue('mode');
 		$page = $form_state->getValue('page');

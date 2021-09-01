@@ -6,6 +6,7 @@
 namespace Drupal\setup_project\Form;  
 use Drupal\Core\Form\FormBase; 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
 include_once(dirname(__FILE__).'\..\..\init.inc');
 include_once(dirname(__FILE__).'\..\..\products.inc');
 
@@ -61,7 +62,7 @@ class CreateConcept extends FormBase {
 		return '';
 	}
 
-  $concept_path = '<div class="position-absolute top-9"><a href ='.SITE_PATH.'/'.URL_PROJECT_VIEW.'/'. $pid .'>'.$product['name'].'</a> > <a href ='.SITE_PATH.'/'.URL_PROJECT_CONCEPTS.'/'. $pid .'>Concepts</a> >&nbsp<strong>Create a concept</strong></div>';
+  $concept_path = '<div class="position-absolute top-9"><a href ='.SITE_PATH.'/'.URL_PROJECT_VIEW.'/'. $pid .'>'.$product['name'].'</a> > <a href ='.SITE_PATH.'/'.URL_PROJECT_CONCEPTS.'/'. $pid .'>Concepts</a> > <strong>Create a concept</strong></div>';
 	// $form = array();
 	// allows file upload
 	$form['#attributes'] = array(
@@ -267,8 +268,6 @@ class CreateConcept extends FormBase {
 			if (file_copy($file, $destination, \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE)) {
 			  $form_state->setValue('img_upload', $destination);
 			  $form_state->setValue('icon', file_create_url($destination));
-			  $file->setPermanent();
-			  $file->save();
 			}
 			else {
 			  $form_state->setErrorByName('img_upload', t('Unable to copy upload file to @dest', ['@dest' => $destination]));
@@ -276,8 +275,12 @@ class CreateConcept extends FormBase {
 		  }
 		}}
     
-  public function validateForm(array &$form, FormStateInterface $form_state,$mode=null, $pid=null)
+  public function validateForm(array &$form, FormStateInterface $form_state)
 	{
+	$image = $form_state->getValue('img_upload');
+	$file = file_load( $image );
+	$file->status = 1;
+	
     if ($form_state->getValue('op') != BUTTON_LABEL_CANCEL) {
       if (!$form_state->getValue('title')) {
         $form_state->setErrorByName('title', t(TEXT_ERROR_CONCEPT_NAME));

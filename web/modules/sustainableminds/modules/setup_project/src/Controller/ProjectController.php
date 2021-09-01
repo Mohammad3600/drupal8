@@ -129,22 +129,22 @@ class ProjectController{
             '#children' => $wizard . $output ,
         ];
     }
-    public function viewBOM($conceptid = null){
-        // $db = \Drupal::service('setup_project.sbom_db');
-        // $concept = $db->get_concept($conceptid);
+    public function viewBOM($conceptid = null, $mid = null){
+        $db = \Drupal::service('setup_project.sbom_db');
+        $concept = $db->get_concept($conceptid);
         // $output = sustainable_minds_concept_view($concept, $conceptid);
-        // $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
+        $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
         return [
-            '#children' => '' ,
+            '#children' => $wizard ,
         ];
     }
     public function viewResults($conceptid = null){
-        // $db = \Drupal::service('setup_project.sbom_db');
-        // $concept = $db->get_concept($conceptid);
+        $db = \Drupal::service('setup_project.sbom_db');
+        $concept = $db->get_concept($conceptid);
         // $output = sustainable_minds_concept_view($concept, $conceptid);
-        // $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
+        $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
         return [
-            '#children' => '' ,
+            '#children' => $wizard ,
         ];
     }
 }
