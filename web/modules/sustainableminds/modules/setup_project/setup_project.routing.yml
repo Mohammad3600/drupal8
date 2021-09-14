@@ -25,14 +25,7 @@ setup_project.createConcept:
     _form: '\Drupal\setup_project\Form\CreateConcept'  
     _title: 'Create Concept'
   requirements:  
-    _permission: 'access concept_add'         
-# setup_project.EditConcept:  
-#   path: '/project/concept/edit/{pid}'  
-#   defaults:  
-#     _form: '\Drupal\setup_project\Form\CreateConcept'  
-#     _title: 'Edit Concept'
-#   requirements:  
-#     _permission: 'access concept_add'         
+    _permission: 'access concept_add'                  
 setup_project.viewConcept:  
   path: '/project/concept/view/{conceptid}'  
   defaults:  
@@ -41,7 +34,7 @@ setup_project.viewConcept:
   requirements:  
     _permission: 'access concept_add'         
 setup_project.viewBOM:  
-  path: '/project/concept/build/{conceptid}/{mid}'  
+  path: '/project/concept/build/{conceptid}/{phaseid}'  
   defaults:  
     _controller: '\Drupal\setup_project\Controller\ProjectController::viewBOM'  
     _title: 'System BOM'
@@ -57,14 +50,14 @@ setup_project.viewResults:
 setup_project.ajaxNewProject:  
   path: '/ajax/actions/newproject'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\ProjectController::newProject'  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_project_new'  
     _title: 'New Project'  
   requirements:  
     _permission: 'access edit_add_project'       
 setup_project.ajaxCopyProject:  
   path: '/ajax/actions/copy_project'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_copy_project'  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_copy_project'  
     _title: 'Copy Project'  
   options:
       query:
@@ -74,7 +67,7 @@ setup_project.ajaxCopyProject:
 setup_project.ajaxCopyToProject:  
   path: '/ajax/actions/copy_to_project'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_copy_to_project'  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_copy_to_project'  
     _title: 'Copy To Project'  
   options:
       query:
@@ -84,7 +77,7 @@ setup_project.ajaxCopyToProject:
 setup_project.ajaxCopyUpdateProject:  
   path: '/ajax/actions/copy_update_project'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_copy_update_project'  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_copy_update_project'  
     _title: 'Copy Update Project'  
   options:
       query:
@@ -94,13 +87,53 @@ setup_project.ajaxCopyUpdateProject:
 setup_project.ajaxDeleteProject:  
   path: '/ajax/actions/delete_project'  
   defaults:  
-    _controller: '\Drupal\setup_project\Controller\ProjectController::sustainable_minds_delete_project'  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_delete_project'  
     _title: 'Delete Project'  
   options:
       query:
         token: ""
   requirements:  
     _permission: 'access delete_project'
+setup_project.copyConcept:  
+  path: '/ajax/actions/copy'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_concept_copy'  
+    _title: 'Copy Concept'
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access concept_add,access set_project_info'         
+setup_project.deleteConcept:  
+  path: '/ajax/actions/delete_concept'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_delete_concept'  
+    _title: 'Delete Concept'
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access concept_add'         
+setup_project.setRefConcept:  
+  path: '/ajax/actions/set_reference'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_set_concept_reference'  
+    _title: 'Set Reference Concept'
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access set_project_info'         
+setup_project.setFinalConcept:  
+  path: '/ajax/actions/set_final'  
+  defaults:  
+    _controller: '\Drupal\setup_project\Controller\ProjectAjaxController::sustainable_minds_set_concept_final'  
+    _title: 'Set Final Concept'
+  options:
+      query:
+        token: ""
+  requirements:  
+    _permission: 'access set_project_info'
 
 
 

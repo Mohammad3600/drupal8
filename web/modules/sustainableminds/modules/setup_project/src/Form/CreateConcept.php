@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 include_once(dirname(__FILE__).'\..\..\init.inc');
-include_once(dirname(__FILE__).'\..\..\products.inc');
 
 class CreateConcept extends FormBase {  
     /**  
@@ -42,16 +41,29 @@ class CreateConcept extends FormBase {
       	$form_state->setErrorByName('title',t('The concept you are looking for does not exist.'));
 			return '';
 		}
-	
+		$form['conceptID'] = array(
+			'#type'=>'hidden',
+			'#value'=>$pid,
+		);
+		$productid = $concept['productID'];
 		$default_values = array('title' => $concept['name'], 'description' => $concept['description'], 'icon'=> $concept['icon'], 'lifetimefuncunits'=> $concept['lifetimefuncunits'], 'funcunitnote'=>$concept['funcunitnote']);
 		//select all product info and put it in $edit
+		$form['productID'] = array(
+			'#type'=>'hidden',
+			'#value'=>$productid,
+		);
 		$bradtitle = 'Editing '.$default_values['title'];
 		$product = $db->get_product($concept['productID']);
 	} elseif ($mode == 'add' && is_numeric($pid)) {
 		$is_add= true;
 		$default_values = array('title' => null, 'description' => null, 'icon'=> null, 'lifetimefuncunits'=> null, 'funcunitnote'=> null);
 		$bradtitle = 'Create a concept';
+		$productid = $pid;
 		$product = $db->get_product($pid);
+		$form['productID'] = array(
+			'#type'=>'hidden',
+			'#value'=>$pid,
+		);
 	} else {
 		$form_state->setErrorByName('title',t('The concept you are looking for does not exist.'));
 		return '';
@@ -62,25 +74,23 @@ class CreateConcept extends FormBase {
 		return '';
 	}
 
-  $concept_path = '<div class="position-absolute top-9"><a href ='.SITE_PATH.'/'.URL_PROJECT_VIEW.'/'. $pid .'>'.$product['name'].'</a> > <a href ='.SITE_PATH.'/'.URL_PROJECT_CONCEPTS.'/'. $pid .'>Concepts</a> > <strong>Create a concept</strong></div>';
+  $concept_breadcrumb = \Drupal::service('setup_project.utilities')->breadcrumb(['<a href ='.SITE_PATH.'/'.URL_PROJECT_VIEW.'/'. $productid .'>'.$product['name'].'</a>', '<a href ='.SITE_PATH.'/'.URL_PROJECT_CONCEPTS.'/'. $productid .'>Concepts</a>'], $bradtitle);
 	// $form = array();
 	// allows file upload
 	$form['#attributes'] = array(
     'enctype' => "multipart/form-data",
     'class' => array('project_setup_form'),
   );
+
   $form['navigation'] = array(
-    '#markup' => $concept_path
+    '#markup' => $concept_breadcrumb
   );
   $form['mode'] = array(
 		'#type'=>'hidden',
 		'#attributes' => array('id' => 'Product-Mode'),
 		'#value'=>$mode
 	);
-	$form['productID'] = array(
-		'#type'=>'hidden',
-		'#value'=>$pid,
-	);
+	
 	$form['title'] = array(
     '#twig_suggestion' => 'concept-fields',
 		'#type' => 'textfield',
@@ -90,22 +100,7 @@ class CreateConcept extends FormBase {
 		'#star' => TRUE,
 	);
 	
-	//Custon file upload field
-	/*$form['image'] = array(
-    '#twig_suggestion' => 'concept-fields',
-		'#type' => 'sustainable_minds_file_upload',
-		'#use_title' => 'Image or rendering',
-		'#process' => array('_sustainable_minds_file_upload'=>array()),
-	);*/
-	//
-/*	$form['file'] = array(
-  '#twig_suggestion' => 'concept-fields',
-		'#title' => 'Image or rendering',
-		'#type' => 'sustainable_minds_multi_file_upload',
-		'#default_value'=>$default_values['image'],
-		//'#process' => array('_sustainable_minds_file_upload'=>array()),
-		'#process' => array('_sustainable_minds_multi_file_upload'=>array())
-	);*/
+	
   $imagePath = $default_values['icon'] ? $default_values['icon'] : (SITE_PATH.'/sites/default/files/2021-07/no_scope.gif');
 			$form['defaultImgPath'] = array(
         '#twig_suggestion' => 'concept-fields',
@@ -257,8 +252,11 @@ class CreateConcept extends FormBase {
 		$validators = [
 		  'file_validate_extensions' => ['png jpeg jpg gif'],
 		];	
+		$userid = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->get('uid')->value;
 		if ($file = file_save_upload('img_upload', $validators, FALSE, 0, \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE)) {
-		  $img_dir = 'public://2021-07/';
+		  $img_dir = 'public://u'.$userid.'/';
+		  $file->status = FILE_STATUS_PERMANENT;
+		//   file_save_data($file);
 		  $directory_exists = \Drupal::service('file_system')->prepareDirectory($img_dir);
 		  if(!$directory_exists){
 			\Drupal::service('file_system')->prepareDirectory($img_dir, \Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY);
@@ -277,9 +275,9 @@ class CreateConcept extends FormBase {
     
   public function validateForm(array &$form, FormStateInterface $form_state)
 	{
-	$image = $form_state->getValue('img_upload');
-	$file = file_load( $image );
-	$file->status = 1;
+	// $image = $form_state->getValue('img_upload');
+	// $file = file_load( $image );
+	// $file->status = 1;
 	
     if ($form_state->getValue('op') != BUTTON_LABEL_CANCEL) {
       if (!$form_state->getValue('title')) {
@@ -295,10 +293,10 @@ class CreateConcept extends FormBase {
         $form_state->setErrorByName('lifetimefuncunits', t(TEXT_ERROR_CONCEPT_FUNCUNIT_ZERO));
       }
     } else {
-      // if ($form_state->getValue('mode') == 'edit')
-      //   drupal_goto(URL_CONCEPT_VIEW .'/'. $form_state->getValue('pid'));
-      // elseif ($form_state->getValue('mode') == 'add')
-      //   drupal_goto(URL_PROJECT_CONCEPTS .'/'. $form_state->getValue('pid'));
+      if ($form_state->getValue('mode') == 'edit')
+	  	$form_state->setRedirect('setup_project.viewConcept',['conceptid'=>$form_state->getValue('conceptID')]);
+      elseif ($form_state->getValue('mode') == 'add')
+	  	$form_state->setRedirect('setup_project.viewProject',['page'=>'concepts' , 'pid'=>$form_state->getValue($productID)]);
     }
   }
   
@@ -314,12 +312,13 @@ class CreateConcept extends FormBase {
         $lastid = $db->add_concept($form_state->getValues());
 		$form_state->setRedirect('setup_project.viewConcept',['conceptid'=>$lastid]);
       } elseif($form_state->getValue('mode') == 'edit') {
-        // $op= $form_state->getValue('op');
-        // $conceptid = sustainable_minds_sbom_get_concept_arg();
-        // $db->update_concept($conceptid, $form_state->getValues());
-        // $goto = URL_CONCEPT_VIEW .'/'.$conceptid;
+        $conceptid = $form_state->getValue('conceptID');
+        $db->update_concept((int)$conceptid, $form_state->getValues());
+		$form_state->setRedirect('setup_project.viewConcept',['conceptid'=>$conceptid]);
       }
       // drupal_goto($goto);
-    }
+    }else{
+
+	}
   }  
 }  

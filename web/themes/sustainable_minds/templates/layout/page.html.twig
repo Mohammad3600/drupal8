@@ -44,150 +44,22 @@
  */
 #}
 <style>
-  #concept-table #block-sustainable-minds-page-title {
-    display:none;
-  }
-  #concept-table table.project-concepts {
-    border-collapse: collapse;
-}
-#concept-table .project-concepts tr {
-    background-color: #F1F1F1;
-}
-#concept-table .project-concepts tr.even, .even tr {
-    background-color: #CBE1EA !important;
-}
-#concept-table .project-concepts tr {
-    background-color: #F1F1F1;
-}
-#concept-table tr.even, tr.odd {
-    background-color: #eee;
-    border-bottom: 1px solid #ccc;
-    padding: 0.1em 0.6em;
-}
-#concept-table .project-concepts td {
-    border: 1px solid #FFF;
-    padding: 0;
-    margin: 0;
-    text-align: center;
-}
-#concept-table .project-concepts th {
-    width: 90px;
-    border: 1px solid #fff;
-    background-color: #E2EBEE;
-    color: #000;
-    font-weight: normal;
-    padding: 5px 5px;
-    vertical-align: top;
-}
-#concept-table table.project-concepts table td {
-    border: 0px;
-    text-align: left;
-}
-#concept-table .project-concepts .act a {
-    cursor: pointer;
-    font-size:11px;
-}
-#concept-table table.project-concepts td.title {
-    height: 10px;
-}
-#concept-table .project-concepts td.name {
-    height: 50px;
-    width: 100%;
-    vertical-align: top;
+.product-view .product-view-concept-name a {
+    text-decoration: none;
     font-weight: bold;
-    padding: 0 7px 0 7px;
+    height: 14px;
 }
-#concept-table .project-concepts tr.positive, .positive tr {
-    background-color: #FFE2E2 !important;
+.project-concept-icon img {
+    max-width: 258px;
 }
 .project-concepts .product-view-concept-icon img, .product-view .product-view-concept-icon img {
-    max-width: 100px;
-    max-height: 58px;
+    max-width: 98px;
+    max-height: 56px;
 }
-.project-concepts h3 {
-    font-size: 11px;
-    padding-left: 5px;
-    margin: 0;
-    height: 30px;
-    line-height: 30px;
-}
-.project-concepts .product-view-concept-icon div, .product-view .product-view-concept-icon div {
-    width: 100px;
-    background-color: #E0EAEC;
-    border: 1px solid #ccc;
-    text-align: center;
-    height: 58px;
-    line-height: 58px;
-    margin: 0px 0px 5px 5px;
-}
-#concept-table table.project-concepts table {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    position: relative;
-}
-#concept-table .project-concepts table, .project-concepts td table {
-    position: relative !important;
-    width: 100% !important;
-}
-#concept-table .project-concepts .gl-more-emphesis {
-    font-size: 16px !important;
-}
-#concept-table .gl-more-emphesis {
-    font-size: 15px;
-    font-weight: bold;
-}
- .clear {
-    clear: both;
-}
-.clear {
-    margin: 0px;
-    padding: 0px;
-    clear: both;
-}
-#concept-table .project-concepts td.negative {
-    color: #336600;
-    font-weight: bold;
-}
-#concept-table .project-concepts .product-view-concept-icon, .product-view .product-view-concept-icon {
-    width: 107px;
-}
-#concept-table .project-concepts th.concept-table-funcunit {
-    background-color: #fff;
-    padding: 3px 5px;
-    width: 300px !important;
-}
-#concept-table .project-concepts td.name a {
-    /* font-size: 13px; */
-    font-size: 12px;
-    font-weight: bold;
-    text-decoration: none;
-}
-#concept-table .project-concepts .act {
-    padding: 0 0 10px 5px;
-}
-#concept-table .project-concepts .act a {
-    color: #134FBD;
-}
-.font-size-6{
-  font-size: 0.65rem;
-}
-  .top-9{
-    top: 9.5rem;
-  }
-  .prevmethodology {
-    background-color: #FDFFB9;
-    font-size: 11px;
-    margin-top: -3px;
-    margin-left: -7px;
-    padding: 5px 7px;
-}
-.project-concepts-methodology .prevmethodology {
-    margin: 0px 10px 20px 5px !important;
-    padding: 7px;
-    display: block;
-    float: left;
-    clear: both;
+
+ul li .nav-link.active {
+    background-image: url(../../../../sites/default/files/sbom_arrow.png) !important;
+    background-position: 5px 10px !important;
 }
 </style>
 <div id="wrapper">
@@ -212,7 +84,7 @@
       <div class="container bg_white">
           <div class="row">
           {% set site_url = path("<current>") ~ '' %}
-          {% set col_class = ('project/concept/view' in site_url or 'project/view' in site_url or 'project/concepts' in site_url) ? 'col-lg-12' : 'col-lg-9' %}
+          {% set col_class = ('project/concept/view' in site_url or 'project/view' in site_url or 'project/concepts' in site_url or 'project/concept/build' in site_url ) ? 'col-lg-12' : 'col-lg-9' %}
             <div class="layout-content {{ col_class }}">
               {{ page.content }}
             </div>{# /.layout-content #}

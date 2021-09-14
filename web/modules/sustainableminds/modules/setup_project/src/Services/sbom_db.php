@@ -74,7 +74,7 @@ class sbom_db{
 		//Get product
 		if ($this->init_and_check_if_error('get_product')) return ''; 
         $conn =  Database::getConnection();
-		// $statement = $conn->prepare('CALL SM_SBOM_Get_Product(%d, %d);', array($id, $this->userid));
+		// $statement = $conn->prepare('CALL SM_SBOM_Get_Product(?, ?);', array($id, $this->userid));
 		// $result = $statement->execute();
 		$statement = db_query('CALL SM_SBOM_Get_Product(?, ?);', array($id, $this->userid));
 		// $object = $this->check_for_errors(db_fetch_array($result));
@@ -115,7 +115,7 @@ class sbom_db{
 		if ($this->init_and_check_if_error('add_product')) return ''; 
 		
 		//Create product userid, title, description,client, categoryid, icon, assessment, development
-		$lastid = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Add_Product(%d, '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s');", array($this->userid, $values['title'], $values['description'], $values['client'], $values['category'], $values['image'], $values['assessment'], $values['development'], $values['inclusion'], $values['exclusion'], $values['system']))));
+		$lastid = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Add_Product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", array($this->userid, $values['title'], $values['description'], $values['client'], $values['category'], $values['image'], $values['assessment'], $values['development'], $values['inclusion'], $values['exclusion'], $values['system']))));
 		
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
@@ -197,7 +197,7 @@ class sbom_db{
 	
 	function get_product_id_by_name($pname, $puserid) {
 		if ($this->init_and_check_if_error('get_product_id_by_name')) return '';
-		$result = db_query("CALL SM_SBOM_Get_ProductID_By_Name('%s', %d);", array($pname, $puserid));
+		$result = db_query("CALL SM_SBOM_Get_ProductID_By_Name(?, ?);", array($pname, $puserid));
 		$projectID = $this->check_for_errors(db_result($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -210,25 +210,25 @@ class sbom_db{
 	
 	function set_product_reference($pid, $cid){
 		if ($this->init_and_check_if_error('set_product_reference')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Set_Product_Reference(%d, %d, %d);", array($pid, $cid, $this->userid)));
+		(db_query("CALL SM_SBOM_Set_Product_Reference(?, ?, ?);", array($pid, $cid, $this->userid)));
 		Database::setActiveConnection();
 	}
 	
 	function unset_product_final($pid){
 		if ($this->init_and_check_if_error('unset_product_final')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Unset_Product_Final(%d, %d);", array($pid, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Unset_Product_Final(?, ?);", array($pid, $this->userid)));
 		Database::setActiveConnection();
 	}
 
 	function set_product_final($pid, $cid){
 		if ($this->init_and_check_if_error('set_product_final')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Set_Product_Final(%d, %d, %d );", array($pid, $cid, $this->userid)));
+		(db_query("CALL SM_SBOM_Set_Product_Final(?, ?, ? );", array($pid, $cid, $this->userid)));
 		Database::setActiveConnection();
 	}
 	
 	function products_using_image($filename, $productID=0) {
 		if ($this->init_and_check_if_error('products_using_image')) return ''; 
-		$count = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Products_Using_Image(%d, '%s');", array($productID, $filename))));
+		$count = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Products_Using_Image(?, ?);", array($productID, $filename))));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 		
@@ -237,7 +237,7 @@ class sbom_db{
 	
 	function delete_product_icon($productID){
 		if ($this->init_and_check_if_error('delete_product_icon')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Product_Icon(%d, %d);", array($productID, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Product_Icon(?, ?);", array($productID, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	
@@ -246,7 +246,7 @@ class sbom_db{
 
 	function get_func_unit_for_product($productID){
 		if ($this->init_and_check_if_error('get_func_unit_for_product')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Func_Unit_For_Product(%d, %d);', array($productID, $this->userid));
+		$result = db_query('CALL SM_SBOM_Get_Func_Unit_For_Product(?, ?);', array($productID, $this->userid));
 		$row = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -298,7 +298,7 @@ class sbom_db{
 	function update_concept($conceptid, $values){
 		if ($this->init_and_check_if_error('update_concept')) return ''; 
 		//Update concept: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Concept(?, ?, ?, ?,?, ?, ?);", array($conceptid, $values['title'], $values['description'], $values['icon'], $values['lifetimefuncunits'], $values['funcunitnote'], $this->userid)));
+		db_query("CALL SM_SBOM_Update_Concept(?, ?, ?, ?, ?, ?, ?);", array($conceptid, $values['title'], $values['description'], $values['icon'], $values['lifetimefuncunits'], $values['funcunitnote'], $this->userid));
 		Database::setActiveConnection();
 		//drupal_set_message(t('Your concept has been updated!'));
 		
@@ -359,7 +359,7 @@ class sbom_db{
 	function copy_concept($pid, $cid){
 		if ($this->init_and_check_if_error('copy_concept')) return '';
 		// @id is not used, just a placeholder for the out parameter
-		$this->check_for_errors(db_query("CALL SM_SBOM_Copy_Concept(%d, %d, %d, %d, %d, @id);", array($cid, $pid, 1, $this->userid, $this->userid)));
+		(db_query("CALL SM_SBOM_Copy_Concept(?, ?, ?, ?, ?, @id);", array($cid, $pid, 1, $this->userid, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	
@@ -368,7 +368,7 @@ class sbom_db{
 	
 	function delete_concept($componentid){
 		if ($this->init_and_check_if_error('delete_concept')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Concept(%d, %d);", array($componentid, $this->userid)));
+		db_query("CALL SM_SBOM_Delete_Concept(?, ?);", array($componentid, $this->userid));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();	
 		return '';
@@ -376,7 +376,7 @@ class sbom_db{
 	
 	function concepts_using_image($filename, $conceptID=0) {
 		if ($this->init_and_check_if_error('concepts_using_image')) return ''; 
-		$count = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Concepts_Using_Image(%d, '%s');", array($conceptID, $filename))));
+		$count = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Concepts_Using_Image(?, ?);", array($conceptID, $filename))));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 		
@@ -385,7 +385,7 @@ class sbom_db{
 	
 	function delete_concept_icon($conceptID){
 		if ($this->init_and_check_if_error('delete_concept_icon')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Concept_Icon(%d, %d);", array($conceptID, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Concept_Icon(?, ?);", array($conceptID, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	
@@ -407,7 +407,7 @@ class sbom_db{
 		if ($this->init_and_check_if_error('add_component')) return ''; 
 		//Create component: conceptID,parentid,name,partID,description,quantity,phaseid
 		//FIXME: Add parentid
-		$lastid = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Add_Component(%d, %d, '%s', '%s', '%s', %d, %d, %d, %d);", array($conceptid, $parentid, $values['title'], $values['partID'], $values['description'], $values['quantity'], $phaseid, 0, $this->userid ))));
+		$lastid = $this->check_for_errors(db_result(db_query("CALL SM_SBOM_Add_Component(?, ?, ?, ?, ?, ?, ?, ?, ?);", array($conceptid, $parentid, $values['title'], $values['partID'], $values['description'], $values['quantity'], $phaseid, 0, $this->userid ))));
 		//$lastid = sustainable_minds_get_last_id();
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
@@ -419,7 +419,7 @@ class sbom_db{
 	
 	function get_component($id){
 		if ($this->init_and_check_if_error('get_component')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Component(%d, %d);', array($id, $this->userid));
+		$result = db_query('CALL SM_SBOM_Get_Component(?, ?);', array($id, $this->userid));
 		$object = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -436,7 +436,7 @@ class sbom_db{
 	
 	function delete_component($componentid){
 		if ($this->init_and_check_if_error('delete_component')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Component(%d, %d);", array($componentid, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Component(?, ?);", array($componentid, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	
@@ -446,7 +446,7 @@ class sbom_db{
 	function update_component($componentid, $values){
 		if ($this->init_and_check_if_error('update_component')) return ''; 
 		//Update component: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component(%d, '%s', '%s', '%s', %d, 0, %d);", array($componentid, $values['title'], $values['partID'], $values['description'],  $values['quantity'], $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component(?, ?, ?, ?, ?, 0, ?);", array($componentid, $values['title'], $values['partID'], $values['description'],  $values['quantity'], $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		
@@ -458,7 +458,7 @@ class sbom_db{
 	function update_component_name($componentid, $name){
 		if ($this->init_and_check_if_error('update_component_name')) return ''; 
 		//Update component: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component_Name(%d, '%s', %d);", array($componentid, $name, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component_Name(?, ?, ?);", array($componentid, $name, $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		
@@ -468,7 +468,7 @@ class sbom_db{
 	function update_component_parent($componentid, $parentid){
 		if ($this->init_and_check_if_error('update_component_parent')) return ''; 
 		//Update component: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component_Parent(%d, %d, %d);", array($componentid, $parentid, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component_Parent(?, ?, ?);", array($componentid, $parentid, $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		
@@ -478,7 +478,7 @@ class sbom_db{
 	function update_component_description($componentid, $desc){
 		if ($this->init_and_check_if_error('update_component_description')) return ''; 
 		//Update component: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component_Description(%d, '%s', %d);", array($componentid, $desc, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Component_Description(?, ?, ?);", array($componentid, $desc, $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		
@@ -491,7 +491,7 @@ class sbom_db{
 	function list_components_by_parent_and_phase($parentid, $phaseid){
 		$components = array();
 		if ($this->init_and_check_if_error('list_components_by_parent_and_phase')) return ''; 
-		$result = db_query('CALL SM_SBOM_List_Components_By_Parent_And_Phase(%d, %d, %d);', array($parentid, $phaseid, $this->userid));
+		$result = db_query('CALL SM_SBOM_List_Components_By_Parent_And_Phase(?, ?, ?);', array($parentid, $phaseid, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$components[]= $row;
 		}
@@ -503,7 +503,7 @@ class sbom_db{
 
 	function get_components_by_concept_and_type($conceptid, $typeid){
 		if ($this->init_and_check_if_error('get_components_by_concept_and_type')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Component_By_Concept_And_Type(%d, %d, %d);', array($conceptid, $typeid, $this->userid));
+		$result = db_query('CALL SM_SBOM_Get_Component_By_Concept_And_Type(?, ?, ?);', array($conceptid, $typeid, $this->userid));
 		$object = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();		
@@ -513,7 +513,7 @@ class sbom_db{
 	function list_components_by_parent($parentid){
 		$components = array();
 		if ($this->init_and_check_if_error('list_components_by_parent')) return ''; 
-		$result = db_query('CALL SM_SBOM_List_Components_By_Parent(%d, %d);', array($parentid, $this->userid));
+		$result = db_query('CALL SM_SBOM_List_Components_By_Parent(?, ?);', array($parentid, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$components[]= $row;
 		}
@@ -525,7 +525,7 @@ class sbom_db{
 	
 	function get_weight($compID) {
 		if ($this->init_and_check_if_error('get_weight')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Weight_Return(%d, %d);', array($compID, 0));
+		$result = db_query('CALL SM_SBOM_Get_Weight_Return(?, ?);', array($compID, 0));
 		$row = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -535,7 +535,7 @@ class sbom_db{
 	
 	function get_trans_weight($compID) {
 		if ($this->init_and_check_if_error('get_trans_weight')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Trans_Weight_Return(%d, %d);', array($compID, 0));
+		$result = db_query('CALL SM_SBOM_Get_Trans_Weight_Return(?, ?);', array($compID, 0));
 		$row = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -546,7 +546,7 @@ class sbom_db{
 	function add_item($componentid, $values){
 		if ($this->init_and_check_if_error('add_item')) return ''; 
 		//Create item :componentid,name,description,sequence,factor
-		$lastid =$this->check_for_errors(db_result(db_query("CALL SM_SBOM_Add_Item_And_Material(%d, '%s', '%s', '%s', %d, %d, %f, %d, 1, %f, '%s', %d);", array($componentid, $values['title'], $values['partID'], $values['description'], $values['quantity'], $values['newMatProcID'], $values['convertedAmount'], $values['measure'], $values['displayUnitID'], $values['displayAmount'], $this->userid))));
+		$lastid =$this->check_for_errors(db_result(db_query("CALL SM_SBOM_Add_Item_And_Material(?, ?, ?, ?, ?, ?, %f, ?, 1, %f, ?, ?);", array($componentid, $values['title'], $values['partID'], $values['description'], $values['quantity'], $values['newMatProcID'], $values['convertedAmount'], $values['measure'], $values['displayUnitID'], $values['displayAmount'], $this->userid))));
 		sustainable_minds_clear_db();
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
@@ -558,7 +558,7 @@ class sbom_db{
 	
 	function get_item($id){
 		if ($this->init_and_check_if_error('get_item')) return ''; 
-		$result = db_query('Call SM_SBOM_Get_Item(%d, %d)', array($id, $this->userid));
+		$result = db_query('Call SM_SBOM_Get_Item(?, ?)', array($id, $this->userid));
 		$object = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -568,7 +568,7 @@ class sbom_db{
 	
 	function delete_item($itemid){
 		if ($this->init_and_check_if_error('delete_item')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Item(%d, %d);", array($itemid, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Delete_Item(?, ?);", array($itemid, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	
@@ -578,7 +578,7 @@ class sbom_db{
 	function update_item($itemid, $values){
 		if ($this->init_and_check_if_error('update_item')) return ''; 
 		//Update item: title, description, measure
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item(%d, '%s', '%s', '%s', %d, %d, %d);", array($itemid, $values['title'], $values['partID'], $values['description'], $values['quantity'], $values['measure'], $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item(?, ?, ?, ?, ?, ?, ?);", array($itemid, $values['title'], $values['partID'], $values['description'], $values['quantity'], $values['measure'], $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		return true;
@@ -587,7 +587,7 @@ class sbom_db{
 	function update_item_name($itemid, $name){
 		if ($this->init_and_check_if_error('update_item_name')) return ''; 
 		//Update component: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item_Name(%d, '%s', %d);", array($itemid, $name, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item_Name(?, ?, ?);", array($itemid, $name, $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		
@@ -597,7 +597,7 @@ class sbom_db{
 	function update_item_component($itemid, $component){
 		if ($this->init_and_check_if_error('update_item_component')) return ''; 
 		//Update component: conceptid, name, description
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item_Component(%d, '%s', %d);", array($itemid, $component, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item_Component(?, ?, ?);", array($itemid, $component, $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
 		
@@ -606,7 +606,7 @@ class sbom_db{
 	
 	function update_item_description($itemid, $desc){
 		if ($this->init_and_check_if_error('update_item_description')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item_Description(%d, '%s', %d);", array($itemid, $desc, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_Item_Description(?, ?, ?);", array($itemid, $desc, $this->userid)));
 		Database::setActiveConnection();
 		return true;
 	}
@@ -614,7 +614,7 @@ class sbom_db{
 	function list_item_tree_no_eol($parentid){
 		$components = array();
 		if ($this->init_and_check_if_error('list_item_tree_no_eol')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Item_Tree_No_EOL(%d);', array($parentid));
+		$result = db_query('CALL SM_SBOM_Get_Item_Tree_No_EOL(?);', array($parentid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$components[]= $row;
 		}
@@ -627,7 +627,7 @@ class sbom_db{
 	function list_items_with_process($parentid, $eol='both', $trans=0){
 		$items = array();
 		if ($this->init_and_check_if_error('list_items_with_process')) return ''; 
-		$result = db_query('CALL SM_SBOM_List_Items_With_Process(%d, \'%s\',%d, %d);', array($parentid, $eol, $trans, $this->userid));
+		$result = db_query('CALL SM_SBOM_List_Items_With_Process(?, \'%s\',?, ?);', array($parentid, $eol, $trans, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$items[]= $row;
 		}
@@ -640,7 +640,7 @@ class sbom_db{
 	
 	function list_items_no_process($parentid, $eol='both', $trans=0) {
 		if ($this->init_and_check_if_error('list_items_no_process')) return ''; 
-		$result = db_query('CALL SM_SBOM_List_Items_No_Process(%d, \'%s\',%d, %d);', array($parentid, $eol, $trans, $this->userid));
+		$result = db_query('CALL SM_SBOM_List_Items_No_Process(?, \'%s\',?, ?);', array($parentid, $eol, $trans, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))) {
 			$processes[]= $row;
 		}
@@ -656,7 +656,7 @@ class sbom_db{
 		if ($this->init_and_check_if_error('list_transportation_items_with_process')) {
 			return ''; 
 		}
-		$result = db_query('CALL SM_SBOM_List_Items_With_Process(%d, \'%s\',%d, %d);', array($parentid, $eol, $trans, $this->userid));
+		$result = db_query('CALL SM_SBOM_List_Items_With_Process(?, \'%s\',?, ?);', array($parentid, $eol, $trans, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$items[]= $row;
 		}
@@ -670,7 +670,7 @@ class sbom_db{
 	function list_transportation_items_no_process($parentid, $eol='noteol', $trans=1){
 		$items = array();
 		if ($this->init_and_check_if_error('list_transportation_items_no_process')) return ''; 
-		$result = db_query('CALL SM_SBOM_List_Items_No_Process(%d, \'%s\',%d, %d);', array($parentid, $eol, $trans, $this->userid));
+		$result = db_query('CALL SM_SBOM_List_Items_No_Process(?, \'%s\',?, ?);', array($parentid, $eol, $trans, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$items[]= $row;
 		}
@@ -684,7 +684,7 @@ class sbom_db{
 	function add_process($itemid, $values){
     if ($this->init_and_check_if_error('add_proccess')) return ''; 
 	  // bmagee - modified for unit of measure conversion
-	  $this->check_for_errors(db_query("CALL SM_SBOM_Add_MatProc_To_Item(%d, %d, '%s', %d, '%s', 0, %d, '%s', %d);", array($itemid, $values['newMatProcID'], $values['convertedAmount'], $values['measure'], $values['description'], $values['displayUnitID'], $values['displayAmount'], $this->userid)));
+	  $this->check_for_errors(db_query("CALL SM_SBOM_Add_MatProc_To_Item(?, ?, ?, ?, ?, 0, ?, ?, ?);", array($itemid, $values['newMatProcID'], $values['convertedAmount'], $values['measure'], $values['description'], $values['displayUnitID'], $values['displayAmount'], $this->userid)));
 	
 	  Database::setActiveConnection();
 		
@@ -693,7 +693,7 @@ class sbom_db{
 
 	function delete_process($itemid,$processid){
 		if ($this->init_and_check_if_error('delete_process')) return ''; 
-		$this->check_for_errors( db_query("CALL SM_SBOM_Remove_MatProc_From_Item(%d, %d, %d);", array($itemid, $processid, $this->userid)));
+		$this->check_for_errors( db_query("CALL SM_SBOM_Remove_MatProc_From_Item(?, ?, ?);", array($itemid, $processid, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	
@@ -703,7 +703,7 @@ class sbom_db{
 	function list_process_by_item($itemid,$eol='both'){
 		$processes = array();
 		if ($this->init_and_check_if_error('list_process_by_item')) return ''; 
-		$result = db_query('CALL SM_SBOM_Get_Procs_By_Item(%d, \'%s\', %d);', array($itemid, $eol,$this->userid));
+		$result = db_query('CALL SM_SBOM_Get_Procs_By_Item(?, \'%s\', ?);', array($itemid, $eol,$this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$processes[]= $row;
 		}
@@ -715,7 +715,7 @@ class sbom_db{
 	
 	function list_process_by_material($matid,$eol='both'){
 		if ($this->init_and_check_if_error('list_process_by_material')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_Process_By_Material(%d, \'%s\');', array($matid,$eol));
+		$result = db_query('CALL SM_LCA_Get_Process_By_Material(?, \'%s\');', array($matid,$eol));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$processes[]= $row;
 		}
@@ -741,7 +741,7 @@ class sbom_db{
 	function update_itemmatproc($itemmatprocid, $values){
 		if ($this->init_and_check_if_error('update_itemmatproc')) return ''; 
 		//Update item: title, description, measure
-		$this->check_for_errors(db_query("CALL SM_SBOM_Update_ItemMatProc(%d, %d, %d, '%s', %d);", 
+		$this->check_for_errors(db_query("CALL SM_SBOM_Update_ItemMatProc(?, ?, ?, ?, ?);", 
 				array($itemmatprocid, $values['newMatProcID'], $values['measure'], $values['description'], $this->userid)));
 		//switch back to drupal db after inserting data
 		Database::setActiveConnection();
@@ -753,7 +753,7 @@ class sbom_db{
 		$items = array();
 		if ($this->init_and_check_if_error('list_matproc')) return ''; 
 		$arr = array($parentid, $eol, $this->userid);
-		$result = db_query('CALL SM_SBOM_List_MatProcs_By_Item(%d, \'%s\', %d);', $arr);
+		$result = db_query('CALL SM_SBOM_List_MatProcs_By_Item(?, \'%s\', ?);', $arr);
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$items[]= $row;
 		}
@@ -771,7 +771,7 @@ class sbom_db{
 		$arr[] = in_array('process', $types);
 		$arr[] = in_array('transportation', $types);
 		$arr[] = $this->userid;
-		$result = db_query('CALL SM_SBOM_List_MatProcs_For_Item_By_Type(%d, \'%s\', \'%s\', \'%s\', \'%s\', %d);', $arr);
+		$result = db_query('CALL SM_SBOM_List_MatProcs_For_Item_By_Type(?, \'%s\', \'%s\', \'%s\', \'%s\', ?);', $arr);
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$items[]= $row;
 		}
@@ -783,7 +783,7 @@ class sbom_db{
 	
 	function get_itemmatproc($id){
 		if ($this->init_and_check_if_error('get_itemmatproc')) return ''; 
-		$result = db_query('Call SM_SBOM_Get_ItemMatProc(%d, %d)', array($id, $this->userid));
+		$result = db_query('Call SM_SBOM_Get_ItemMatProc(?, ?)', array($id, $this->userid));
 		$object = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -816,7 +816,7 @@ class sbom_db{
 	function okala_concept_total($conceptid){
 		if ($this->init_and_check_if_error('okala_concept_total')) return '';
 		$object=  array();
-		$result = db_query('CALL SM_SBOM_Concept_Scores(%d, %d);', array($conceptid, $this->userid));
+		$result = db_query('CALL SM_SBOM_Concept_Scores(?, ?);', array($conceptid, $this->userid));
 		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
 			$object[]=$currentobject;
 		}
@@ -841,7 +841,7 @@ class sbom_db{
 	
 	function co2_concept_by_phase($conceptid){
 		if ($this->init_and_check_if_error('co2_concept_by_phase')) return '';
-		$result = db_query('CALL SM_SBOM_Concept_Co2_By_Phase(%d, %d);', array($conceptid, $this->userid));
+		$result = db_query('CALL SM_SBOM_Concept_Co2_By_Phase(?, ?);', array($conceptid, $this->userid));
 		$object = array();
 		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
 			$object[]=$currentobject;
@@ -867,7 +867,7 @@ class sbom_db{
 	
 	function okala_concept_top_okala_impacts_total($conceptid){
 		if ($this->init_and_check_if_error('okala_concept_top_okala_impacts_total')) return '';
-		$result = db_query('CALL SM_LCA_Get_Top_Okala_Items_By_Concept_B_Total(%d);', array($conceptid));
+		$result = db_query('CALL SM_LCA_Get_Top_Okala_Items_By_Concept_B_Total(?);', array($conceptid));
 		$object = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -877,7 +877,7 @@ class sbom_db{
 	
 	function okala_concept_top_co2_impacts($conceptid){
 		if ($this->init_and_check_if_error('okala_concept_top_co2_impacts')) return '';
-		$result = db_query('CALL SM_SBOM_Get_Top_CO2_Items_For_Concept(%d, %d);', array($conceptid, $this->userid));
+		$result = db_query('CALL SM_SBOM_Get_Top_CO2_Items_For_Concept(?, ?);', array($conceptid, $this->userid));
 		$object = array();
 		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
 			$object[]=$currentobject;
@@ -890,7 +890,7 @@ class sbom_db{
 	
 	function okala_concept_top_co2_impacts_total($conceptid){
 		if ($this->init_and_check_if_error('okala_concept_top_co2_impacts_total')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_Top_CO2_Items_By_Concept_B_Total(%d);', array($conceptid)); 
+		$result = db_query('CALL SM_LCA_Get_Top_CO2_Items_By_Concept_B_Total(?);', array($conceptid)); 
 		$object = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -900,7 +900,7 @@ class sbom_db{
 
 	function score_concept_by_phase($conceptid){
 		if ($this->init_and_check_if_error('score_concept_by_phase')) return ''; 
-		$result = db_query('CALL SM_LCA_Concept_By_Phase_B(%d);', array($conceptid)); 
+		$result = db_query('CALL SM_LCA_Concept_By_Phase_B(?);', array($conceptid)); 
 		$object = array();
 		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
 			$object[]=$currentobject;
@@ -913,7 +913,7 @@ class sbom_db{
 	
 	function okala_concept_top_impacts($conceptid){
 		if ($this->init_and_check_if_error('okala_concept_top_impacts')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_Top_Items_By_Concept(%d);', array($conceptid)); 
+		$result = db_query('CALL SM_LCA_Get_Top_Items_By_Concept(?);', array($conceptid)); 
 		$object = array();
 		while($currentobject = $this->check_for_errors(db_fetch_array($result))){
 			$object[]=$currentobject;
@@ -961,7 +961,7 @@ class sbom_db{
 	function list_matproc_by_category($categoryid){
 		$matproc = array();
 		if ($this->init_and_check_if_error('list_matproc_by_category')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_MatProc_By_Cat(%d);', array($categoryid, $this->userid));
+		$result = db_query('CALL SM_LCA_Get_MatProc_By_Cat(?);', array($categoryid, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$matproc[]= $row;
 		}
@@ -975,7 +975,7 @@ class sbom_db{
 	function list_matproc_by_category2($categoryid){
 		$matproc = array();
 		if ($this->init_and_check_if_error('list_matproc_by_category2')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_MatProc_By_Cat2(%d);', array($categoryid, $this->userid));
+		$result = db_query('CALL SM_LCA_Get_MatProc_By_Cat2(?);', array($categoryid, $this->userid));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$matproc[]= $row;
 		}
@@ -989,7 +989,7 @@ class sbom_db{
 	function list_mp_category($parentid){
 		$category = array();
 		if ($this->init_and_check_if_error('list_mp_category')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_MPC_Children(%d);', array($parentid));
+		$result = db_query('CALL SM_LCA_Get_MPC_Children(?);', array($parentid));
 		
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$category[]= $row;
@@ -1002,7 +1002,7 @@ class sbom_db{
 	
 	function get_matproc($matprocid){
 		if ($this->init_and_check_if_error('get_matproc')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_MatProc(%d);', array($matprocid));
+		$result = db_query('CALL SM_LCA_Get_MatProc(?);', array($matprocid));
 		$row = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1011,7 +1011,7 @@ class sbom_db{
 	
 	function list_matproc_category_parents($matprocid){
 		if ($this->init_and_check_if_error('list_matproc_category_parents')) return ''; 
-		$result = db_query('CALL SM_LCA_List_MatProc_Category_Parents(%d);', array($matprocid));
+		$result = db_query('CALL SM_LCA_List_MatProc_Category_Parents(?);', array($matprocid));
 		$row = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1032,7 +1032,7 @@ class sbom_db{
 		$displayUnitID = unitsapi_getUnitID($displayUnit);
 		$convertedAmount = isset($info['result']) ? $info['result'] : $factor;
   	if ($this->init_and_check_if_error('set_imp_factor')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Set_IMP_Factor(%d, '%s', '%s', '%s', %d);", array($impid, $convertedAmount, $displayUnitID, $factor, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Set_IMP_Factor(?, ?, ?, ?, ?);", array($impid, $convertedAmount, $displayUnitID, $factor, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	  return;
@@ -1048,7 +1048,7 @@ class sbom_db{
     $displayUnitID = unitsapi_getUnitID($displayUnit);
 	$convertedAmount = isset($info['result']) ? $info['result'] : $factor; 
   	if ($this->init_and_check_if_error('set_rimp_factor')) return ''; 
-		$this->check_for_errors(db_query("CALL SM_SBOM_Set_RIMP_Factor(%d, '%s', %d, '%s', %d);", array($rimpid, $convertedAmount, $displayUnitID, $displayFactor, $this->userid)));
+		$this->check_for_errors(db_query("CALL SM_SBOM_Set_RIMP_Factor(?, ?, ?, ?, ?);", array($rimpid, $convertedAmount, $displayUnitID, $displayFactor, $this->userid)));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	  return;
@@ -1056,7 +1056,7 @@ class sbom_db{
 	
 	function list_matproc_category($matprocid){
 		if ($this->init_and_check_if_error('list_matproc_category')) return ''; 
-		$result = db_query('CALL SM_LCA_List_MatProc_Category(%d);', array($matprocid));
+		$result = db_query('CALL SM_LCA_List_MatProc_Category(?);', array($matprocid));
 		$row = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1065,7 +1065,7 @@ class sbom_db{
 
 	function update_mpclink($mpclinkID, $matprocID, $categoryID) {
 		if ($this->init_and_check_if_error('update_mpclink')) return ''; 
-		db_query("CALL SM_LCA_Update_MPCLink(%d, %d, %d)", array($mpclinkID, $matprocID, $categoryID));
+		db_query("CALL SM_LCA_Update_MPCLink(?, ?, ?)", array($mpclinkID, $matprocID, $categoryID));
 		//sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return ;
@@ -1074,7 +1074,7 @@ class sbom_db{
 	function get_result_label_option($productID) {
 	    if ($this->init_and_check_if_error('get_result_label_option')) return '';
 		// Fetch the JSON string from the User Profile table
-		$result = db_query('CALL SM_User_Profile_Get(%d,%d);', array($this->userid, $productID));
+		$result = db_query('CALL SM_User_Profile_Get(?,?);', array($this->userid, $productID));
 		$user_profile = $this->check_for_errors(db_result($result));
 		// decode JSON and fetch the Option: value
 		sustainable_minds_clear_db($result);
@@ -1094,7 +1094,7 @@ class sbom_db{
 		if ($this->init_and_check_if_error('set_result_label_option')) return '';
 		// JSON encode the selected label
 		$save_label = '{option: '.$sel_label.'}';
-		db_query("CALL SM_User_Profile_Set(%d,%d,'%s');", array($this->userid, $productID, $save_label));
+		db_query("CALL SM_User_Profile_Set(?,?,?);", array($this->userid, $productID, $save_label));
 		Database::setActiveConnection();
 		return true;
 	}
@@ -1102,7 +1102,7 @@ class sbom_db{
 	function copy_sbom_item($itemID, $componentID, $isTop) {
 		if ($this->init_and_check_if_error('copy_sbom_item'))
 		return '';
-		db_query("CALL SM_SBOM_Copy_Item(%d, %d, %d);", array($itemID, $componentID, $isTop));
+		db_query("CALL SM_SBOM_Copy_Item(?, ?, ?);", array($itemID, $componentID, $isTop));
 		Database::setActiveConnection();
 		return true;
 	}
@@ -1110,7 +1110,7 @@ class sbom_db{
 	function copy_sbom_component($componentID, $parentID, $conceptID, $isTop) {
 		if ($this->init_and_check_if_error('copy_sbom_component'))
 		return '';
-		db_query("CALL SM_SBOM_Copy_Component(%d, %d, %d, %d);", array($componentID, $parentID, $conceptID, $isTop));
+		db_query("CALL SM_SBOM_Copy_Component(?, ?, ?, ?);", array($componentID, $parentID, $conceptID, $isTop));
 		Database::setActiveConnection();
 		return true;
 	}
@@ -1120,9 +1120,9 @@ class sbom_db{
 	function get_matproc_category_by_name($category, $categoryparent='') {
 		if ($this->init_and_check_if_error('get_matproc_category_by_name')) return ''; 
 		if (empty($categoryparent)) {
-			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name('%s');", array($category));
+			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name(?);", array($category));
 		} else {
-			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Parent('%s', '%s');", array($category, $categoryparent));
+			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Parent(?, ?);", array($category, $categoryparent));
 		}
 
 		$row = $this->check_for_errors(db_fetch_array($result));
@@ -1134,7 +1134,7 @@ class sbom_db{
 	
 	function add_matproc_category($category, $parentID=0) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_MatProc_Category(%d, '%s', '%s')", array($parentID, $category, ''));
+		$result = db_query("CALL SM_LCA_Add_MatProc_Category(?, ?, ?)", array($parentID, $category, ''));
 		$catID = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1143,7 +1143,7 @@ class sbom_db{
 	
 	function get_matproc_category_by_name_parentID($category, $parentID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_ParentID('%s', %d);", array($category, $parentID));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_ParentID(?, ?);", array($category, $parentID));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1152,7 +1152,7 @@ class sbom_db{
 	
 	function get_name_matproc_alias($material) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_Name_MatProc_Alias('%s')", array($material));
+		$result = db_query("CALL SM_LCA_Get_Name_MatProc_Alias(?)", array($material));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1161,7 +1161,7 @@ class sbom_db{
 	
 	function get_matproccategory_temp($categoryID, $material) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProcCategory_Temp(%d, '%s')", array($category, $material));
+		$result = db_query("CALL SM_LCA_Get_MatProcCategory_Temp(?, ?)", array($category, $material));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1170,7 +1170,7 @@ class sbom_db{
 	
 	function delete_matProcCategory_temp_by_name($material) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("SM_LCA_Delete_MatProcCategory_Temp_By_Name('%s')", array($material));
+		$result = db_query("SM_LCA_Delete_MatProcCategory_Temp_By_Name(?)", array($material));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return ;
@@ -1178,7 +1178,7 @@ class sbom_db{
 	
 	function add_matproc_category_temp($categoryID, $material) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_MatProc_Category_Temp(%d, '%s', '%s')", array($categoryID, $material, ''));
+		$result = db_query("CALL SM_LCA_Add_MatProc_Category_Temp(?, ?, ?)", array($categoryID, $material, ''));
 		$catID = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1187,7 +1187,7 @@ class sbom_db{
 	
 	function get_matproc_by_name($material) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_By_Name('%s')", array($material));
+		$result = db_query("CALL SM_LCA_Get_MatProc_By_Name(?)", array($material));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1196,7 +1196,7 @@ class sbom_db{
 
 	function delete_mpclink_by_mp($matProcID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Delete_MPCLink_By_MP(%d)", array($matProcID));
+		$result = db_query("CALL SM_LCA_Delete_MPCLink_By_MP(?)", array($matProcID));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return;
@@ -1204,7 +1204,7 @@ class sbom_db{
 	
 	function add_mpc_to_matproc($matProcID, $categoryID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_MPC_To_MatProc(%d, %d)", array($matProcID, $categoryID));
+		$result = db_query("CALL SM_LCA_Add_MPC_To_MatProc(?, ?)", array($matProcID, $categoryID));
 		$id = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1213,7 +1213,7 @@ class sbom_db{
 	
 	function get_matproc_links_by_materialID($materialID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProcLinks_By_MaterialID('%s')", array($materialID));
+		$result = db_query("CALL SM_LCA_Get_MatProcLinks_By_MaterialID(?)", array($materialID));
 		$arr = array();
 		while ($row = db_fetch_array($result)) $arr[] = $row;
 		sustainable_minds_clear_db($result);
@@ -1223,7 +1223,7 @@ class sbom_db{
 	
 	function get_matproc_links_by_processID($processID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProcLinks_By_ProcessID('%s')", array($processID));
+		$result = db_query("CALL SM_LCA_Get_MatProcLinks_By_ProcessID(?)", array($processID));
 		$arr = array();
 		while ($row = db_fetch_array($result)) $arr[] = $row;
 		sustainable_minds_clear_db($result);
@@ -1233,7 +1233,7 @@ class sbom_db{
 	
 	function get_matproc_link_by_ids($materialID, $processID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Link_By_Ids(%d, %d);", array($materialID, $processID));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Link_By_Ids(?, ?);", array($materialID, $processID));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1242,7 +1242,7 @@ class sbom_db{
 	
 	function add_matproc_link($materialID, $processID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_MatProc_Link(%d, %d)", array($materialID, $processID));
+		$result = db_query("CALL SM_LCA_Add_MatProc_Link(?, ?)", array($materialID, $processID));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1251,7 +1251,7 @@ class sbom_db{
 	
 	function update_matproclink($materialID, $processID, $mplinkID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		db_query("CALL SM_LCA_Update_MatProcLink(%d, %d, %d)", array($materialID, $processID, $mplinkID));
+		db_query("CALL SM_LCA_Update_MatProcLink(?, ?, ?)", array($materialID, $processID, $mplinkID));
 		//sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return;
@@ -1259,7 +1259,7 @@ class sbom_db{
 
 	function update_matproc_desc($matProcID, $desc) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Update_MatProc_Description(%d,'%s')", array($matProcID, $desc));
+		$result = db_query("CALL SM_LCA_Update_MatProc_Description(?,?)", array($matProcID, $desc));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return $result;
@@ -1267,7 +1267,7 @@ class sbom_db{
 
 	function update_matproc_name($matProcID, $name) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Update_MatProc_Name(%d,'%s')", array($matProcID, $name));
+		$result = db_query("CALL SM_LCA_Update_MatProc_Name(?,?)", array($matProcID, $name));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return $result;
@@ -1275,7 +1275,7 @@ class sbom_db{
 
 	function get_matproc_id_alias($matprocid, $alias) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Id_Alias(%d, '%s')", array($matprocid, $alias));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Id_Alias(?, ?)", array($matprocid, $alias));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1284,7 +1284,7 @@ class sbom_db{
 
 	function add_matproc_alias($matprocid, $alias) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_MatProc_Alias(%d, '%s')", array($matprocid, $alias));
+		$result = db_query("CALL SM_LCA_Add_MatProc_Alias(?, ?)", array($matprocid, $alias));
 		$id = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1293,7 +1293,7 @@ class sbom_db{
 	
 	function get_unit_by_name($matUnit) {
 		if ($this->init_and_check_if_error('')) return '';
-		$result = db_query("CALL SM_LCA_Get_Unit_By_Name('%s')", array($matUnit));
+		$result = db_query("CALL SM_LCA_Get_Unit_By_Name(?)", array($matUnit));
 		$id = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1302,7 +1302,7 @@ class sbom_db{
 	
 	function add_unit($matUnit) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_Unit('%s', '%s')", array($matUnit, ''));
+		$result = db_query("CALL SM_LCA_Add_Unit(?, ?)", array($matUnit, ''));
 		$id = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1311,7 +1311,7 @@ class sbom_db{
 	
 	function list_matproc_alias($myname) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Alias('%s')", array($myname));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Alias(?)", array($myname));
 		$arr = array();
 		while ($row = db_fetch_array($result)) $arr[] = $row['alias'];
 		sustainable_minds_clear_db($result);
@@ -1321,7 +1321,7 @@ class sbom_db{
 	
 	function get_matproc_category_by_name_temp($pname) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Temp('%s')", array($pname));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Temp(?)", array($pname));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1330,7 +1330,7 @@ class sbom_db{
 	
 	function update_matproc($matprocID, $myname, $desc, $matID, $enum, $endoflife) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Update_MatProc(%d, '%s', '%s', %d, '%s', %d)", array($matprocID, $myname, $desc, $matID, $enum, $endoflife));
+		$result = db_query("CALL SM_LCA_Update_MatProc(?, ?, ?, ?, ?, ?)", array($matprocID, $myname, $desc, $matID, $enum, $endoflife));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return $result;
@@ -1338,7 +1338,7 @@ class sbom_db{
 	
 	function add_matproc($myname, $desc, $matID, $mpcid, $enum, $endoflife) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_MatProc('%s', '%s', %d, %d, '%s', %d)", array($myname, $desc, $matID, $mpcid, $enum, $endoflife));
+		$result = db_query("CALL SM_LCA_Add_MatProc(?, ?, ?, ?, ?, ?)", array($myname, $desc, $matID, $mpcid, $enum, $endoflife));
 		$lastid = db_result($result, 0);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1347,7 +1347,7 @@ class sbom_db{
 	
 	function get_matproc_impact_by_mp_i($id, $col) {
 		if ($this->init_and_check_if_error('')) return '';
-		$result = db_query("CALL SM_LCA_Get_MatProc_Impact_By_MP_I(%d, %d)", array($id, $col));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Impact_By_MP_I(?, ?)", array($id, $col));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1356,7 +1356,7 @@ class sbom_db{
 	
 	function add_matproc_impact($lastid, $col, $val, $phaseid) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_MatProc_Impact(%d, %d, '%s', %d)", array($lastid, $col, $val, $phaseid));
+		$result = db_query("CALL SM_LCA_Add_MatProc_Impact(?, ?, ?, ?)", array($lastid, $col, $val, $phaseid));
 		$lastid = db_result($result,0);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1365,7 +1365,7 @@ class sbom_db{
 	
 	function update_matproc_impact($mpcid, $lastid, $col, $val, $phaseid) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Update_MatProc_Impact(%d, %d, %d, '%s', %d)", array($mpcid, $lastid, $col, $val, $phaseid));
+		$result = db_query("CALL SM_LCA_Update_MatProc_Impact(?, ?, ?, ?, ?)", array($mpcid, $lastid, $col, $val, $phaseid));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return $result;
@@ -1383,7 +1383,7 @@ class sbom_db{
 	
 	function list_impacts_version($version) {
 		if ($this->init_and_check_if_error('')) return '';
-		$result = db_query("CALL SM_LCA_List_Impact_version('%s')", array($version));
+		$result = db_query("CALL SM_LCA_List_Impact_version(?)", array($version));
 		$cols = array();
 		while($row = db_fetch_array($result)) $cols[] = $row;
 		sustainable_minds_clear_db($result);
@@ -1398,7 +1398,7 @@ class sbom_db{
 	function add_dataset($version, $revision, $description, $published) {
 		if ($this->init_and_check_if_error('')) return ''; 
 		//$description = "Enter dataset description here.";
-		db_query("CALL SM_LCA_Add_DatasetInfo('%s', '%s', '%s', %d)", array($version, $revision, $description, $published));
+		db_query("CALL SM_LCA_Add_DatasetInfo(?, ?, ?, ?)", array($version, $revision, $description, $published));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 	}
@@ -1406,7 +1406,7 @@ class sbom_db{
 	function map_dataset($src_version, $dest_version) {
 		if ($this->init_and_check_if_error('')) return ''; 
 		//$description = "Enter dataset description here.";
-		db_query("CALL SM_LCA_Map_DataSet('%s', '%s')", array($src_version, $dest_version));
+		db_query("CALL SM_LCA_Map_DataSet(?, ?)", array($src_version, $dest_version));
 		sustainable_minds_clear_db();
 		Database::setActiveConnection();
 	}
@@ -1414,7 +1414,7 @@ class sbom_db{
 	function update_dataset($version, $revision, $description, $published) {
 		if ($this->init_and_check_if_error('')) return ''; 
 		//$description = "Enter dataset description here.";
-		db_query("CALL SM_LCA_Update_DatasetInfo('%s', '%s', '%s', %d)", array($version, $revision, $description, $published));
+		db_query("CALL SM_LCA_Update_DatasetInfo(?, ?, ?, ?)", array($version, $revision, $description, $published));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 	}
@@ -1422,7 +1422,7 @@ class sbom_db{
 	function delete_dataset($version, $revision='1.0') {
 		if ($this->init_and_check_if_error('')) return ''; 
 		//$description = "Enter dataset description here.";
-		db_query("CALL SM_LCA_Delete_Dataset('%s', '%s')", array($version, $revision));
+		db_query("CALL SM_LCA_Delete_Dataset(?, ?)", array($version, $revision));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 	}
@@ -1461,7 +1461,7 @@ class sbom_db{
 	}
 	function find_datasetInfo($version, $revision) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Find_DatasetInfo('%s', '%s')", array($version, $revision));
+		$result = db_query("CALL SM_LCA_Find_DatasetInfo(?, ?)", array($version, $revision));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1471,13 +1471,13 @@ class sbom_db{
 	function add_datasetFiles($version, $revision, $datatype, $filename) {
 		if ($this->init_and_check_if_error('')) return ''; 
 		//$description = "Enter dataset description here.";
-		db_query("CALL SM_LCA_Add_DatasetFiles('%s', '%s', '%s', '%s')", array($version, $revision, $datatype, $filename));
+		db_query("CALL SM_LCA_Add_DatasetFiles(?, ?, ?, ?)", array($version, $revision, $datatype, $filename));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 	}
 	function list_datasetFiles($version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_DatasetFiles('%s')", array($version));
+		$result = db_query("CALL SM_LCA_Get_DatasetFiles(?)", array($version));
 		$arr = array();
 		while ($row = db_fetch_array($result)) $arr[] = $row;
 		sustainable_minds_clear_db($result);
@@ -1487,7 +1487,7 @@ class sbom_db{
 
 	function get_datasetFiles($version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_DatasetFiles('%s')", array($version));
+		$result = db_query("CALL SM_LCA_Get_DatasetFiles(?)", array($version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1496,7 +1496,7 @@ class sbom_db{
 
 	function add_dataset_version($version, $revision, $datatype, $recordID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Add_Dataset_Version('%s', '%s', '%s', '%s')", array($version, $revision, $datatype, $recordID));
+		$result = db_query("CALL SM_LCA_Add_Dataset_Version(?, ?, ?, ?)", array($version, $revision, $datatype, $recordID));
 		$id = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1505,7 +1505,7 @@ class sbom_db{
 
 	function update_dataset_version_recordID($version, $revision, $datatype, $recordID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Update_Dataset_Version_RecordID('%s', '%s', '%s', '%s')", array($version, $revision, $datatype, $recordID));
+		$result = db_query("CALL SM_LCA_Update_Dataset_Version_RecordID(?, ?, ?, ?)", array($version, $revision, $datatype, $recordID));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1514,7 +1514,7 @@ class sbom_db{
 
 	function update_dataset_version($version, $revision, $datatype, $recordID) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		db_query("CALL SM_LCA_Update_Dataset_Version('%s', '%s', '%s', '%s')", array($version, $revision, $datatype, $recordID));
+		db_query("CALL SM_LCA_Update_Dataset_Version(?, ?, ?, ?)", array($version, $revision, $datatype, $recordID));
 		//sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return;
@@ -1522,7 +1522,7 @@ class sbom_db{
 
 	function update_impact_for_matproc_version($matprocID, $version, $revision) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		db_query("CALL SM_LCA_Update_Impact_MatProc_Version(%d, '%s', '%s')", array($matprocID, $version, $revision));
+		db_query("CALL SM_LCA_Update_Impact_MatProc_Version(?, ?, ?)", array($matprocID, $version, $revision));
 		//sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return;
@@ -1571,7 +1571,7 @@ class sbom_db{
 	
 	function get_matproc_version($matprocid, $version){
 		if ($this->init_and_check_if_error('get_matproc')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_MatProc_Version(%d, "%s");', array($matprocid, $version));
+		$result = db_query('CALL SM_LCA_Get_MatProc_Version(?, "%s");', array($matprocid, $version));
 		$row = $this->check_for_errors(db_fetch_array($result));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1580,7 +1580,7 @@ class sbom_db{
 	
 	function get_matproc_by_name_version($material, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_By_Name_Version('%s', '%s')", array($material, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProc_By_Name_Version(?, ?)", array($material, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1589,7 +1589,7 @@ class sbom_db{
 	
 	function get_name_matproc_alias_version($material, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_Name_MatProc_Alias_Version('%s', '%s')", array($material, $version));
+		$result = db_query("CALL SM_LCA_Get_Name_MatProc_Alias_Version(?, ?)", array($material, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1598,7 +1598,7 @@ class sbom_db{
 
 	function get_matprocid_alias_version($matprocid, $alias, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProcID_Alias_Version(%d, '%s', '%s')", array($matprocid, $alias, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProcID_Alias_Version(?, ?, ?)", array($matprocid, $alias, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1607,7 +1607,7 @@ class sbom_db{
 
 	function list_matproc_alias_version($myname, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Alias_Version('%s', '%s')", array($myname, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Alias_Version(?, ?)", array($myname, $version));
 		$arr = array();
 		while ($row = db_fetch_array($result)) $arr[] = $row['alias'];
 		sustainable_minds_clear_db($result);
@@ -1617,7 +1617,7 @@ class sbom_db{
 	
 	function get_matproc_category_by_name_temp_version($pname, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Temp_Version('%s', '%s')", array($pname, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Temp_Version(?, ?)", array($pname, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1626,7 +1626,7 @@ class sbom_db{
 	
 	function delete_matproc_category_by_name_temp_version($pname, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Delete_MatProcCategory_Temp_By_Name_Version('%s', '%s')", array($pname, $version));
+		$result = db_query("CALL SM_LCA_Delete_MatProcCategory_Temp_By_Name_Version(?, ?)", array($pname, $version));
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
 		return;
@@ -1634,7 +1634,7 @@ class sbom_db{
 	
 	function get_matproccategory_temp_version($categoryID, $material, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProcCategory_Temp_Version(%d, '%s', '%s')", array($category, $material, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProcCategory_Temp_Version(?, ?, ?)", array($category, $material, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1643,7 +1643,7 @@ class sbom_db{
 	
 	function get_MPC_for_matproc_version($mpname, $version) {
 		if ($this->init_and_check_if_error('')) return '';
-		$result = db_query("CALL SM_LCA_Get_MatProcCategory_For_MatProc_Version('%s', '%s')", array($mpname, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProcCategory_For_MatProc_Version(?, ?)", array($mpname, $version));
 		$id = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1652,7 +1652,7 @@ class sbom_db{
 	
 	function get_matproc_impact_by_mp_i_version($id, $col, $version) {
 		if ($this->init_and_check_if_error('')) return '';
-		$result = db_query("CALL SM_LCA_Get_MatProc_Impact_By_MP_I_Version(%d, %d, '%s')", array($id, $col, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Impact_By_MP_I_Version(?, ?, ?)", array($id, $col, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1662,9 +1662,9 @@ class sbom_db{
 	function get_matproc_category_by_name_version($category, $categoryparent='', $version) {
 		if ($this->init_and_check_if_error('get_matproc_category_by_name')) return ''; 
 		if (empty($categoryparent)) {
-			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Version('%s', '%s');", array($category, $version));
+			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Version(?, ?);", array($category, $version));
 		} else {
-			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Parent_Version('%s', '%s', '%s');", array($category, $categoryparent, $version));
+			$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_Parent_Version(?, ?, ?);", array($category, $categoryparent, $version));
 		}
 
 		$row = $this->check_for_errors(db_fetch_array($result));
@@ -1676,7 +1676,7 @@ class sbom_db{
 	
 	function get_matproc_category_parentid_by_id($categoryid) {
 		if ($this->init_and_check_if_error('get_matproc_category_parent_by_id')) return '';
-		$result = db_query("CALL SM_LCA_Get_MatProc_Category_ParentID_by_ID('%d');", array($categoryid));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Category_ParentID_by_ID('?');", array($categoryid));
 		$row = db_fetch_array($result);
 		$parentID = $row['parentID'];
 		sustainable_minds_clear_db($result);
@@ -1686,7 +1686,7 @@ class sbom_db{
 		
 	function get_matproc_category_by_name_parentID_version($category, $parentID, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_ParentID_Version('%s', %d, '%s');", array($category, $parentID, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Category_By_Name_ParentID_Version(?, ?, ?);", array($category, $parentID, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1694,7 +1694,7 @@ class sbom_db{
 	}
 	function get_matproc_link_by_ids_version($materialID, $processID, $version) {
 		if ($this->init_and_check_if_error('')) return ''; 
-		$result = db_query("CALL SM_LCA_Get_MatProc_Link_By_Ids_Version(%d, %d, '%s');", array($materialID, $processID, $version));
+		$result = db_query("CALL SM_LCA_Get_MatProc_Link_By_Ids_Version(?, ?, ?);", array($materialID, $processID, $version));
 		$row = db_fetch_array($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1704,7 +1704,7 @@ class sbom_db{
   /* UI */
 	function get_version_for_component($componentID) {
 		if ($this->init_and_check_if_error('')) return '';
-		$result = db_query("CALL SM_SBOM_Get_Version_For_Component(%d, %d)", array($componentID, $this->userid));
+		$result = db_query("CALL SM_SBOM_Get_Version_For_Component(?, ?)", array($componentID, $this->userid));
 		$version = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1713,7 +1713,7 @@ class sbom_db{
 	
 	function get_owner_private_mpc($mpcid) {
 		if ($this->init_and_check_if_error('')) return '';
-		$result = db_query("CALL SM_LCA_Get_Owner_Private_Mpc(%d)", array($mpcid));
+		$result = db_query("CALL SM_LCA_Get_Owner_Private_Mpc(?)", array($mpcid));
 		$ownerid = db_result($result);
 		sustainable_minds_clear_db($result);
 		Database::setActiveConnection();
@@ -1723,7 +1723,7 @@ class sbom_db{
 	function list_mp_category_version($parentid, $cattype, $version){
 		$category = array();
 		if ($this->init_and_check_if_error('list_mp_category')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_MPC_Children_Version(%d, "%s", "%s");', array($parentid, $cattype, $version));
+		$result = db_query('CALL SM_LCA_Get_MPC_Children_Version(?, "%s", "%s");', array($parentid, $cattype, $version));
 
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$category[]= $row;
@@ -1739,7 +1739,7 @@ class sbom_db{
 	
 		$matproc = array();
 		if ($this->init_and_check_if_error('list_matproc_by_category')) return ''; 
-		$result = db_query('CALL SM_LCA_Get_MatProc_By_Cat_Version(%d, "%s");', array($categoryid, $version));
+		$result = db_query('CALL SM_LCA_Get_MatProc_By_Cat_Version(?, "%s");', array($categoryid, $version));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$matproc[]= $row;
 		}
@@ -1765,7 +1765,7 @@ class sbom_db{
 	function list_process_by_material_version($matid,$eol='both', $version){
 		if ($this->init_and_check_if_error('list_process_by_material')) return ''; 
 		$database = \Drupal::database();
-		$result = db_query('CALL SM_LCA_Get_Process_By_Material_Version(%d, "%s", "$s");', array($matid,$eol,$version));
+		$result = db_query('CALL SM_LCA_Get_Process_By_Material_Version(?, "%s", "$s");', array($matid,$eol,$version));
 		while($row = $this->check_for_errors(db_fetch_array($result))){
 			$processes[]= $row;
 		}
@@ -1776,8 +1776,8 @@ class sbom_db{
     public function getCategories(){
 		Database::setActiveConnection('d5_dump');
         $conn =  Database::getConnection();
-        $statement = $conn->prepare("CALL SM_SBOM_List_PCategories();");
-        $exec_result = $statement->execute();
+        $statement = db_query("CALL SM_SBOM_List_PCategories();");
+        // $exec_result = $statement->execute();
         while($row = $statement->fetchAssoc()){
             if($row['name']!=''){
                 $categories[$row['pcategoryID']] = $row['name'];

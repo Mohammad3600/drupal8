@@ -3,6 +3,8 @@ global-styling:
   js:
     //ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js: { type: external } 
     https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js: { type: external, minified: true  }
+    js/concepts.js: {}
+    js/products.js: {}
     js/custom.js: {}
 
   css:

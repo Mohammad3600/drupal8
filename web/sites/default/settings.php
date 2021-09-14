@@ -803,7 +803,7 @@ $databases['default']['default'] = array (
   'driver' => 'mysql',
 );
 $databases['d5_dump']['default'] = array (
-  'database' => 'd5_dump',
+  'database' => 'd5_eng',
   'username' => 'root',
   'password' => '',
   'prefix' => '',

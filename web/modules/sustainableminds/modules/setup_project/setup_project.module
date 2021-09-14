@@ -1,11 +1,44 @@
 <?php
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-define('SM_PATH', drupal_get_path('module', 'setup_project'));
+include_once(dirname(__FILE__).'\init.inc');
 global $chart_colors;
 $chart_colors = array('303869', '285C74', '0B818D', '2E9C9B', '6BB59C', '9ECD96', '74B93A', 'BFD559', 'F3E57C', 'FCD16B', 'D4EF24');
 global $chartIDs;
 $chartIDs = array();
+
+
+/*
+ * Build list of dataset versions
+ **/
+function sustainable_minds_list_versions() {
+	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+  $is_admin = false;
+  if ($user->hasRole("superadmin") || $user->hasRole("lca data manager")) {
+    $is_admin = true;
+  }
+   
+  $db = \Drupal::service('setup_project.sbom_db');
+
+  $versions = $db->list_dataset_version();
+  $list = array();
+  $list['1.0'] = 'Dataset 1.0';
+  
+  /* build dropdown list */
+  for ($i = 0; $i < count($versions); $i++) {
+    if ($versions[$i]) {
+      if ($versions[$i]['status'] == 1 || $is_admin) {
+        $option = trim($versions[$i]['version']);
+        $description = 'Dataset: ' . trim($versions[$i]['version']);
+        $list[$option] = $description;
+      }
+    }
+  }
+
+  return $list;
+}
+
+
 /**
  * View Product
  */
@@ -78,15 +111,6 @@ function sustainable_minds_product_edit_tab($page, $productid) {
 	  return '<div class="'.$class.'">'.$edit.'</div>';
   }
 
-/**
- * Creates blank product
- */
-function sustainable_minds_project_new() {
-	$db = \Drupal::service('setup_project.sbom_db');
-	$id = $db->add_blank_product();
-	echo $id ;
-	exit();
-}
 
 /**
  * returns user products
@@ -308,136 +332,92 @@ function sustainable_minds_product_view($product, $productid, $page)
 		$product['client'] = TEXT_DEFAULT_PROJECT_CLIENT;
 
 	// $user = user_load(array('uid' => $product['userID']));
+	$db = \Drupal::service('setup_project.sbom_db');
+	$referenceconcept = $db->get_reference_concept($productid);
+	$finalconcept = $db->get_final_concept($productid);
+	$bestconcept = $db->get_best_concept($productid);
 
+	$conceptArray = array();
+	$conceptArray['reference'] = array('concept' => $referenceconcept, 'title' => 'Reference');
+	$conceptArray['final'] = array('concept' => $finalconcept, 'title' => 'Final concept');
+	$conceptArray['best'] = array('concept' => $bestconcept, 'title' => 'Lowest impact');
+
+	if (!count($conceptArray)) {
+		$output .= TEXT_DEFAULT_PROJECT_CONCEPTS;
+	}
 	$output .= '<div class="product-view">'
 		. '<div class="row flex-row-reverse">'
-		. '<div class="col-lg-6 ps-0">' . sustainable_minds_product_edit_tab($page, $productid) . '<div class="project-edit-right-table">
-		<table class="product-view-concept">
+		. '<div class="col-lg-6 ps-0">' . sustainable_minds_product_edit_tab($page, $productid) . '<div class="project-edit-right-table">'
+		. '<table class="product-view-concept project-concepts">
 			<caption></caption>
-			<tbody>
-				<tr class="product-view-concept-title product-view-concept-reference">
-					<td colspan="2"><h3 class="font_11">Reference:</h3></td>
-					<td style="border-right: 1px solid #fff; border-left: 1.5px solid #fff;"></td>
-					<td></td>
-				</tr>
-				<tr class="product-view-concept-reference">
-					<td class="product-view-concept-icon">
-						<figure><img class="full_width" src="'.SITE_PATH.'/sites/default/files/2021-07/no_scope.gif" title="The Reference has not been designated" alt="refrence image"></figure>
-					</td>
-					<td class="product-view-concept-name">The reference has not been designated.</td>
-					<td class="product-view-concept-mpts"></td>
-					<td class="product-view-concept-change"><div class="gl-"></div></td>
-				</tr>
-				<tr class="product-view-concept-title product-view-concept-final">
-					<td colspan="2"><h3 class="font_11">Final concept:</h3></td>
-					<td style="border-right: 1px solid #fff; border-left: 1.5px solid #fff;"></td>
-					<td></td>
-				</tr>
-				<tr class="product-view-concept-final">
-					<td class="product-view-concept-icon">
-						<figure><img class="full_width" src="'.SITE_PATH.'/sites/default/files/2021-07/no_scope.gif" title="The final concept has not been designated" alt="Final image"></figure>
-					</td>
-					<td class="product-view-concept-name">The final concept has not been designated.</td>
-					<td class="product-view-concept-mpts"></td>
-					<td class="product-view-concept-change"><div class="gl-"></div></td>
-				</tr>
-				<tr class="product-view-concept-title product-view-concept-best">
-					<td colspan="2"><h3 class="font_11">Lowest impact:</h3></td>
-					<td style="border-right: 1px solid #fff; border-left: 1.5px solid #fff;"></td>
-					<td></td>
-				</tr>
-				<tr class="product-view-concept-best">
-					<td class="product-view-concept-icon">
-						<figure><img class="full_width" src="'.SITE_PATH.'/sites/default/files/2021-07/no_scope.gif" title="The lowest impact has not been designated" alt="Lowest image"></figure>
-					</td>
-					<td class="product-view-concept-name">The lowest impact has not been designated.</td>
-					<td class="product-view-concept-mpts"></td>
-					<td class="product-view-concept-change"><div class="gl-"></div></td>
-				</tr>
-			</tbody>
-		</table>
+			<tbody>';
 		
-	   </div></div>'
-		. '<div class="col-lg-6"><div class="product-view-main">'
-		. '<h3>' . $product['name'] . '</h3>'
-		. '<ul>'
-		. '<li><div class="d-flex flex-wrap"><h4>Client or group</h4><p>' .$product['client']. '</p></div>'
-		. '<div class="d-flex flex-wrap"><h4>Category</h4><p>' . $product['pcategory'] . '</p></div></li>'
-		. '<li><div class="d-flex flex-wrap"><h4>Methodology</h4>' . sustainable_minds_methodology($product['version']) . '</div></li>'
-		. '<li><div class="d-flex flex-wrap"><h4>Description</h4><p>' . $projectDescription . '</p></div></li>'
-		. '<li><div class="d-flex flex-wrap"><h4>Created on</h4><p>' . date('j F, Y', strtotime($product['date_created'])) . '</p></div></li>'
-		. '</div></div></div></div>';
-		// . '<table class="product-view-concept">'
-		// . '<caption></caption>'; /* previously class="product-view-concept-head"*/
+	foreach ($conceptArray as $key => $concept) {
+		$supress = false;
+		//if (!$concept['concept']['conceptID']) continue;
+		if (!$concept['concept']['conceptID']) {
+			$concept['concept']['name'] = 'The ' . strtolower($concept['title']) . ' has not been designated.';
+			$supress = true;
+		}
 
-		 $db = \Drupal::service('setup_project.sbom_db');
-		 $referenceconcept = $db->get_reference_concept($productid);
-		 $finalconcept = $db->get_final_concept($productid);
-		 $bestconcept = $db->get_best_concept($productid);
+		if (!$supress && $key != 'reference') {
+			$ochange = $concept['concept']['ref_compare_okala'];
+			if ($ochange > 0) {
+				$classChange = 'positive';
+				$ochange = '<div class="gl-emphesis gl-no-color">' . nice_exponential_notation(scientific_notation($ochange, 2, SN_LOWER, SN_UPPER)) . '%</div> Performance reduction from reference'; // from Reference
+			} elseif ($ochange === null) {
+				$classChange = '';
+				if ($concept['concept']['conceptID'] == $referenceconcept['conceptID']) $ochange = 'Reference';
+				else $ochange = '';
+			} elseif ($ochange == 0) {
+				//$classChange = 'even';
+				$classChange = '';
+				if ($concept['concept']['conceptID'] == $referenceconcept['conceptID']) $ochange = 'Reference';
+				else $ochange = 'No change'; // from Reference
+			} else {
+				$classChange = 'negative';
+				$ochange = '<div class="gl-emphesis gl-no-color">' . nice_exponential_notation(scientific_notation($ochange * -1, 2, SN_LOWER, SN_UPPER)) . '%</div>Performance improvement from reference'; // from Reference
+			}
+		} else {
+			$ochange = '';
+			$classChange = '';
+		}
 
-	// $conceptArray = array();
-	// $conceptArray['reference'] = array('concept' => $referenceconcept, 'title' => 'Reference');
-	// $conceptArray['final'] = array('concept' => $finalconcept, 'title' => 'Final concept');
-	// $conceptArray['best'] = array('concept' => $bestconcept, 'title' => 'Lowest impact');
+		if (!$concept['concept']['icon'])
+			$concept['concept']['icon'] = DEFAULT_IMAGE;
 
-	// if (!count($conceptArray)) {
-	// 	$output .= TEXT_DEFAULT_PROJECT_CONCEPTS;
-	// }
+		if ($supress) {
+			$url = $concept['concept']['name'];
+			$mpts = '';
+		} else {
+			$url = '<a href="'. SITE_PATH . '/' . URL_CONCEPT_VIEW . '/' . $concept['concept']['conceptID'] . '">' . $concept['concept']['name'] . '</a>';
+			$mpts = '<div class="gl-emphesis">' . nice_exponential_notation(scientific_notation($concept['concept']['okala_n'], 2, SN_LOWER, SN_UPPER)) . '</div>' . MPTS_HOURS_USE_LABEL;
+		}
 
-	// foreach ($conceptArray as $key => $concept) {
-	// 	$supress = false;
-	// 	//if (!$concept['concept']['conceptID']) continue;
-	// 	if (!$concept['concept']['conceptID']) {
-	// 		$concept['concept']['name'] = 'The ' . strtolower($concept['title']) . ' has not been designated.';
-	// 		$supress = true;
-	// 	}
+		$icon = '<figure><img class="full_width" src="' . $concept['concept']['icon'] . '" /></figure>';
+	 /* previously class="product-view-concept-head"*/
 
-	// 	if (!$supress && $key != 'reference') {
-	// 		$ochange = $concept['concept']['ref_compare_okala'];
-	// 		if ($ochange > 0) {
-	// 			$classChange = 'positive';
-	// 			$ochange = '<div class="gl-emphesis gl-no-color">' . nice_exponential_notation(scientific_notation($ochange, 2, SN_LOWER, SN_UPPER)) . '%</div> Performance reduction from reference'; // from Reference
-	// 		} elseif ($ochange === null) {
-	// 			$classChange = '';
-	// 			if ($concept['concept']['conceptID'] == $referenceconcept['conceptID']) $ochange = 'Reference';
-	// 			else $ochange = '';
-	// 		} elseif ($ochange == 0) {
-	// 			//$classChange = 'even';
-	// 			$classChange = '';
-	// 			if ($concept['concept']['conceptID'] == $referenceconcept['conceptID']) $ochange = 'Reference';
-	// 			else $ochange = 'No change'; // from Reference
-	// 		} else {
-	// 			$classChange = 'negative';
-	// 			$ochange = '<div class="gl-emphesis gl-no-color">' . nice_exponential_notation(scientific_notation($ochange * -1, 2, SN_LOWER, SN_UPPER)) . '%</div>Performance improvement from reference'; // from Reference
-	// 		}
-	// 	} else {
-	// 		$ochange = '';
-	// 		$classChange = '';
-	// 	}
-
-	// 	if (!$concept['concept']['icon'])
-	// 		$concept['concept']['icon'] = DEFAULT_IMAGE;
-
-	// 	if ($supress) {
-	// 		$url = $concept['concept']['name'];
-	// 		$mpts = '';
-	// 	} else {
-	// 		$url = '<a href="/' . URL_CONCEPT_VIEW . '/' . $concept['concept']['conceptID'] . '">' . $concept['concept']['name'] . '</a>';
-	// 		$mpts = '<div class="gl-emphesis">' . nice_exponential_notation(scientific_notation($concept['concept']['okala_n'], 2, SN_LOWER, SN_UPPER)) . '</div>' . MPTS_HOURS_USE_LABEL;
-	// 	}
-
-	// 	$icon = '<img src="' . $concept['concept']['icon'] . '" />';
-	// 	$output .=   '<tr class="product-view-concept-title product-view-concept-' . $key . ' ' . $classChange . '">'
-	// 		. '<td colspan="2"><h3>' . $concept['title'] . ':</h3></td>'
-	// 		. '<td style="border-right: 1px solid #fff;border-left: 1px solid #fff;"></td><td></td></tr>'
-	// 		. '<tr class="product-view-concept-' . $key . ' ' . $classChange . '">'
-	// 		. '<td class="product-view-concept-icon"><div>' . $icon . '</div></td>' //div needed for ie 8
-	// 		. '<td class="product-view-concept-name">' . $url . '</td>'
-	// 		. '<td class="product-view-concept-mpts">' . $mpts . '</td>'
-	// 		. '<td class="product-view-concept-change"><div class="gl-' . $classChange . '">' . $ochange . '</div></td>'
-	// 		. '</tr>';
-	// }
-
+		 
+		$output .=   '<tr class="product-view-concept-reference product-view-concept-title product-view-concept-' . $key . ' ' . $classChange . '">'
+			. '<td colspan="2"><h3 class="font_11 p-0">' . $concept['title'] . ':</h3></td>'
+			. '<td style="border-right: 1px solid #fff;border-left: 1px solid #fff;"></td><td></td></tr>'
+			. '<tr class="product-view-concept-' . $key . ' ' . $classChange . '">'
+			. '<td class="product-view-concept-icon">' . $icon . '</td>' //div needed for ie 8
+			. '<td class="product-view-concept-name">' . $url . '</td>'
+			. '<td class="product-view-concept-mpts">' . $mpts . '</td>'
+			. '<td class="product-view-concept-change"><div class="gl-' . $classChange . '">' . $ochange . '</div></td>'
+			. '</tr>';
+	}
+	$output .= '</tr></tbody></table></div></div>';
+	$output .= '<div class="col-lg-6"><div class="product-view-main">'
+	. '<h3>' . $product['name'] . '</h3>'
+	. '<ul>'
+	. '<li><div class="d-flex flex-wrap"><h4>Client or group</h4><p>' .$product['client']. '</p></div>'
+	. '<div class="d-flex flex-wrap"><h4>Category</h4><p>' . $product['pcategory'] . '</p></div></li>'
+	. '<li><div class="d-flex flex-wrap"><h4>Methodology</h4>' . sustainable_minds_methodology($product['version']) . '</div></li>'
+	. '<li><div class="d-flex flex-wrap"><h4>Description</h4><p>' . $projectDescription . '</p></div></li>'
+	. '<li><div class="d-flex flex-wrap"><h4>Created on</h4><p>' . date('j F, Y', strtotime($product['date_created'])) . '</p></div></li>'
+	. '</div></div></div></div>';
 	// $output .= '</table><div class="clear"></div></div>'; // clear,end product view
 	return $output;
 }
@@ -620,7 +600,7 @@ $output .= '<div id="concept-table" class="ms-2 my-3"><div class="concept-list">
 	$output .='<div class="pro-concept-list">
 	<div class="noconcepts">
 		<div class="create">
-			<!-- <a href="#" class="btn_green">Create a new Concept</a> -->
+			<!-- <a class="btn_green">Create a new Concept</a> -->
 			<a href='. SITE_PATH ."/".URL_CONCEPT_ADD.'/'. $productid. ' class="text-start project_btn btn btn-success btn-sm"> Create a new Concept <img src='. SITE_PATH .'/sites/default/files/2021-07/plus.svg alt="plus-icon" title="plus"> </a>
 		</div>
 		<p><strong>'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_INTRO.'</strong></p>
@@ -723,7 +703,7 @@ $output .= '<div id="concept-table" class="ms-2 my-3"><div class="concept-list">
 			  $output .='    
 				</td></tr>
 				<tr>
-				  <td class="product-view-concept-icon"><a href="/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'"><div><img src="'. $concept['icon'] . '" alt="' . $concept['name'].'" border=0 /></div> </a> </td>
+				  <td class="product-view-concept-icon"><a href="/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'"><div><img class="position-relative" style="top:-2px;" src="'. $concept['icon'] . '" alt="' . $concept['name'].'" border=0 /></div> </a> </td>
 				  <td class="name"><a href="'.SITE_PATH.'/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'">'.$concept['name'].'</a></td>
 				</tr>
 				<tr>
@@ -776,19 +756,24 @@ function sustainable_minds_concept_actions_area(&$concept, $actiondisplay = 'btn
 		if (!$concept['isFinal'])
 			$output .= ' | <a onClick="set_final_concept(' . $concept['productID'] . ', ' . $concept['conceptID'] . ');">Final</a>';
 	} else {
-		$output .= '<img class="concept-list-buttons" src="' . DEFAULT_PROJECT_CONCEPT_ICON_COPY . '" onClick="copy_concept(' . $concept['productID'] . ', ' . $concept['conceptID'] . ');" />';
+		$output .= '<a class="btn_green" onClick="copy_concept(' . $concept['productID'] . ', ' . $concept['conceptID'] . ');">Copy</a>';
 
 		if (!$concept['isRef'])
-			$output .= '<img class="concept-list-buttons" src="' . DEFAULT_PROJECT_CONCEPT_ICON_DELETE . '" onClick="delete_concept(' . $concept['conceptID'] . ', ' . $concept['productID'] . ');"/>';
+			$output .= '<a class="btn_green" onClick="delete_concept(' . $concept['conceptID'] . ', ' . $concept['productID'] . ');">Delete</a>';
 
+		$output .= '</div></div>';
 		if (!$concept['isRef'] || !$concept['isFinal'])
-			$output .= '<div class="clear"></div><div class="label">Declare as:</div>';
+			$output .= '<div class="project-concept-action row gx-0 align-items-center mb-1">
+						<div class="project-concept-action-left col-lg-4"><p><strong>Declare as:</strong></p></div><div class="project-concept-action-right col-lg-8">';
 
 		if (!$concept['isRef'])
-			$output .= '<img class="concept-list-buttons" src="' . DEFAULT_PROJECT_CONCEPT_ICON_REFERENCE . '" onClick="set_reference_concept(' . $concept['productID'] . ', ' . $concept['conceptID'] . ');"/>';
+			$output .= '<a class="btn_green" onClick="set_reference_concept(' . $concept['productID'] . ', ' . $concept['conceptID'] . ');">Reference</a>';
 
 		if (!$concept['isFinal'])
-			$output .= '<img class="concept-list-buttons" src="' . DEFAULT_PROJECT_CONCEPT_ICON_FINAL . '" onClick="set_final_concept(' . $concept['productID'] . ', ' . $concept['conceptID'] . ');"/>';
+			$output .= '<a onClick="set_final_concept(' . $concept['productID'] . ', ' . $concept['conceptID'] . ');" class="btn_green">Final</a>';
+
+		if (!$concept['isRef'] || !$concept['isFinal'])
+			$output .= '</div></div>';
 	};
 
 	$output .= '<div class="clear"></div>';
@@ -938,17 +923,8 @@ function sustainable_minds_concept_view($concept, $conceptid) {
 			<div class="project-concept-action row gx-0 align-items-center mb-1">
 				<div class="project-concept-action-left col-lg-4"><p><strong>This concept:</strong></p></div>
 				<div class="project-concept-action-right col-lg-8">
-					<a href="#" class="btn_green">Edit overview</a>
-					<a href="#" class="btn_green">Copy</a>
-				</div>
-			</div>
-			<div class="project-concept-action row gx-0 align-items-center mb-1">
-				<div class="project-concept-action-left col-lg-4"><p><strong>Declare as:</strong></p></div>
-				<div class="project-concept-action-right col-lg-8">
-					<a href="#" class="btn_green">Final</a>
-				</div>
-			</div>
-			<div class="project-concept-action row gx-0 align-items-center mb-3">
+					'.sustainable_minds_concept_actions_area($concept,'btn','<a class="btn_green" href="'.SITE_PATH.'/'.URL_CONCEPT_EDIT.'/'.$conceptid .'">Edit overview</a>')
+			.'<div class="project-concept-action row gx-0 align-items-center mb-3">
 				<div class="project-concept-action-left col-lg-4"><p><strong>Created:</strong></p></div>
 				<div class="project-concept-action-right col-lg-8">
 					<p>October 28, 2020</p>
@@ -1480,3 +1456,33 @@ function format_numbers($number, $info = null) {
 	//sprintf("%.3e", $number)
 	return round($number,$fchar);  
 } 
+
+//sbom tabs
+function sbom_tabs($conceptid, $phaseid){
+	$manufacture_path = SITE_PATH . '/' .URL_CONCEPT_BUILD . '/' . $conceptid . '/' . PHASEID_MANUFACTURE;
+	$use_path = SITE_PATH . '/' .URL_CONCEPT_BUILD . '/' . $conceptid . '/' . PHASEID_USE;
+	$eof_path = SITE_PATH . '/' .URL_CONCEPT_BUILD . '/' . $conceptid . '/' . PHASEID_EOL;
+	$transportation_path = SITE_PATH . '/' .URL_CONCEPT_BUILD . '/' . $conceptid . '/' . PHASEID_TRANSPORT;
+	$active = [
+		PHASEID_MANUFACTURE==$phaseid? 'active':' ',
+		PHASEID_USE==$phaseid? 'active':' ',
+		PHASEID_EOL==$phaseid? 'active':' ',
+		PHASEID_TRANSPORT==$phaseid? 'active':' '
+	];
+	return '<div class="system-bom-tabs">
+		<ul class="nav nav-tabs" id="BOMTab">
+			<li class="nav-item">
+			  <a href='.$manufacture_path. ' class="nav-link '.$active[0].'" id="manufacturing-tab"   aria-selected="true"><span>Manufacturing</span></a>
+			</li>
+			<li class="nav-item">
+			  <a href='.$use_path. ' class="nav-link '.$active[1].'" id="system-BOM-use-tab" aria-selected="false"><span>Use</span></a>
+			</li>
+			<li class="nav-item">
+				<a href='.$eof_path. ' class="nav-link '.$active[2].'" id="system-BOM-end-life-tab"  aria-selected="false"><span>End of life</span></a>
+			  </li>
+			<li class="nav-item">
+			  <a href='.$transportation_path. ' class="nav-link '.$active[3].'" id="transportation-tab" aria-selected="false"><span>Transportation</span></a>
+			</li>
+		</ul>
+	  </div>';
+}

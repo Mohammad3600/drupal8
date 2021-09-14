@@ -1,75 +1,13 @@
 <?php
 /**  
  * @file  
- * Contains Drupal\setup_project\Form\MyProject.  
+ * Contains Drupal\setup_project\Controller\ProjectController.  
  */  
 namespace Drupal\setup_project\Controller;
 use Drupal\Core\Database\Database;
 use Drupal\taxonomy\Entity\Term;  
 use Drupal\user\Entity\User;
-include_once(dirname(__FILE__).'\..\..\products.inc');
 class ProjectController{
-
-    /**
-    * returns blank project id
-    */
-    function newProject() {
-        $db = \Drupal::service('setup_project.sbom_db');
-        $id = $db->add_blank_product();
-        echo $id ;
-        exit();
-    }
-
-    /**
-    * delete project from db
-    */
-    function sustainable_minds_delete_project($str='') {
-        $db = \Drupal::service('setup_project.sbom_db');
-        $db->delete_project($_GET['pid']);
-        exit();
-    }
-
-    /**
-    * copy project from db
-    */
-    function sustainable_minds_copy_project($str='') {
-        $db = \Drupal::service('setup_project.sbom_db');
-        $db->copy_project($_GET['pid']);
-        $pid = $_GET['pid'];
-        exit();
-    }
-
-    /**
-    * copies project to targeted user
-    */
-    function sustainable_minds_copy_to_project($str='') {
-        $db = \Drupal::service('setup_project.sbom_db');
-        $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
-        $to_user =  user_load_by_name($_GET['target']);
-        /* check if target username exists */
-        // if it does, copy the project
-        if ($to_user) {
-            $result = $db->copy_from_to_project($_GET['pid'], $user->get('uid')->value, $to_user->get('uid')->value);
-        } else {
-            echo('noname');
-        }
-        exit();
-    }
-
-    function sustainable_minds_copy_update_project($str='') {
-        $db = \Drupal::service('setup_project.sbom_db');
-        $new_pid = $db->copy_project($_GET['pid']);
-        $failed_items = $db->update_project_dataset($new_pid, $_GET['version']);
-        
-        foreach ($failed_items as $f) {
-          $message .= $f['name'].'<br />';
-        }
-        
-        if ($message) {
-            //$message = 'The following materials and processes were not updated because they did not have corresponding materials and processes in the new LCA dataset version: <br />'.$message;
-            $message = 'The project was successfully copied and successfully updated to use the most recent methodology.<br /><br /> Due to differences between current and previous methodologies, the following materials and/or processes were not updated, but still remain in the concept SBOMs. Take note of these items, and manually assign new materials and processes in your concepts. <br />'.$message;
-        }
-    }
 
     /**
     * returns html for listing projects 
@@ -79,11 +17,6 @@ class ProjectController{
         return [
             '#children' => $user_projects,
           ];
-    }
-    public function uploadFile(){
-    $t = $_FILES["img_upload"];
-    // $dir = "drupal8/web/sites/default/files";
-    // move_uploaded_file($_FILES["img_upload"]["tmp_name"], $dir. $_FILES["img_upload"]["name"]);
     }
 
     /**
@@ -129,13 +62,30 @@ class ProjectController{
             '#children' => $wizard . $output ,
         ];
     }
-    public function viewBOM($conceptid = null, $mid = null){
+    public function viewBOM($conceptid = null, $phaseid = null){
         $db = \Drupal::service('setup_project.sbom_db');
         $concept = $db->get_concept($conceptid);
-        // $output = sustainable_minds_concept_view($concept, $conceptid);
         $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
+        $comp_type = 0;
+        $sbom_tabs = sbom_tabs($conceptid, (int)$phaseid);
+        // switch($phaseid){
+        //     case PHASEID_MANUFACTURE:
+        //         $treegrid = new  phases_tg_manufacturing($conceptid);       
+        //     break;
+        //     case PHASEID_USE:
+        //         $treegrid = new phases_tg_use($conceptid);
+        //     break;
+        //     case PHASEID_EOL :
+        //         $treegrid =  new phases_tg_eol($conceptid);
+        //     break;
+        //     case PHASEID_TRANSPORT:
+        //         $treegrid = new phases_tg_transportation($conceptid);
+        //     break;
+        // }
+
+        // $output .= $treegrid->draw();
         return [
-            '#children' => $wizard ,
+            '#children' => $wizard .$sbom_tabs,
         ];
     }
     public function viewResults($conceptid = null){

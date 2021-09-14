@@ -29,96 +29,98 @@ class settingForm extends ConfigFormBase {
    */  
   public function buildForm(array $form, FormStateInterface $form_state) {  
     $config = $this->config('indblog.adminsettings');  
-    $form['braintree_integration'] = [  
-      '#type' => 'fieldset',  
-      '#title' => $this->t('Braintree Integration Settings'),
-    ]; 
-    $form['braintree_integration']['description'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Define information needed for the integration to Braintree.<br>
-      Enable debug mode for the registration cron job. This is designed to allow testing of the registration cron email notifications by using minutes instead of days as a measurement of when an email should be sent to trial users (example: after 15 minutes a trial user will receive the 15 day notfication). Note: cron must be set to run evey minute for this to work properly.'),
-    ];
-    $form['braintree_integration']['enable_debug'] = [  
-      '#type' => 'checkbox',  
-      '#title' => $this->t('Enable debug'),
-      '#default_value' => $config->get('indblog.enable_debug'),
-    ]; 
-    $form['braintree_integration']['environment']=[
+    $roleObjects = \Drupal\user\Entity\Role::loadMultiple();
+    $roles = [];
+    foreach($roleObjects as $roleObj){
+      $roles[] = $roleObj->label();
+    }
+    $showRoles = [];
+    foreach($config->get('indblog.show_roles') as $roleObj => $value){
+      if($value!= 0){
+        $showRoles[] = $value;
+      }
+    }
+    $form['block_class'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Block Class settings'),
+      '#collapsible' => TRUE,
+      '#weight' => -1,
+    );
+    $form['block_class']['css_class'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Environment:'),
-      '#default_value' => $config->get('indblog.environment'),
-    ]; 
-    $form['braintree_integration']['public_key']=[
+      '#title' => t('CSS class(es)'),
+      '#default_value' => $config->get('indblog.css_class'),
+      '#description' => t('Separate classes with a space. IMPORTANT: You must add &lt;?php print block_class($block); ?&gt; to your theme\'s block.tpl.php file to make the classes appear.'),
+    );
+    $form['block_specific'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Block specific settings'),
+      '#collapsible' => TRUE,
+      '#weight' => -1,
+    );
+    $form['block_specific']['block_title'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Public Key:'),
-      '#default_value' => $config->get('indblog.public_key'),
-    ]; 
-    $form['braintree_integration']['private_key']=[
-      '#type' => 'textfield',
-      '#title' => $this->t('Private Key:'),
-      '#default_value' => $config->get('indblog.private_key'),
-    ]; 
-    $form['braintree_integration']['merchant_id']=[
-      '#type' => 'textfield',
-      '#title' => $this->t('Merchant ID:'),
-      '#default_value' => $config->get('indblog.merchant_id'),
-    ];
-    $form['braintree_integration']['email_address']=[
-      '#type' => 'textfield',
-      '#title' => $this->t('Sustainableminds sales email address:'),
-      '#default_value' => $config->get('indblog.email_address'),
-    ]; 
-    $form['braintree_integration']['enable_braintree'] = [  
-      '#type' => 'fieldset',  
-      '#title' => $this->t('Enable Braintree Subscription Plans'),
-      '#description' => 'List the plans you want to enable for on-line registration separated by commas.<br>
-      Available Braintree plans: (Regular, Monthly_Plan, Instructor, Semester, )',  
-    ];
-    $form['braintree_integration']['online_registration']=[
-      '#type' => 'textfield',
-      '#title' => $this->t('Subscription Plans allowed in on-line registration:'),
-      '#default_value' => $config->get('indblog.online_registration'),
-    ]; 
-    $form['braintree_integration']['plans_allowed']=[
-      '#type' => 'textfield',
-      '#title' => $this->t('Subscription Plans allowed for Resellers:'),
-      '#default_value' => $config->get('indblog.plans_allowed'),
-    ]; 
-    $form['braintree_integration']['time_period']=[
-      '#type' => 'textfield',
-      '#title' => $this->t('Time period (days) for Trial subscription:'),
-      '#default_value' => $config->get('indblog.time_period'),
-    ]; 
+      '#title' => t('Block title:'),
+      '#default_value' => $config->get('indblog.block_title'),
+      '#description' => t('Override the default title for the block. Use <none> to display no title, or leave blank to use the default block title.'),
+    );
+    $form['block_specific']['block'] = array(
+    '#type' => 'select', 
+    '#title' => t('Number of news items in block'), 
+    '#default_value' => $config->get('indblog.block'), 
+    '#options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+    );
+  
+    $form['specific_visibility'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('User specific visibility settings'),
+      '#collapsible' => TRUE,
+      '#weight' => -1,
+    );
+    $form['specific_visibility']['custom_visibility'] = array(
+      '#type' => 'radios',
+      '#title' => t('Custom visibility settings:'),
+      '#default_value' => $config->get('indblog.custom_visibility'),
+      '#options' => ['Users cannot control whether or not they see this block.','Show this block by default, but let individual users hide it.','Hide this block by default but let individual users show it.'],
+      '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
+    );
+  
+    $form['role_visibility'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Role specific visibility settings'),
+      '#collapsible' => TRUE,
+      '#weight' => -1,
+    );
+    $form['role_visibility']['show_roles'] = array(
+      '#type' => 'checkboxes',
+      '#options' => $roles,
+      '#default_value' => $showRoles,
+      '#title' => t('Show block for specific roles:'),
+      '#description' => t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.')
+    );
+    
+    $form['page_visibility'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Page specific visibility settings'),
+      '#collapsible' => TRUE,
+      '#weight' => -1,
+    );
 
-    $form['actions'] = [
-      '#type' => 'actions',
-    ];
-
-    // Add a reset button
-    $form['actions']['reset'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Reset to defaults'),
-      '#submit' => array([$this, 'resetValues'])
-    ];
-
+    $form['page_visibility']['show_blocks'] = array(
+      '#type' => 'radios',
+      '#title' => t('Show block on specific pages:'),
+      '#default_value' => $config->get('indblog.show_blocks'),
+      '#options' => ['Show on every page except the listed pages.','Show on only the listed pages.','Hide this block by default but let individual users show it.'],
+      '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
+    );
+    $form['page_visibility']['pages']=[
+      '#type' => 'textarea',
+      '#title' => $this->t('Pages:'),
+      '#default_value' => $config->get('indblog.pages'),
+      '#description' => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are blog for the blog page and blog/* for every personal blog. <front> is the front page. If the PHP-mode is chosen, enter PHP code between <?php ?>. Note that executing incorrect PHP-code can break your Drupal site."),
+    ]; 
     return parent::buildForm($form, $form_state);  
   }
-  public function resetValues($form, &$form_state){
-    $config = $this->config('indblog.adminsettings');
-    $config->set('indblog.enable_debug', false);  
-    $config->set('indblog.environment', '');  
-    $config->set('indblog.public_key', '' );  
-    $config->set('indblog.private_key', '' );  
-    $config->set('indblog.merchant_id', '' );  
-    $config->set('indblog.opsource_username', '' );  
-    $config->set('indblog.opsource_password', '' );  
-    $config->set('indblog.email_address', '' );  
-    $config->set('indblog.online_registration', '' );  
-    $config->set('indblog.plans_allowed', '' );  
-    $config->set('indblog.time_period', 15 );  
-    $config->save();
-    drupal_set_message('The configuration options have been reset to their default values.');
-    }
 
   /**  
   * { To save the values of submitted form }  
@@ -126,17 +128,13 @@ class settingForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {  
     parent::submitForm($form, $form_state);  
     $config = $this->config('indblog.adminsettings');
-    $config->set('indblog.enable_debug', $form_state->getValue('enable_debug'));  
-    $config->set('indblog.environment', $form_state->getValue('environment'));  
-    $config->set('indblog.public_key', $form_state->getValue('public_key'));  
-    $config->set('indblog.private_key', $form_state->getValue('private_key'));  
-    $config->set('indblog.merchant_id', $form_state->getValue('merchant_id'));  
-    $config->set('indblog.opsource_username', $form_state->getValue('opsource_username'));  
-    $config->set('indblog.opsource_password', $form_state->getValue('opsource_password'));  
-    $config->set('indblog.email_address', $form_state->getValue('email_address'));  
-    $config->set('indblog.online_registration', $form_state->getValue('online_registration'));  
-    $config->set('indblog.plans_allowed', $form_state->getValue('plans_allowed'));  
-    $config->set('indblog.time_period', $form_state->getValue('time_period'));  
+    $config->set('indblog.css_class', $form_state->getValue('css_class'));  
+    $config->set('indblog.block_title', $form_state->getValue('block_title'));  
+    $config->set('indblog.custom_visibility', $form_state->getValue('custom_visibility'));  
+    $config->set('indblog.show_roles', $form_state->getValue('show_roles'));  
+    $config->set('indblog.block', $form_state->getValue('block'));  
+    $config->set('indblog.show_blocks', $form_state->getValue('show_blocks'));  
+    $config->set('indblog.pages', $form_state->getValue('pages'));   
     $config->save();  
   }  
 }  

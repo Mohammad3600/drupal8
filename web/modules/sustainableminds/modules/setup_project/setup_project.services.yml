@@ -1,3 +1,5 @@
 services:
   setup_project.sbom_db:
     class: Drupal\setup_project\Services\sbom_db
+  setup_project.utilities:
+    class: Drupal\setup_project\Services\Utilities

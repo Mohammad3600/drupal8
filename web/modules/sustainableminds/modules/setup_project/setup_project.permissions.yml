@@ -4,10 +4,19 @@ access edit_add_project :
   title: 'edit/add project'
 access view_project_info :
   title: 'view project info'
+access set_project_info :
+  title: 'set project info'
 access delete_project :
   title: 'delete project'
 access copy_to_project :
   title: 'copy to project'
 access concept_add :
   title: 'edit/add concept'
+access view_concept_info :
+  title: 'view concept info'
+access view_concepts :
+  title: 'view concepts'
+access delete_concept :
+  title: 'delete concept'
+
 
