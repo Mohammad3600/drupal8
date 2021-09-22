@@ -47,6 +47,13 @@ setup_project.viewResults:
     _title: 'View Results'
   requirements:  
     _permission: 'access concept_add'         
+setup_project.addPart:  
+  path: '/project/material/{mode}/{conceptid}/{phaseid}/{componentid}'  
+  defaults:  
+    _form: '\Drupal\setup_project\Form\AddPart'
+    _title: 'Add/Edit Part'
+  requirements:  
+    _permission: 'access concept_add'         
 setup_project.ajaxNewProject:  
   path: '/ajax/actions/newproject'  
   defaults:  

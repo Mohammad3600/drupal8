@@ -1,41 +1,37 @@
 <?php
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\Core\Database\Database;
 include_once(dirname(__FILE__).'\init.inc');
 global $chart_colors;
 $chart_colors = array('303869', '285C74', '0B818D', '2E9C9B', '6BB59C', '9ECD96', '74B93A', 'BFD559', 'F3E57C', 'FCD16B', 'D4EF24');
 global $chartIDs;
 $chartIDs = array();
 
-
 /*
  * Build list of dataset versions
  **/
 function sustainable_minds_list_versions() {
 	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
-  $is_admin = false;
-  if ($user->hasRole("superadmin") || $user->hasRole("lca data manager")) {
-    $is_admin = true;
-  }
-   
-  $db = \Drupal::service('setup_project.sbom_db');
-
-  $versions = $db->list_dataset_version();
-  $list = array();
-  $list['1.0'] = 'Dataset 1.0';
-  
-  /* build dropdown list */
-  for ($i = 0; $i < count($versions); $i++) {
-    if ($versions[$i]) {
-      if ($versions[$i]['status'] == 1 || $is_admin) {
-        $option = trim($versions[$i]['version']);
-        $description = 'Dataset: ' . trim($versions[$i]['version']);
-        $list[$option] = $description;
-      }
-    }
-  }
-
-  return $list;
+	$is_admin = false;
+	if ($user->hasRole("superadmin") || $user->hasRole("lca data manager")) {
+		$is_admin = true;
+	} 
+	$db = \Drupal::service('setup_project.sbom_db');
+	$versions = $db->list_dataset_version();
+	$list = array();
+	$list['1.0'] = 'Dataset 1.0';
+	/* build dropdown list */
+	for ($i = 0; $i < count($versions); $i++) {
+		if ($versions[$i]) {
+			if ($versions[$i]['status'] == 1 || $is_admin) {
+				$option = trim($versions[$i]['version']);
+				$description = 'Dataset: ' . trim($versions[$i]['version']);
+				$list[$option] = $description;
+			}
+		}
+  	}
+  	return $list;
 }
 
 
@@ -49,67 +45,64 @@ function sustainable_minds_product_edit_tab($page, $productid) {
 	if ($user->hasRole("superadmin") || $user->hasRole("lca data manager")) {
 	  $is_admin = true;
 	}
-  
 	//   $productid = sustainable_minds_arg_set(2);
 	//   $page = arg(1);
-	  $class="project-edit-block";
-	  $db = \Drupal::service('setup_project.sbom_db');
-	  $version = $db->get_version_for_project($productid);
-	  $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['menu_name' => 'edit-project']);
-	  switch($page) {
-		  case 'view':
+	$class="project-edit-block";
+	$db = \Drupal::service('setup_project.sbom_db');
+	$version = $db->get_version_for_project($productid);
+	$menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['menu_name' => 'edit-project']);
+	switch($page) {
+		case 'view':
 			// determine whether to show option to update project  
 			if ($is_admin) {
-			  $status = 'any';
-			  $latest_version = $db->get_latest_version($status);
+				$status = 'any';
+				$latest_version = $db->get_latest_version($status);
 			} else {
-			  $status = 'published';
-			  $latest_version = $db->get_latest_version($status);
+				$status = 'published';
+				$latest_version = $db->get_latest_version($status);
 			}
-		  
 			$version_map_exists = $db->find_version_map($version, $latest_version);
-  
 			$page = PROJECT_PAGE_NAME_DEFINITION;
 			$open = '<div class="project-edit-right-title"><h2 class="font_11">This project:</h2><ul class="d-flex flex-wrap">';
 			$del = $current_user->hasPermission('access delete_project')? ('<li><a  class="text-white" onclick="delete_project('.$productid.');return false;" />Delete</a></li>') : '';
 			$copy = '<li><a  class="text-white" onclick="copy_project('.$productid.');return false;" />Copy</a></li>';
 			if ($version_map_exists) {
-				  $copyupdate = '<li><a class="text-white" onclick="copy_update_project('.$productid.',\''.$latest_version.'\');return false;" />Copy and Update</a></li>';
-			  }
+				$copyupdate = '<li><a class="text-white" onclick="copy_update_project('.$productid.',\''.$latest_version.'\');return false;" />Copy and Update</a></li>';
+			}
 			$close='</ul></div>';
-			  $text .= 'Edit Overview';
-			  $class ="project-edit-tab";
-		  	  $edit = $open.'<span><li><a href="'.SITE_PATH.'/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page.'">'.$text.'</a></li></span>'.$del.$copy.$copyupdate.$close;
-			  break;
-		  case 'goal':
-			  $page = PROJECT_PAGE_NAME_GOALS;
-			  $class = 'text-end';
-			  $text .= 'Edit Assessment Goals';
-			  $view_path = '/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page;
-			  foreach ($menu_links as $menu_link) {
+			$text .= 'Edit Overview';
+			$class ="project-edit-tab";
+			$edit = $open.'<span><li><a href="'.SITE_PATH.'/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page.'">'.$text.'</a></li></span>'.$del.$copy.$copyupdate.$close;
+			break;
+		case 'goal':
+			$page = PROJECT_PAGE_NAME_GOALS;
+			$class = 'text-end';
+			$text .= 'Edit Assessment Goals';
+			$view_path = '/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page;
+			foreach ($menu_links as $menu_link) {
 				$a = $menu_link->gettitle();
 				$menu_link->set('title', $text);
 				$menu_link->set('link', ['uri' => 'internal:'.$view_path]);
 				$menu_link->save();
-			  }
-			//   $edit = '<div class="project_right_blog text-start position-absolute" style="top:30%;right:18%;width: 198px; max-width:198px;"><a href="'.SITE_PATH.'/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page.'" class="edit_assign_btn" style="padding:3px 24px;">'.$text.'</a></div>';
-			  break;
-		  case 'scope':
-			  $page = PROJECT_PAGE_NAME_SCOPE;
-			  $class = 'text-end';
-			  $text .= 'Edit Assessment Scope';
-			  $view_path = '/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page;
-			  foreach ($menu_links as $menu_link) {
+			}
+			// $edit = '<div class="project_right_blog text-start position-absolute" style="top:30%;right:18%;width: 198px; max-width:198px;"><a href="'.SITE_PATH.'/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page.'" class="edit_assign_btn" style="padding:3px 24px;">'.$text.'</a></div>';
+			break;
+		case 'scope':
+			$page = PROJECT_PAGE_NAME_SCOPE;
+			$class = 'text-end';
+			$text .= 'Edit Assessment Scope';
+			$view_path = '/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page;
+			foreach ($menu_links as $menu_link) {
 				$menu_link->set('title', $text);
 				$menu_link->set('link', ['uri' => 'internal:'.$view_path]);
 				$menu_link->save();
-			  }
+			}
 			//   $edit = '<div class="project_right_blog text-start position-absolute" style="top:30%;right:18%;width: 198px; max-width:198px;"><a href="'.SITE_PATH.'/'.URL_PROJECT_EDIT.'/'.$productid.'/'.$page.'" class="edit_assign_btn" style="padding:3px 18px;">'.$text.'</a></div>';
-			  break;
-		  default:$page='';
-	  }
-	  return '<div class="'.$class.'">'.$edit.'</div>';
-  }
+			break;
+		default: $page='';
+	}
+	return '<div class="'.$class.'">'.$edit.'</div>';
+}
 
 
 /**
@@ -121,9 +114,7 @@ function sustainable_minds_user_products() {
 	// drupal_set_breadcrumb($links);
 	//set userid here to argument to show other user's products
 	$userid = $user->get('uid')->value;
-	
-	$output = '<div class="product-list-container">';
-	
+	$output = '<div class="product-list-container">';	
 	$db = \Drupal::service('setup_project.sbom_db');
 	$products = $db->list_products_by_user();
 	// if ($user->uid == $userid || count($products)<1) {
@@ -145,9 +136,7 @@ function sustainable_minds_user_products() {
 			$output .= sustainable_minds_product_list($product);
 		}
 	}
-	
 	$output .= '</div></div>';
-	
 	return $output;
 }
 
@@ -161,7 +150,6 @@ function sustainable_minds_product_list($product) {
 	  $is_admin = true;
 	}
 	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
-
 	if (!$product['reference_okala'] || !$product['refConcept'] ) {
 	  $concept = $db->get_reference_concept($product['productID']);
 	  $product['reference_okala'] = '---';
@@ -187,7 +175,6 @@ function sustainable_minds_product_list($product) {
 	} else {
 	  $projectDescription = TEXT_DEFAULT_PROJECT_DESCRIPTION;
 	}
-	
 	$projectClient = $product['client'];
 	if (empty($projectClient))
 	  $projectClient = TEXT_DEFAULT_PROJECT_CLIENT;
@@ -195,8 +182,6 @@ function sustainable_minds_product_list($product) {
 	  $projectDescription = '<br/>';
 	if (empty($projectClient))
 	  $projectClient = '<br/>';
-  
-  
 	// determine whether to show option to update project  
 	if ($is_admin) {
 	  $status = 'any';
@@ -205,7 +190,6 @@ function sustainable_minds_product_list($product) {
 	  $status = 'published';
 	  $latest_version = $db->get_latest_version($status);
 	}
-  
 	$version_map_exists = $db->find_version_map($product['version'], $latest_version);
 	// if (in_array("superadmin", $user->getRoles()) || in_array("sales", $user->getRoles()) || in_array("group", $user->getRoles())) {
 	if($current_user->hasPermission('access copy_to_project')){
@@ -217,7 +201,6 @@ function sustainable_minds_product_list($product) {
 	if ($version_map_exists) {
 	  $update_project_link = ' | <a href="" onclick="copy_update_project('.$product['productID'].',\''.$latest_version.'\');return false;">Copy and update to SM2013</a>';
 	}
-
 	$output = '';
 	// $update_project_link = 
 	$output = '<hr><div class="my_project_list d-flex flex-wrap justify-content-space-between align-items-center">'
@@ -244,16 +227,15 @@ function sustainable_minds_product_list($product) {
 			  .'</div>';
   
 	return $output;
-  }
+}
   
 function sustainable_minds_product_empty() {
 	  $output = '<div class="product-view">There are currently no projects.</div><div class="clear"></div>';
 	  return $output;
-  }
+}
+
 function setup_project_form_open_div($divid){
-	return array(
-				'#markup' => '<div class="'.$divid.'">'
-			);
+	return array('#markup' => '<div class="'.$divid.'">');
 }
 
 function setup_project_form_close_div(){
@@ -269,6 +251,7 @@ function sustainable_minds_clear_db($result=NULL){
 	// while(mysqli_next_result($active_db));
 	return;
 }
+
 function sustainable_minds_access_denied() {
 	/*global $user;
 	if (!$user->uid) sustainable_minds_set_error_goto('You must log in to have access to this area.','');
@@ -277,6 +260,7 @@ function sustainable_minds_access_denied() {
 	// drupal_access_denied();
 	throw new AccessDeniedHttpException();
 } 
+
 function sustainable_minds_project_view_wizard($page, $pid, $pname){
 	// $SITE_PATH = '/drupal8/web';
 	$view_path = '/'.URL_PROJECT_VIEW.'/'.$pid;
@@ -327,21 +311,17 @@ function sustainable_minds_product_view($product, $productid, $page)
 	} else {
 		$projectDescription = TEXT_DEFAULT_PROJECT_DESCRIPTION;
 	}
-
 	if (empty($product['client']))
 		$product['client'] = TEXT_DEFAULT_PROJECT_CLIENT;
-
 	// $user = user_load(array('uid' => $product['userID']));
 	$db = \Drupal::service('setup_project.sbom_db');
 	$referenceconcept = $db->get_reference_concept($productid);
 	$finalconcept = $db->get_final_concept($productid);
 	$bestconcept = $db->get_best_concept($productid);
-
 	$conceptArray = array();
 	$conceptArray['reference'] = array('concept' => $referenceconcept, 'title' => 'Reference');
 	$conceptArray['final'] = array('concept' => $finalconcept, 'title' => 'Final concept');
 	$conceptArray['best'] = array('concept' => $bestconcept, 'title' => 'Lowest impact');
-
 	if (!count($conceptArray)) {
 		$output .= TEXT_DEFAULT_PROJECT_CONCEPTS;
 	}
@@ -349,9 +329,8 @@ function sustainable_minds_product_view($product, $productid, $page)
 		. '<div class="row flex-row-reverse">'
 		. '<div class="col-lg-6 ps-0">' . sustainable_minds_product_edit_tab($page, $productid) . '<div class="project-edit-right-table">'
 		. '<table class="product-view-concept project-concepts">
-			<caption></caption>
-			<tbody>';
-		
+		  <caption></caption>
+		  <tbody>';	
 	foreach ($conceptArray as $key => $concept) {
 		$supress = false;
 		//if (!$concept['concept']['conceptID']) continue;
@@ -359,7 +338,6 @@ function sustainable_minds_product_view($product, $productid, $page)
 			$concept['concept']['name'] = 'The ' . strtolower($concept['title']) . ' has not been designated.';
 			$supress = true;
 		}
-
 		if (!$supress && $key != 'reference') {
 			$ochange = $concept['concept']['ref_compare_okala'];
 			if ($ochange > 0) {
@@ -382,7 +360,6 @@ function sustainable_minds_product_view($product, $productid, $page)
 			$ochange = '';
 			$classChange = '';
 		}
-
 		if (!$concept['concept']['icon'])
 			$concept['concept']['icon'] = DEFAULT_IMAGE;
 
@@ -393,11 +370,8 @@ function sustainable_minds_product_view($product, $productid, $page)
 			$url = '<a href="'. SITE_PATH . '/' . URL_CONCEPT_VIEW . '/' . $concept['concept']['conceptID'] . '">' . $concept['concept']['name'] . '</a>';
 			$mpts = '<div class="gl-emphesis">' . nice_exponential_notation(scientific_notation($concept['concept']['okala_n'], 2, SN_LOWER, SN_UPPER)) . '</div>' . MPTS_HOURS_USE_LABEL;
 		}
-
 		$icon = '<figure><img class="full_width" src="' . $concept['concept']['icon'] . '" /></figure>';
-	 /* previously class="product-view-concept-head"*/
-
-		 
+	 	/* previously class="product-view-concept-head"*/ 
 		$output .=   '<tr class="product-view-concept-reference product-view-concept-title product-view-concept-' . $key . ' ' . $classChange . '">'
 			. '<td colspan="2"><h3 class="font_11 p-0">' . $concept['title'] . ':</h3></td>'
 			. '<td style="border-right: 1px solid #fff;border-left: 1px solid #fff;"></td><td></td></tr>'
@@ -410,14 +384,14 @@ function sustainable_minds_product_view($product, $productid, $page)
 	}
 	$output .= '</tr></tbody></table></div></div>';
 	$output .= '<div class="col-lg-6"><div class="product-view-main">'
-	. '<h3>' . $product['name'] . '</h3>'
-	. '<ul>'
-	. '<li><div class="d-flex flex-wrap"><h4>Client or group</h4><p>' .$product['client']. '</p></div>'
-	. '<div class="d-flex flex-wrap"><h4>Category</h4><p>' . $product['pcategory'] . '</p></div></li>'
-	. '<li><div class="d-flex flex-wrap"><h4>Methodology</h4>' . sustainable_minds_methodology($product['version']) . '</div></li>'
-	. '<li><div class="d-flex flex-wrap"><h4>Description</h4><p>' . $projectDescription . '</p></div></li>'
-	. '<li><div class="d-flex flex-wrap"><h4>Created on</h4><p>' . date('j F, Y', strtotime($product['date_created'])) . '</p></div></li>'
-	. '</div></div></div></div>';
+			. '<h3>' . $product['name'] . '</h3>'
+			. '<ul>'
+			. '<li><div class="d-flex flex-wrap"><h4>Client or group</h4><p>' .$product['client']. '</p></div>'
+			. '<div class="d-flex flex-wrap"><h4>Category</h4><p>' . $product['pcategory'] . '</p></div></li>'
+			. '<li><div class="d-flex flex-wrap"><h4>Methodology</h4>' . sustainable_minds_methodology($product['version']) . '</div></li>'
+			. '<li><div class="d-flex flex-wrap"><h4>Description</h4><p>' . $projectDescription . '</p></div></li>'
+			. '<li><div class="d-flex flex-wrap"><h4>Created on</h4><p>' . date('j F, Y', strtotime($product['date_created'])) . '</p></div></li>'
+			. '</div></div></div></div>';
 	// $output .= '</table><div class="clear"></div></div>'; // clear,end product view
 	return $output;
 }
@@ -425,12 +399,12 @@ function sustainable_minds_product_view($product, $productid, $page)
 function sustainable_minds_methodology($version, $short=false) {
 	$meth = sustainable_minds_get_methodology($version, $short);
 	return '<p class="'.$meth['class'].' p-2 m-0">'.$meth['text'].'</p>';
-  }
+ }  
   
-  
-  /* @version: version name
-	 @short: if true, do not show link to update version */
-  function sustainable_minds_get_methodology($version, $short=false) {
+/* @version: version name
+	@short: if true, do not show link to update version 
+*/
+function sustainable_minds_get_methodology($version, $short=false) {
 	$db = \Drupal::service('setup_project.sbom_db');
 	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
 	$is_admin = false;
@@ -445,43 +419,37 @@ function sustainable_minds_methodology($version, $short=false) {
 	  $lastest_version = $db->get_latest_version($status);   
 	}
 	$versionInfo = $db->get_datasetInfo($version);
-	
 	$class = "prevmethodology";
 	switch ($version) {
-	  case $lastest_version:
-		$msg = $versionInfo['description'];
-		$class = "currmethodology";
-		break;
-	  case '1.0':
-	  case 'none':
-		if ($short) {
-		  $msg = 'SM2009 (Okala)';
-		} else {
-		  $msg = 'For guidance on upgrading your project from Okala2010 to '.$lastest_version.', please contact support@sustainableminds.com.';
-		}
-	   break;
-	  default:
-	   if ($short) {
-		  $msg = $versionInfo['description'];
-		} else {
-		  $msg = 'This project uses '.$versionInfo['description'].'. You can update this project to '.$lastest_version.'. <a href='.SITE_PATH.'/learning-center/conducting-sm-lca/project-methodology>Learn more ></a>';
-		}
+		case $lastest_version:
+			$msg = $versionInfo['description'];
+			$class = "currmethodology";
+			break;
+	  	case '1.0':
+		case 'none':
+			if ($short) {
+				$msg = 'SM2009 (Okala)';
+			} else {
+				$msg = 'For guidance on upgrading your project from Okala2010 to '.$lastest_version.', please contact support@sustainableminds.com.';
+			}
+			break;
+	 	 default:
+			if ($short) {
+					$msg = $versionInfo['description'];
+			} else {
+				$msg = 'This project uses '.$versionInfo['description'].'. You can update this project to '.$lastest_version.'. <a href='.SITE_PATH.'/learning-center/conducting-sm-lca/project-methodology>Learn more ></a>';
+			}
 	}
-	//$msg .= ' v:' .$version['version'] .'lv: '.$lastest_version; //debug
 	return array('text'=>$msg, 'class'=>$class);
-  }
+}
 
 function sustainable_minds_assessment_goal($productid, $product, $page)
 {
-	// $db = \Drupal::service('setup_project.sbom_db');
-	// $product = $db->get_product(arg(2));
-
 	if ($product['development']) {
 		$development = $product['development'];
 	} else {
 		$development = TEXT_DEFAULT_PROJECT_GOALS_COMPANY;
 	}
-
 	if ($product['assessment']) {
 		$assessment = $product['assessment'];
 	} else {
@@ -507,9 +475,6 @@ function sustainable_minds_assessment_goal($productid, $product, $page)
 
 function sustainable_minds_assessment_scope($productid, $product, $page)
 {
-	// $db = \Drupal::service('setup_project.sbom_db');
-	// $product = $db->get_product(arg(2));
-	//print_r($product);
 	if (empty($product['icon']))
 		$product['icon'] = DEFAULT_SCOPE_IMAGE;
 	$icon = '<img src="' . $product['icon'] . '"/>';
@@ -562,180 +527,145 @@ function sustainable_minds_assessment_scope($productid, $product, $page)
 				.'</div></div>';
 	return $output;
 }
+
 function sustainable_minds_concept_list($productid, $product, $page) {
 	$db = \Drupal::service('setup_project.sbom_db');
 	$product = $db->get_product($productid);
 	$concepts = $db->list_concepts($productid);
-	// testing moving this
-	// $output .= '<div class="concept-list"><a href="/'.URL_CONCEPT_ADD.'/'. $productid. '">'. DEFAULT_PROJECT_CONCEPT_ICON_CREATE. '</a><br/>';
-	
 	$meth = sustainable_minds_get_methodology($product['version']);
 	if ($meth['class'] == 'prevmethodology') {
-	  $output = '<div class="project-concepts-methodology my-3">' .sustainable_minds_methodology($product['version']) .'</div>';
+		$output = '<div class="project-concepts-methodology my-3">' .sustainable_minds_methodology($product['version']) .'</div>';
 	} 
-  
-$output .= '<div id="concept-table" class="ms-2 my-3"><div class="concept-list">';
-	
-	if (!empty($concepts)) 
+	$output .= '<div id="concept-table" class="ms-2 my-3"><div class="concept-list">';
+	if (!empty($concepts)){ 
 	  $output .= '<table class="project-concepts">
 					<tr class="concept-no-border">
 					  <th class="concept-table-funcunit">'
-					  //testing adding create button below
-					  // moving funit 
-					  // Functional unit:<h3>'. $product['funame'].'</h3></th>'
 					  .'<p><strong>Functional unit:</strong> '. $product['funame'].'</p>'
 					  .'<a href='. SITE_PATH ."/".URL_CONCEPT_ADD.'/'. $productid. ' class="font-size-6 pe-0 mt-4 w-50 ps-2 text-start project_btn btn btn-success btn-sm"> Create a new Concept <img src='. SITE_PATH .'/sites/default/files/2021-07/plus.svg alt="plus-icon" title="plus"> </a>'
 					  .'</th>'
-					  //.'<th class="concept-table-label concept-table-label-impfu">Impacts / functional unit <span class="units">'.MPTS_HOURS_USE_LABEL.'</span></th>'
 					  .'<th>Impacts / functional unit <span class="units">'.MPTS_UNIT_LABEL.PER_FU_LABEL.'</span></th>'
 					  .'<th>'.CO2_EQ_LABEL.' / functional unit <span class="units">'.CO2_EQ_LABEL.PER_FU_LABEL.'</span></th>'
 					  .'<th>Performance improvement from reference <span class="units">'.MPTS_UNIT_LABEL.'</span></th>'
 					  .'<th>Performance improvement from reference <span class="units">%</span></th>'
 					  .'<th>Units of svc delivered <span class="units">Svc. Units</span></th>'
 					  .'<th>Assessment type</th>'
-					  //.'<td class="concept-table-label">Date created</td>'//
-					  //.'<td class="concept-table-blank concept-table-label-actions">&nbsp;</td>'
 					.'</tr>';
-	else
-	$output .='<div class="pro-concept-list">
-	<div class="noconcepts">
-		<div class="create">
-			<!-- <a class="btn_green">Create a new Concept</a> -->
-			<a href='. SITE_PATH ."/".URL_CONCEPT_ADD.'/'. $productid. ' class="text-start project_btn btn btn-success btn-sm"> Create a new Concept <img src='. SITE_PATH .'/sites/default/files/2021-07/plus.svg alt="plus-icon" title="plus"> </a>
-		</div>
-		<p><strong>'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_INTRO.'</strong></p>
-		<div class="inblock-getstart">
-		'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'
-		</div>
-		<div class="inblock-getstart">
-		'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'
-		</div>
-	</div>
-</div>';
-	//   $output .= '<div class="pro-concept-list">
-	//   			<div class="noconcepts">
-	// 		  <div class="create">'
-	// 	  .'<a href='. SITE_PATH ."/".URL_CONCEPT_ADD.'/'. $productid. ' class="text-start project_btn btn btn-success btn-sm"> Create a new Concept <img src='. SITE_PATH .'/sites/default/files/2021-07/plus.svg alt="plus-icon" title="plus"> </a>'
-	// 	  .'<div><p>'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_INTRO.'</p></div>'
-	// 	  .'<div class="inblock-getstart">'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'</div>'
-	// 	  .'<div class="inblock-getstart">'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'</div>'
-	// 	  .'</div></div>';
-	  // sort so ref/current best/final is on top
-	  $bestConcept = $db->get_best_concept($productid);
+	} else
+		$output .='<div class="pro-concept-list">
+					<div class="noconcepts">
+						<div class="create">
+							<!-- <a class="btn_green">Create a new Concept</a> -->
+							<a href='. SITE_PATH ."/".URL_CONCEPT_ADD.'/'. $productid. ' class="text-start project_btn btn btn-success btn-sm"> Create a new Concept <img src='. SITE_PATH .'/sites/default/files/2021-07/plus.svg alt="plus-icon" title="plus"> </a>
+						</div>
+						<p><strong>'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_INTRO.'</strong></p>
+						<div class="inblock-getstart">
+						'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'
+						</div>
+						<div class="inblock-getstart">
+						'.TEXT_DEFAULT_PROJECT_CONCEPT_LIST_REF.'
+						</div>
+					</div>
+				</div>';
+	$bestConcept = $db->get_best_concept($productid); 
+	foreach ($concepts as $key=>$concept) {
+		if ($concept['isRef'] && !$ref) {
+			$ref = $concept ;
+			$ref['text'] .= 'Reference';
+			if ($concept['isFinal']) $ref['text'] .= ', final';
+			if ($concept['conceptID'] == $bestConcept['conceptID']) $ref['text'] .= ', Lowest impact';
+			$concepts[$key] = null;
+		}
+		elseif ($concept['isFinal']) {
+			$fin = $concept ;
+			$fin['text'] .= 'Final';
+			if ($concept['conceptID'] == $bestConcept['conceptID']) $fin['text'] .= ', Lowest impact';
+			$concepts[$key] = null;
+		}
+		elseif ($concept['conceptID'] == $bestConcept['conceptID']) {
+			$best = $concept;
+			$best['text'] .= 'Lowest impact';
+			$concepts[$key] = null;
+		}
+	}
+	array_unshift($concepts, $ref, $fin, $best);
+	if ($refFinal)
+		$ref=$refFinal;
+	foreach ($concepts as $concept) {
+		if (empty($concept)) continue;
+		$label = null;
+		$label = $concept['text'];
+		$diff = $ref['okala_n']-$concept['okala_n'];
+		if ($ref['okala_n'])
+			$diffper = $diff / $ref['okala_n'];	
+		if ($diff == 0) {
+			$addsign = '';
+			$pos = "negative";
+		} elseif ($diff > 0) {
+			$addsign = '+';
+			$pos = "negative";
+		} else {
+			$addsign = '';
+			$pos = "positive";
+		}  
+		$diffper = 0 - $concept['ref_compare_okala']; //why is $diffper calculated twice?
+		$pct_sign = "%";
+		if ($concept['isRef']) {
+			$diff =  '';
+			$diffper = '';
+			$pct_sign = '';
+		}
+		
+		if (empty($concept['icon'])) 
+			$concept['icon'] = IMAGE_NO_IMAGE_DEFAULT;
+		$class = "";
+		if (strpos($label, 'Reference') === 0)
+			$class = 'class="even"';
+		elseif (strpos($label, 'Lowest') === 0 || strpos($label, 'Final') === 0) {
+			if ($concept['ref_compare_okala'] > 0)
+				$class = 'class="positive"';
+			elseif ($concept['ref_compare_okala'] < 0)
+				$class = 'class="negative"';
+			else
+				$class = 'class="even"';
+		}
+		$output .= '<tr '.$class.'>'
+			.'<td>
+			<table '.$class.'> 
+			<tr>
+			<td colspan="2" class="title">';
+			if ($label)
+				$output .= '<h3>'.$label.'</h3>';
+			else
+				$output .='';
+			$output .='    
+			</td></tr>
+			<tr>
+				<td class="product-view-concept-icon"><a href="/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'"><div><img class="position-relative" style="top:-2px;" src="'. $concept['icon'] . '" alt="' . $concept['name'].'" border=0 /></div> </a> </td>
+				<td class="name"><a href="'.SITE_PATH.'/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'">'.$concept['name'].'</a></td>
+			</tr>
+			<tr>
+			<td class="act" colspan="2">
+				'.sustainable_minds_concept_actions_area($concept,'text')
+			.'</td>
+			</tr>
+			</table>'
+			.'</td>'
+			.'<td class="gl-more-emphesis">' . nice_exponential_notation(scientific_notation($concept['okala_n'], 2, SN_LOWER, SN_UPPER)) . '</td>'
+			.'<td class="gl-more-emphesis">' . nice_exponential_notation(scientific_notation($concept['co2_n'], 2, SN_LOWER, SN_UPPER)) . '</td>'
+			.'<td class="'.$pos.' gl-more-emphesis">'. $addsign . nice_exponential_notation(scientific_notation($diff, 2, SN_LOWER, SN_UPPER)). '</td>'
+			.'<td class="'.$pos.' gl-more-emphesis">'. $addsign . nice_exponential_notation(scientific_notation($diffper, 2, SN_LOWER, SN_UPPER)) . $pct_sign . '</td>'
+			.'<td>' . $concept['lifetimeFuncUnits'] . '</td>'
+			.'<td>' . $concept['measurementType'] . '</td>'
+			.'<div class="clear"></div>'
+			.'</td></tr>';
+	}
 	  
-	  foreach ($concepts as $key=>$concept) {
-		  if ($concept['isRef'] && !$ref) {
-			  $ref = $concept ;
-			  $ref['text'] .= 'Reference';
-			  if ($concept['isFinal']) $ref['text'] .= ', final';
-			  if ($concept['conceptID'] == $bestConcept['conceptID']) $ref['text'] .= ', Lowest impact';
-			  $concepts[$key] = null;
-		  }
-		  elseif ($concept['isFinal']) {
-			  $fin = $concept ;
-			  $fin['text'] .= 'Final';
-			  if ($concept['conceptID'] == $bestConcept['conceptID']) $fin['text'] .= ', Lowest impact';
-			  $concepts[$key] = null;
-		  }
-		  elseif ($concept['conceptID'] == $bestConcept['conceptID']) {
-			  $best = $concept;
-			  $best['text'] .= 'Lowest impact';
-			  $concepts[$key] = null;
-		  }
-	  }
-  
-	  array_unshift($concepts, $ref, $fin, $best);
-	  if ($refFinal)
-		  $ref=$refFinal;
-  
-	  foreach ($concepts as $concept) {
-		  if (empty($concept)) continue;
-		  $label = null;
-		  $label = $concept['text'];
-		  
-		  $diff = $ref['okala_n']-$concept['okala_n'];
-		  if ($ref['okala_n'])
-			  $diffper = $diff / $ref['okala_n'];
-			  
-		  if ($diff == 0) {
-			   $addsign = '';
-			   $pos = "negative";
-		  } elseif ($diff > 0) {
-			  $addsign = '+';
-			   $pos = "negative";
-		  } else {
-			   $addsign = '';
-			  $pos = "positive";
-		  }
-		  
-		  $diffper = 0 - $concept['ref_compare_okala']; //why is $diffper calculated twice?
-		  $pct_sign = "%";
-		  if ($concept['isRef']) {
-			  $diff =  '';
-			  $diffper = '';
-			  $pct_sign = '';
-		  }
-		  
-		  if (empty($concept['icon'])) 
-			  $concept['icon'] = IMAGE_NO_IMAGE_DEFAULT;
-  
-		  $class = "";
-		  if (strpos($label, 'Reference') === 0)
-			  $class = 'class="even"';
-		  elseif (strpos($label, 'Lowest') === 0 || strpos($label, 'Final') === 0) {
-			  if ($concept['ref_compare_okala'] > 0)
-				  $class = 'class="positive"';
-			  elseif ($concept['ref_compare_okala'] < 0)
-				  $class = 'class="negative"';
-			  else
-				  $class = 'class="even"';
-		  }
-  
-		  $output .= '<tr '.$class.'>'
-			  .'<td>
-			  <table '.$class.'> 
-			  <tr>
-			  <td colspan="2" class="title">';
-			  if ($label)
-				  $output .= '<h3>'.$label.'</h3>';
-			  else
-				  $output .='';
-			  $output .='    
-				</td></tr>
-				<tr>
-				  <td class="product-view-concept-icon"><a href="/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'"><div><img class="position-relative" style="top:-2px;" src="'. $concept['icon'] . '" alt="' . $concept['name'].'" border=0 /></div> </a> </td>
-				  <td class="name"><a href="'.SITE_PATH.'/'.URL_CONCEPT_VIEW.'/'.$concept['conceptID'].'">'.$concept['name'].'</a></td>
-				</tr>
-				<tr>
-				<td class="act" colspan="2">
-				  '.sustainable_minds_concept_actions_area($concept,'text')
-			   .'</td>
-				</tr>
-			  </table>'
-		  .'</td>'
-		  .'<td class="gl-more-emphesis">' . nice_exponential_notation(scientific_notation($concept['okala_n'], 2, SN_LOWER, SN_UPPER)) . '</td>'
-		  .'<td class="gl-more-emphesis">' . nice_exponential_notation(scientific_notation($concept['co2_n'], 2, SN_LOWER, SN_UPPER)) . '</td>'
-		  .'<td class="'.$pos.' gl-more-emphesis">'. $addsign . nice_exponential_notation(scientific_notation($diff, 2, SN_LOWER, SN_UPPER)). '</td>'
-		  .'<td class="'.$pos.' gl-more-emphesis">'. $addsign . nice_exponential_notation(scientific_notation($diffper, 2, SN_LOWER, SN_UPPER)) . $pct_sign . '</td>'
-		  .'<td>' . $concept['lifetimeFuncUnits'] . '</td>'
-		  .'<td>' . $concept['measurementType'] . '</td>'
-		  
-		  /*.'<td>' . $concept['date_created'] . '</td>'*/
-		  //.'<td class="actions">'
-		  //.sustainable_minds_concept_actions_area($concept)
-		  //this is a dirty hack to insert a link that is only meaningful if the sbom_export module is enabled
-		  //don't know an alternative way
-		  //.'<a class="concept-list-link" href="/'.SBOM_EXPORT.'/'.$concept['conceptID'].'"><strong>Download sBOM</strong></a>'
-		  .'<div class="clear"></div>'
-		  .'</td></tr>';
-	  }
-	  
-	  if (!empty($concepts)) 
-		  $output .='</table>';
-		  
-	  $output .='</div></div>';
-	  return $output ;
-  }
+	if (!empty($concepts)) 
+		$output .='</table>';	  
+	$output .='</div></div>';
+	return $output ;
+}
 
 //need to get rid of javascript:void(0)
 function sustainable_minds_concept_actions_area(&$concept, $actiondisplay = 'btn', $add = '')
@@ -791,11 +721,10 @@ function sustainable_minds_concept_view($concept, $conceptid) {
 	$topphases = $db->okala_concept_by_phase($conceptid);
 	foreach ($topphases as $topphase) {
 	  if($topscore < $topphase['score']) {
-		  $topscore = $topphase['score'];
-		  $topph = $topphase['phase'];
+			$topscore = $topphase['score'];
+			$topph = $topphase['phase'];
 	  }
 	}
-	
 	// check to see if a values exist for greatest impacts section
 	if (empty($topcomponent[0]['name'])) {
 		$topcomponent[0]['name'] = SCORE_NO_HIGHINPUT;
@@ -817,7 +746,6 @@ function sustainable_minds_concept_view($concept, $conceptid) {
 	} else {
 	  $concept['okala'] = $concept['okala'] .' '. MPTS_UNIT_LABEL;
 	};
-	
 	$output1 = '<div class="row ps-2 py-4">
 	<div class="col-lg-8">
 		<div class="product-concept-view-main">
@@ -1043,95 +971,95 @@ function sustainable_minds_concept_view($concept, $conceptid) {
 				  .'<div class="clear"></div>'
 				  .'</div>' ; // END TOP concept-view
 	return $output1 ;
-  }
+}
 
-  /*	Make exponential notation look like 1.23x10^4 or (1.23 x 10^4 if $spaces == true) instead of 1.23e+4
-	$html = true makes actual superscript notation	*/
-	function nice_exponential_notation ($number, $spaces = false, $html = true) {
-		//drupal_set_message("number: $number");
-		if (strpos($number, 'e') !== false && $number != 0) {
-			$tail = ' ';
+/*	
+Make exponential notation look like 1.23x10^4 or (1.23 x 10^4 if $spaces == true) instead of 1.23e+4
+$html = true makes actual superscript notation	
+*/
+function nice_exponential_notation ($number, $spaces = false, $html = true) {
+	//drupal_set_message("number: $number");
+	if (strpos($number, 'e') !== false && $number != 0) {
+		$tail = ' ';
+		$sign = '';
+		if (strpos($number, '-') === 0) {
+			$number = ltrim($number, '-');
+			$sign = '-';
+		}
+		if ($html) {
+			$tail = '</sup> ';
+			if ($spaces)
+				$trans = array('e'=>' x 10<sup>', '+0'=>'', '+'=>'', '-0'=>'-');
+			else
+				$trans = array('e'=>'x10<sup>', '+0'=>'', '+'=>'', '-0'=>'-');
+		} else {
+			if ($spaces)
+				$trans = array('e'=>' x 10', '+0'=>'^', '+'=>'^', '-0'=>'^-', '-'=>'^-');
+			else
+				$trans = array('e'=>'x10', '+0'=>'^', '+'=>'^', '-0'=>'^-', '-'=>'^-');
+		}
+		return $sign . strtr($number, $trans) . $tail;
+	}
+	//drupal_set_message("number: $number");
+	return $number;
+}
+
+/*	
+Put numbers <= $lower or >= $upper in scientific notation to $sig significant digits.
+If min/max is null, don't exclude any range; if $sig is null don't use significant digits.	
+*/
+function scientific_notation($number, $sig = null, $lower = null, $upper = null) {
+	if ($number != 0) {
+		//if number should be put in scientific notation
+		if ( (!is_null($lower) && abs($number) <= $lower) || (!is_null($upper) && abs($number) >= $upper) ) {
+			if ($sig && intval($sig) > 0)
+				$format_string = '%.'.($sig-1).'e';
+			else
+				$format_string = '%e';
+		
+			return sprintf($format_string, $number);
+		}
+		
+		if ($sig && intval($sig) > 0) {
 			$sign = '';
-			if (strpos($number, '-') === 0) {
-				$number = ltrim($number, '-');
+			if ($number < 0) {
 				$sign = '-';
+				$number = 0 - $number;
 			}
 			
-			if ($html) {
-				$tail = '</sup> ';
-				if ($spaces)
-					$trans = array('e'=>' x 10<sup>', '+0'=>'', '+'=>'', '-0'=>'-');
-				else
-					$trans = array('e'=>'x10<sup>', '+0'=>'', '+'=>'', '-0'=>'-');
-			} else {
-				if ($spaces)
-					$trans = array('e'=>' x 10', '+0'=>'^', '+'=>'^', '-0'=>'^-', '-'=>'^-');
-				else
-					$trans = array('e'=>'x10', '+0'=>'^', '+'=>'^', '-0'=>'^-', '-'=>'^-');
+			$multiplier = 1;
+			while ($number < 0.1) {
+				$number *= 10;
+				$multiplier /= 10;
 			}
-			
-			return $sign . strtr($number, $trans) . $tail;
-		}
-		//drupal_set_message("number: $number");
+			while ($number >= 1) {
+				$number /= 10;
+				$multiplier *= 10;
+			}
 		
-		return $number;
-	}
-/*	Put numbers <= $lower or >= $upper in scientific notation to $sig significant digits.
-	If min/max is null, don't exclude any range; if $sig is null don't use significant digits.	*/
-	function scientific_notation($number, $sig = null, $lower = null, $upper = null) {
-		if ($number != 0) {
-			//if number should be put in scientific notation
-			if ( (!is_null($lower) && abs($number) <= $lower) || (!is_null($upper) && abs($number) >= $upper) ) {
-				if ($sig && intval($sig) > 0)
-					$format_string = '%.'.($sig-1).'e';
-				else
-					$format_string = '%e';
+			$num = round($number, $sig) * $multiplier;
 			
-				return sprintf($format_string, $number);
+			//now check that enough 0s on the right to reach $sig
+			$stripped_num = ltrim(ltrim(ltrim($num, '0'), '.'), '0');
+			$diff = $sig - (strlen($stripped_num) - ((strpos($stripped_num, '.') === false) ? 0 : 1));
+			//drupal_set_message("number: ". $number . " stripped_num: " .$stripped_num);
+			//drupal_set_message("sig: ". $sig . " strlen(stripped_num): " .strlen($stripped_num) ."  diff: ". $diff);
+			if ($diff > 0) {
+				//drupal_set_message("number: ". $number . " stripped_num: " .$stripped_num ."  num: ". $num);
+				if (strpos($num, '.') === false)
+					$num .= '.';
+
+				while ($diff > 0) {
+					$num .= '0';
+					--$diff;
+				}
 			}
 			
-			if ($sig && intval($sig) > 0) {
-				$sign = '';
-				if ($number < 0) {
-					$sign = '-';
-					$number = 0 - $number;
-				}
-				
-				$multiplier = 1;
-				while ($number < 0.1) {
-					$number *= 10;
-					$multiplier /= 10;
-				}
-				while ($number >= 1) {
-					$number /= 10;
-					$multiplier *= 10;
-				}
-			
-				$num = round($number, $sig) * $multiplier;
-				
-				//now check that enough 0s on the right to reach $sig
-				$stripped_num = ltrim(ltrim(ltrim($num, '0'), '.'), '0');
-				$diff = $sig - (strlen($stripped_num) - ((strpos($stripped_num, '.') === false) ? 0 : 1));
-				//drupal_set_message("number: ". $number . " stripped_num: " .$stripped_num);
-				//drupal_set_message("sig: ". $sig . " strlen(stripped_num): " .strlen($stripped_num) ."  diff: ". $diff);
-				if ($diff > 0) {
-					//drupal_set_message("number: ". $number . " stripped_num: " .$stripped_num ."  num: ". $num);
-					if (strpos($num, '.') === false)
-						$num .= '.';
-	
-					while ($diff > 0) {
-						$num .= '0';
-						--$diff;
-					}
-				}
-				
-				return $sign . $num;
-			}
+			return $sign . $num;
 		}
-		
-		return $number;
 	}
-	
+	return $number;
+}
 
 function reorder_impact_array_by_impactID($version, $s_impacts = '')
 {
@@ -1220,7 +1148,6 @@ function sustainable_minds_make_impact_pie($conceptid, $args = '', $link_to_popu
 		);
 		$i++;
 	}
-
 	$pie['visual'] = '';
 	$pie_table_args = array('percent', 'impacts');
 	if ($args['table_class'])
@@ -1248,7 +1175,6 @@ function sustainable_minds_make_graph_table($impacts, $graph_identifer = '', $ty
 			$total += $imp['score'];
 		}
 	}
-
 	// see if use %s
 	$percent = in_array('percent', $graph_identifer);
 	// see if doing by impact graph
@@ -1256,7 +1182,6 @@ function sustainable_minds_make_graph_table($impacts, $graph_identifer = '', $ty
 	// see if doing by input
 	$input_graph = in_array('by_input', $graph_identifer);
 	$phase_graph = in_array('by_phase', $graph_identifer);
-
 	// see if doing by_phase
 	if ($percent) {
 		foreach ($impacts as $key => $imp) {
@@ -1268,7 +1193,6 @@ function sustainable_minds_make_graph_table($impacts, $graph_identifer = '', $ty
 				$impacts[$key]['score'] = 0;
 		}
 	}
-
 	if ($impact_graph) {
 		$txt = 'Impact category';
 		$unit = '%';
@@ -1282,7 +1206,6 @@ function sustainable_minds_make_graph_table($impacts, $graph_identifer = '', $ty
 		else
 			$unit = MPTS_UNIT_LABEL . PER_FU_LABEL;
 	}
-
 	//Set the units
 	$args_array = array(); // store what needs to be passed to the functions
 	$args_array['percent'] = $percent;
@@ -1292,11 +1215,9 @@ function sustainable_minds_make_graph_table($impacts, $graph_identifer = '', $ty
 		. '<td class="head-title">' . $txt . '</td>'
 		. '<td class="head-unit">' . $unit . '</td>'
 		. '</tr>';
-
 	if ($impact_graph) {
 		return sustainable_minds_make_graph_table_impacts($impacts, $args_array, $link_to_popup);
 	}
-
 	$args_array['type'] = $type;
 	$args_array['total'] = $total;
 	return sustainable_minds_make_graph_table_other($impacts, $args_array);
@@ -1330,33 +1251,26 @@ function sustainable_minds_make_graph_table_impacts($impacts, $args = '', $link_
 		}
 		$i++;
 	}
-
 	//FIXME: better way to do this whole categorizing thing...?
 	$table .= $args['head'];
 	$table .= '<tr class="category"><td></td><td colspan="2">Ecological damage</td></tr>';
-
 	if (!is_array($impact_list['ecological']))
 		$impact_list['ecological'] = array();
 	foreach ($impact_list['ecological'] as $imp_list) {
 		$table .= $imp_list;
 	}
-
 	$table .= '<tr class="category"><td></td><td colspan="2">Resource depletion</td></tr>';
-
 	if (!is_array($impact_list['resource']))
 		$impact_list['resource'] = array();
 	foreach ($impact_list['resource'] as $imp_list) {
 		$table .= $imp_list;
 	}
-
 	$table .= '<tr class="category"><td></td><td colspan="2">Human health damage</td></tr>';
-
 	if (!is_array($impact_list['human']))
 		$impact_list['human'] = array();
 	foreach ($impact_list['human'] as $imp_list) {
 		$table .= $imp_list;
 	}
-
 	$table .= '</table>';
 	return $table;
 }
@@ -1367,19 +1281,16 @@ function sustainable_minds_make_graph_table_other($impacts, $args)
 	$table = '<table class="result-table">';
 	$i = 0;
 	$total = $args['total'];
-
 	//Set the units
 	if (!$args['type']) {
 		$print_type = MPTS_UNIT_LABEL . PER_FU_LABEL; //should always use per FU?
 	} elseif ($args['type'] == 'co2') {
 		$print_type = ' ' . CO2_EQ_LABEL . PER_FU_LABEL; //' CO2 eq. lbs ';
 	}
-
 	$percent = $args['percent'];
 	if (!$percent)
 		$table .= '<caption class="result-table-row-total">Total = ' . nice_exponential_notation(scientific_notation($total, 2, SN_LOWER, SN_UPPER)) . $print_type . ' </caption>';
 	$table .= $args['head'];
-
 	//for every impact item/row of data
 	foreach ($impacts as $key => $imp) {
 		if ($imp['phase'])
@@ -1398,13 +1309,11 @@ function sustainable_minds_make_graph_table_row($color, $name, $popid, $score, $
 	} else {
 		$txt = $name;
 	}
-
 	if (!strpos($score, '%'))
 		if ($val_type == 'pct')
 			$score = format_numbers($score, 2);
 		else
 			$score = nice_exponential_notation(scientific_notation($score, 3, SN_LOWER, SN_UPPER));
-
 	return '<tr class="result-table-row">'
 		. '<td class="result-table-color"><span style="color:#' . $color . ';background-color:#' . $color . ';"></span></td>'
 		. '<td class="result-table-name">' . str_replace('\n', "", $txt) . '</td>'
@@ -1422,14 +1331,11 @@ function sustainable_minds_make_graph_table_horizontal($impacts, $info = '')
 	$i = 0;
 	$table .= '<div class="horizontal-result-table-row">';
 	$table .= '<div class="horizontal-result-table-cell title">Materials</div>';
-
 	foreach ($impacts[0]['impacts'] as $impact) {
 		$table .= '<div class="horizontal-result-table-cell header" style="background-color:#' . $chart_colors[$i] . ';">' . $impact['name'] . '</div>';
 		$i++;
 	}
-
 	$table .= '<div class="clear"></div></div>';
-
 	foreach ($impacts as $key => $imp) {
 		$table .= '<div class="horizontal-result-table-row">';
 		$table .= '<div class="horizontal-result-table-cell title">' . $imp['name'] . '</div>';
@@ -1439,7 +1345,6 @@ function sustainable_minds_make_graph_table_horizontal($impacts, $info = '')
 		$table .= '<div class="clear"></div></div>';
 		$i++;
 	}
-
 	$table .= '</div>';
 	return $table;
 }
@@ -1470,19 +1375,255 @@ function sbom_tabs($conceptid, $phaseid){
 		PHASEID_TRANSPORT==$phaseid? 'active':' '
 	];
 	return '<div class="system-bom-tabs">
-		<ul class="nav nav-tabs" id="BOMTab">
-			<li class="nav-item">
-			  <a href='.$manufacture_path. ' class="nav-link '.$active[0].'" id="manufacturing-tab"   aria-selected="true"><span>Manufacturing</span></a>
-			</li>
-			<li class="nav-item">
-			  <a href='.$use_path. ' class="nav-link '.$active[1].'" id="system-BOM-use-tab" aria-selected="false"><span>Use</span></a>
-			</li>
-			<li class="nav-item">
-				<a href='.$eof_path. ' class="nav-link '.$active[2].'" id="system-BOM-end-life-tab"  aria-selected="false"><span>End of life</span></a>
-			  </li>
-			<li class="nav-item">
-			  <a href='.$transportation_path. ' class="nav-link '.$active[3].'" id="transportation-tab" aria-selected="false"><span>Transportation</span></a>
-			</li>
-		</ul>
-	  </div>';
+			<ul class="nav nav-tabs" id="BOMTab">
+				<li class="nav-item">
+				<a href='.$manufacture_path. ' class="nav-link '.$active[0].'" id="manufacturing-tab"   aria-selected="true"><span>Manufacturing</span></a>
+				</li>
+				<li class="nav-item">
+				<a href='.$use_path. ' class="nav-link '.$active[1].'" id="system-BOM-use-tab" aria-selected="false"><span>Use</span></a>
+				</li>
+				<li class="nav-item">
+					<a href='.$eof_path. ' class="nav-link '.$active[2].'" id="system-BOM-end-life-tab"  aria-selected="false"><span>End of life</span></a>
+				</li>
+				<li class="nav-item">
+				<a href='.$transportation_path. ' class="nav-link '.$active[3].'" id="transportation-tab" aria-selected="false"><span>Transportation</span></a>
+				</li>
+			</ul>
+		</div>';
 }
+
+/**
+ * Error message and kick back
+ */
+function sustainable_minds_invalid_args() {
+	throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
+}  
+
+function sustainable_minds_form_presets($phase, $type='item') {
+	static $presets;
+	if (!$presets) {
+		$presets[PHASEID_MANUFACTURE] = array(
+			'item'=>
+				array(
+				'term_main' => DEFUALT_ITEM_TEXT,
+				'term_sub' =>  'Material',
+				'root' => SM_MATERIAL_CATEGORY_ID,
+				'amount' => 'Amount',
+				'removedfields' => array(
+					'add' => array(
+					),
+					'edit' => array(
+					),
+				)
+			),
+			'imp' => array(
+				'eol'=>'noteol',
+				'term_main' => DEFUALT_PROCESS_TEXT,
+				'term_sub' =>  DEFUALT_PROCESS_TEXT,
+				'root' => SM_PROCESS_CATEGORY_ID,
+				'amount' => 'Amount',
+				'field_amount' => 'textfield',
+				'root_type'=>'material'
+			)
+		);
+		$presets[PHASEID_EOL]['imp'] =array(
+				'eol'=>'eol',
+				'term_main' => DEFUALT_PROCESS_EOL_TEXT,
+				'term_sub' =>  DEFUALT_PROCESS_EOL_TEXT,
+				'root' => SM_PROCESS_CATEGORY_ID,
+				'amount' => 'Amount',
+				'root_type'=>'material',
+				'field_amount' => 'hidden',
+				'removedfields' => array(
+					'measure'
+				)
+			);
+		$presets[PHASEID_TRANSPORT] = array(
+			'item'=>array(
+				'term_main' => 'Transportation mode',
+				'term_sub' => 'Transportation mode',
+				'root' => SM_TRANSPORTATION_CATEGORY_ID, 
+				'amount' => 'Distance',
+				'removedfields' => array(
+					'partID', 'quantity', 'submit_process'/*, 'description'*/
+				)
+			)
+		);
+		$presets[PHASEID_TRANSPORT]['imp'] =  $presets[PHASEID_TRANSPORT]['item'];
+		$presets[PHASEID_TRANSPORT]['imp']['field_amount'] = 'textfield';
+		$presets[PHASEID_TRANSPORT]['imp']['default_amount'] = 0;
+		//$presets[PHASEID_TRANSPORT]['imp']['root_type'] = 'material';
+		$presets[PHASEID_TRANSPORT]['imp']['removedfields'] = array('title','partID', 'quantity');
+		
+		/* Use has no imp*/
+		$presets[PHASEID_USE]= array(
+			 'item'=>array(
+				'term_main' => array(
+					COMPONENT_ROOT_CON => 'Consumable',
+					COMPONENT_ROOT_POW => 'Power use',
+					COMPONENT_ROOT_WAT => 'Water use',
+				),
+				'term_sub' => array(
+					COMPONENT_ROOT_CON => 'Consumable',
+					COMPONENT_ROOT_POW => 'Power',
+					COMPONENT_ROOT_WAT => 'Water',
+				),
+				'root'=>array(
+					COMPONENT_ROOT_CON => SM_CONSUMABLE_CATEGORY_ID2,
+					COMPONENT_ROOT_POW => SM_POWER_CATEGORY_ID,
+					COMPONENT_ROOT_WAT => SM_WATER_CATEGORY_ID,
+				),
+				'amount' => 'Amount',
+				'removedfields' => array(
+					'title','partID', 'quantity','submit_process'
+				)
+			)
+		);
+		$alters = \Drupal::moduleHandler()->invoke('sustainable_minds_form_presets',$presets);
+		if ($alters) $presets = $alters; 
+	}
+	return $presets[$phase][$type];
+}
+
+/*
+ * return argument after parsing and checking for errors
+ * argnumber = number of argument
+ * is_numeric = check if arg is numeric
+ * default = check if there is a default value
+ */
+function sustainable_minds_arg_set($argnumber, $is_numeric=true, $default=false){
+	$arg = ($argnumber);
+	$arg =  htmlspecialchars(trim($arg), ENT_QUOTES, 'UTF-8');
+	if($is_numeric && $arg != null){
+		$arg = (int)$arg;
+	}	
+	if($arg || $arg === 0){
+		if($is_numeric){
+			if(is_numeric($arg)){
+				return $arg;
+			}else{
+				if($default || $default === 0){
+					return $default;
+				}else{
+					//error
+					sustainable_minds_invalid_args();
+					return false;
+				}
+			}
+		} else {
+			return $arg;
+		}
+	} else {
+		if ($default || $default === 0) {
+			return $default;
+		} else {
+			sustainable_minds_invalid_args();
+			return false;
+		}
+	}
+}
+
+
+// Functions for getting constant urls for concept sbom edits. 
+function sustainable_minds_sbom_combine_url_arg($concept=null,$phase=null,$special=null,$aspecial=-1) {
+	if (!isset($concept) && $concept != -1) {
+		$conceptd = sustainable_minds_sbom_get_concept_arg();
+		$concept =$conceptd;
+	}
+	if (!isset($phase) && $phase != -1) {
+		$phased = sustainable_minds_sbom_get_phase_arg();
+		$phase =$phased;
+	}
+	if (!isset($special) && $special != -1) {
+		$speciald = sustainable_minds_sbom_get_special_arg();
+		$special =$speciald;
+	}
+	if (!isset($aspecial) && $aspecial != -1) {
+		$aspeciald = sustainable_minds_sbom_get_afterspecial_arg(true, -1);
+		$aspecial =$aspeciald;
+	}
+	if (isset($concept) && $concept  != -1){
+		$output .= $concept . '/' ;
+		if (isset($phase) && $phase != -1) {
+			$output .= $phase . '/';
+			if (isset($special) && $special != -1) {
+				$output .= $special .'/';
+				if (isset($aspecial) && $aspecial != -1) {
+					$output .= $aspecial .'/';
+				}
+			}
+		}
+	}
+	return $output;
+}
+
+
+function sustainable_minds_hint_list($helplist)
+{
+	//drupal_add_css('files/external/custom_content.css');
+	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+	if ($user->hasRole("superadmin") || $user->hasRole("help_content")  && !count($helplist)) {
+		$geturl = explode("/", $_GET['q']);
+
+		foreach ($geturl as $argument) {
+			if (is_numeric($argument)) {
+				$newurl[] = '%';
+			} else {
+				$newurl[] = $argument;
+			}
+		}
+		$newurl = implode('/', $newurl);
+		$output .= '<div class="hint-body"><a href="/node/add/hint?destination=' . $_GET['q'] . '&url=' . $newurl . '">+Add Hint</a></div>';
+	}
+	foreach ($helplist as $key => $row) {
+		$output .= '<div class="hint-body">';
+		if ($user->hasRole("superadmin") || $user->hasRole("help_content")) 
+			$output .= '<a href="/node/' . $row['nid'] . '/edit?destination=' . $_GET['q'] . '">edit</a><br/>';
+		$output .= $row['body'] . '</div>';
+	}
+	return $output . '</ul>';
+}
+
+function sustainable_minds_hint_contents() {
+	/*
+	 * regrep .* /product/add/%/.*
+	 * like %product/add/dd/\%\n% || like %product/add//\n% || like product/\n%
+	 *sdfsd
+	 */
+	$url = \Drupal::service('path.current')->getPath();
+	Database::setActiveConnection();
+	$conn =  Database::getConnection();
+	$result = Drupal::service('entity.query')
+      ->get('node')
+      ->condition('type', 'hints')->execute();
+	// $output = array(); 
+	foreach($result as $row) {
+		$mynode = node_load((int)$row);
+		$visibility = explode("\n",$mynode->field_visibility->getValue()[0]['value']);
+		foreach ($visibility as $value) {
+			$value = explode(' | ', $value);
+			$urlvalue = trim($value[0]);
+			$sessionvalue = explode('=>',trim($value[1]));
+			$regrep = '/^'.str_replace('/','\/', str_replace('%','([0-9a-zA-Z]|-)*',str_replace('*','(/|-|[0-9a-zA-Z])*',trim($urlvalue)))) . '$/';
+			
+			if (preg_match($regrep,$url) == 1) {
+				$nid = $row;
+				if (count($sessionvalue)>1) {
+					if (($sessionvalue[1] == 0 && !isset($_SESSION['form_values'][$sessionvalue[0]])) || $_SESSION['form_values'][$sessionvalue[0]] == $sessionvalue[1])
+						$output = $mynode->body->value;
+				} else {
+					$output = $mynode->body->value;
+				}
+				break;
+			}	
+		}
+	}
+	$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+	if (($user->hasRole("superadmin") || $user->hasRole("help_content")) && $nid) 
+		$output = '<a href="'.SITE_PATH.'/node/' . $nid . '/edit?destination=' .SITE_PATH.  '/admin/content">edit</a><br/>'. $output;
+	else if($user->hasRole("superadmin") || $user->hasRole("help_content")  && !$nid){
+		$output .= '<a href="'.SITE_PATH.'/node/add/hints">+Add Hint</a>';
+	}
+	return ($output);
+}
+

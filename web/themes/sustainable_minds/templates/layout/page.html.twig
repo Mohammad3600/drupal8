@@ -44,15 +44,270 @@
  */
 #}
 <style>
+
+/* add part */
+.blue-header {
+    background-color: #5F8390;
+    width: 100% !important;
+}
+#add-part .blue-header p {
+    line-height: 26px;
+    padding-left: 10px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    height: 26px;
+}
+#add-part .add-edit-container {
+    float: left;
+    clear: both;
+    width: 100%;
+    margin: 0px;
+    background-color: #EEF3F4;
+}
+#add-part .add-edit-container .inset {
+    float: left;
+    clear: both;
+    padding: 10px 10px 20px 10px;
+    margin: 0px;
+}
+#add-part .add-edit-container div {
+    border-top: none !important;
+}
+#add-part .name-qty-id-wrapper {
+    float: left;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 13px;
+}#add-part 
+
+.add-edit-container .edit-title, .add-edit-container .edit-partID, .add-edit-container .edit-quantity, .add-edit-container .edit-datasetversion {
+    clear: both;
+    width: 831px;
+    margin-bottom: 0px !important;
+}
+#add-part  .name-qty-id-wrapper label, .name-qty-id-wrapper label {
+    width: 100px;
+}#add-part 
+
+.add-edit-container select, .add-edit-container label {
+    float: left;
+}
+#add-part .add-edit-container .form-item {
+    padding: 0;
+}
+#add-part .browser-methodolgy {
+    float: right;
+    height: 20px;
+    line-height: 20px;
+    margin-right: 5px;
+    color: #0A2A38;
+}
+#add-part .edit-myitem .prevmethodology, .edit-myitem .currmethodology {
+    /* float: right; */
+    display: inline;
+}
+#add-part .browser-methodolgy * {
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+#add-part div.form-item label {
+    color: #0A2A38;
+    font-size: 13px;
+    padding-bottom: 10px;
+    position: relative;
+}
+#add-part .name-qty-id-wrapper label {
+    height: 20px;
+    line-height: 20px;
+}
+#add-part .name-qty-id-wrapper {
+    float: left;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 13px;
+}
+#add-part .add-edit-container .select, .add-edit-container .textfield {
+    float: left;
+}
+#add-part label.sm-browser {
+    width: 50%;
+    height: 20px;
+    line-height: 20px;
+    padding-bottom: 5px !important;
+}
+#add-part .form-item label {
+    display: block;
+    font-weight: bold;
+}
+#add-part .browser {
+    background-color: white;
+    border: 1px solid #B9B9B9;
+    float: left;
+    height: 300px;
+    overflow: hidden;
+    width: 230px;
+    clear: both !important;
+}
+#add-part .containerTableStyle {
+    overflow: auto;
+    position: relative;
+    top: 0;
+    font-size: 12px;
+}
+#add-part .browser table {
+    position: relative;
+}
+#add-part .standartTreeImage {
+    width: 18px;
+    height: 18px;
+    overflow: hidden;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 1px;
+}
+#add-part #myitem-browser-browser .standartTreeRow {
+    font-size: 11px !important;
+}
+#add-part .add-edit-container #amount-wrapper {
+    float: left;
+    clear: both;
+    width: 100%;
+    padding: 0px 0px 10px 0px;
+}
+#add-part .standartTreeRow {
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+#add-part .selectionBar {
+    top: 0;
+    background-color: Black;
+    position: absolute;
+    overflow: hidden;
+    height: 2px;
+    z-index: 11;
+}
+#add-part .browse-result {
+    float: left;
+    border-top: 1px solid #B9B9B9;
+    border-bottom: 1px solid #B9B9B9;
+    border-right: 1px solid #B9B9B9;
+}
+#add-part div.gridbox {
+    overflow: visible;
+}
+#add-part .browse-help {
+    border-top: 1px solid #B9B9B9;
+    border-bottom: 1px solid #B9B9B9;
+    border-right: 1px solid #B9B9B9;
+    float: left;
+    height: 294px;
+    padding: 3px 5px;
+    width: 196px;
+    overflow-x: auto;
+}
+#add-part .amt-measure-wrapper {
+    float: left;
+    clear: both;
+    width: 831px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+#add-part .add-edit-container #amount-wrapper .form-item {
+    float: left;
+    border-top: none !important;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+#add-part .add-edit-container .edit-measure {
+    clear: both;
+    float: left;
+    width: 100%;
+    margin-bottom: 0px;
+}
+#add-part .add-edit-container .edit-description {
+    clear: both;
+    float: left;
+    width: 831px;
+    margin-bottom: 0px;
+}
+#add-part .add-edit-container .edit-myitem, .add-edit-container .edit-description, #sm-bomload-file .edit-upload {
+    padding-top: 6px;
+}
+#add-part .add-edit-container .form-item {
+    padding: 0;
+}
+#add-part div.form-item {
+    border-top: 1px solid #ccc;
+    margin: 0px 0 15px 0;
+    padding: 0px;
+}
+#add-part .resizable-textarea {
+    width: 98% !important;
+}
+#add-part .resizable-textarea textarea {
+    color: #072667;
+    font-size: 11px;
+    font-family: tahoma, monaco, Arial, verdana, sans;
+}
+#add-part .resizable-textarea .grippie {
+    height: 9px;
+    overflow: hidden;
+    background: #eee url(../../misc/grippie.png) no-repeat center 2px;
+    border: 1px solid #ddd;
+    border-top-width: 0;
+    cursor: s-resize;
+}
+#add-part .form-button-actions {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+#add-part .form-button-actions {
+    background-color: #DAEDD3;
+    height: 32px;
+    /* margin-top: 15px; */
+}
+#add-part .form-button-actions .general-action.actions-right {
+    float: right;
+}
+#add-part .form-button-actions .general-action {
+    float: left;
+}
+#add-part .general-action {
+    padding: 5px;
+    display: block;
+}
+#add-part .inner-button, .general-action button, .general-action input {
+    background-color: #7AB455;
+    border: 1px solid #fff;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 0;
+    overflow: visible;
+    padding: 3px 5px;
+}
+#add-part .form-submit, .inner-button, .general-action button, .general-action i {
+    cursor: pointer;
+}
+#add-part .form-button-actions .general-action {
+    float: left;
+}
+ /* previous styles */
 .product-view .product-view-concept-name a {
     text-decoration: none;
     font-weight: bold;
     height: 14px;
 }
-.project-concept-icon img {
+ .project-concept-icon img {
     max-width: 258px;
 }
-.project-concepts .product-view-concept-icon img, .product-view .product-view-concept-icon img {
+ .project-concepts .product-view-concept-icon img, .product-view .product-view-concept-icon img {
     max-width: 98px;
     max-height: 56px;
 }
@@ -60,6 +315,16 @@
 ul li .nav-link.active {
     background-image: url(../../../../sites/default/files/sbom_arrow.png) !important;
     background-position: 5px 10px !important;
+}
+.block-sustainable_minds-about h1 {
+    color: #0A2B3C;
+    float: none;
+    font-size: 11px;
+    margin: 0;
+}
+.block-sustainable_minds-about p {
+    margin-top: 8px;
+    color:#000;
 }
 </style>
 <div id="wrapper">
@@ -84,7 +349,7 @@ ul li .nav-link.active {
       <div class="container bg_white">
           <div class="row">
           {% set site_url = path("<current>") ~ '' %}
-          {% set col_class = ('project/concept/view' in site_url or 'project/view' in site_url or 'project/concepts' in site_url or 'project/concept/build' in site_url ) ? 'col-lg-12' : 'col-lg-9' %}
+          {% set col_class = ('project/concept/view' in site_url or 'project/view' in site_url or 'project/concepts' in site_url or 'project/concept/build' in site_url or '/project/material' in site_url ) ? 'col-lg-12' : 'col-lg-9' %}
             <div class="layout-content {{ col_class }}">
               {{ page.content }}
             </div>{# /.layout-content #}

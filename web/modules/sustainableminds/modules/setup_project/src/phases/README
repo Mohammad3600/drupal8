@@ -1,0 +1,372 @@
+--Overview (files in use)--
+
+(relative from sustainable_minds/ directory)
+xml_ajax.inc
+	Contains a base class with various functions for making xml document, adding nodes, printing it, etc.
+
+phases/phases_tg.inc 
+	Contains a base class (with sub classes based on phase) for making a (phase specific) treegrid 
+phases/phases_tg_ajax_get.inc
+	Contains base and (phase specific) sub classes for outputing data for treegrid made via phases_tg
+phases/phases_tg_ajax_edit.inc
+	Contains base and (phase specific) sub classes for processing tree actions (edits and deletes). 
+	
+ajax/ajax.inc 
+	Includes older ajax functions for getting grid data 
+	and altered ones that call the classes from phase_tg_ajax_get and phases_tg_ajax_edit
+
+ajax/events.js 
+	Contains the javascript that works with the various grids/treegrids/trees
+	
+
+(relative from dhtmlx/ directory)
+
+dhtmlx.module
+	Contains base dhtmlx object class with sub classes based on type (grid, tree, treegrid, etc.)
+	Outputs the JS for initilizing the objects
+
+custom_skin.css
+	Custom CSS for treegrid look (sbom)
+whitegrid_skin.css
+	Custon CSS for grid look (add material/process)
+	
+
+--Classes Structures--
+	Class phases_tg (phases_tg.inc)
+		var edit
+		var component_type
+		var root
+		var width
+		var height
+		var phaseID
+		var conceptID
+		var headers
+		var name
+		var autoheight
+		function __construct (phaseID, conceptID, width, height)
+		function disable_autoheight
+		function set_name
+		function alter_header
+		function remove_header
+		function add_header
+		function set_edit
+		function construct_loading_message(divname)
+		function construct_buttons
+		function construct_button_area
+		function find_root
+		function phase_draw(&treegrid)
+		function draw
+		Class phases_tg_manufacturing
+		Class phases_tg_use
+		Class phases_tg_eol
+		Class phases_tg_transportation
+		
+	Class xml_ajax	(xml_ajax.inc)
+		var doc
+		var db
+		var r
+		var headers_order
+		function __construct
+		function clean_get (name, exists, is_numeric,default)
+		function print_xml
+		function fill_xml
+		function make_xml_node (&parent, info)
+		function add_cells(&parent, cells)
+		Class phases_tg_ajax_get (phases_tg_ajax_get.inc)
+			var conceptID
+			var phaseID
+			var phase_to_use
+			var parentID
+			var returnParentID
+			var parent
+			var eol
+			var components
+			var items
+			var items_single
+			var matprocs
+			var edit
+			function __construct (phaseID)
+			function enable_edit(enable[true])
+			function fill_components
+			function fill_items
+			function fill_items_single
+			function fill_matprocs
+			function action_wrapper(actions)
+			function component_has_children(component)
+			function component_text(component)
+			function component_actions(component, addComponent, addMaterial,del)
+			function process_components(r)
+			function valid_item(item)
+			function get_item_okala(item)
+			function get_item_co2(item)
+			function item_text(item)
+			function item_actions(item, addProcess,del)
+			function process_items(r)
+			function item_single_actions(item,addProcess,del)
+			function get_item_single_okala(item)
+			function get_item_single_co2(item)
+			function matproc_text (matproc)
+			function matproc_actions(matproc,del)
+			function get_matproc_okala (matproc)
+			function get_matproc_co2 (matproc)
+			function process_matprocs (r)
+			function fill_xml
+			Class phases_tg_ajax_get_manufacturing
+			Class phases_tg_ajax_get_use
+			Class phases_tg_ajax_get_eol
+			Class phases_tg_ajax_get_transportation
+		Class phases_tg_ajax_edit (phases_tg_ajax_edit.inc)
+			Class phases_tg_ajax_edit_manufacturing
+			Class phases_tg_ajax_edit_use
+			Class phases_tg_ajax_edit_eol
+			Class phases_tg_ajax_edit_transportation
+			
+	Class dhtmlx
+		Class dhtmlx_tree
+		Class dhtmlx_grid
+			Class dhtmlx_treegrid
+				
+Walkthrough
+To create a SBOM treegrid, make an instanious of phases_tg based on the phase (usedin:results.inc, themes.inc) 
+By default the phase is in edit mode. Call set_edit(false) to disable edit mode.
+
+	set_edit (edit [default=true])
+		enables/disables edit mode
+		if false, sets var edit to false, removes the actions header column and changes the size % to componsate
+		if true, sets var edit to true, fixes sizes, make sure actions is visable
+
+Use draw to output the treegrid code
+
+	Draw()
+		Outputs the treegrid code 
+		
+		Finds the root via find_root() 
+		Outputs the loading message div (hidden when not loading)
+		Constructs the buttons that are outside the treegrid (ie Add material/add component)
+		Creates the dhtmlx_treegrid
+			headers are sent in via get so the order of returned rows matches the order of the cells
+			root specifies the top parent for that grid
+			edit specifies whether it's in edit mode
+			phase is set via what sub class you made
+			concept is sent via the constructer, what concept you are in
+		calls phase_draw on treegrid object, overidden with phase specific extra code
+		sets the headers based on array made in constructer, altered via sub class constructs, set_edit
+		sets the dataprocessor
+			Data processer is the page to sent information on edits/deletions/etc.
+		add actions
+			Actions are actions specified via the xml returned from the dataprocessor 
+			Multiple actions are typically returned
+			They are set with action row and javascript functiont to calln each time action is returned
+			action update_row contains information (amount, okala, co2) about 1 row to change information on
+			action item_de_process changes a item with children to a single item (called all it's processes are deleted)
+		enableAutoHeight tells dhtml to use a set height (false) or determine the div's height (true)
+		add events
+			Events are called by dhtmlx with a specific event happens
+			event onRowDblClicked
+				Called whenever a row is double clicked
+				js sustainable_minds_grid_cancel_edit	
+					Row dbl clicked triggers edit, so this cancels
+					edit if information about the row/cell indicates it should
+					not be edited
+					If editable cell, sets userdata for row stating the column edited
+			event onXLS (on xml start)
+				Called when a call to load the XML data is sent
+				js on_loading_grid
+					Sets the curser to wait and unhides the loading message
+			event onXLE (on xml end)
+				Called when XML data is finished being sent 
+				js on_finish_loading_grid
+					Sets the curser to normal and hides the loading messages
+					Sees if any nodes need to be opened based previous state of tree
+					Saves the current open/close state
+			event onEditCell
+				Called when a cell is being edited
+				js sbom_stop_cell_edit
+					Used for comment column to allow it to be viewed an extended txt cell but not editable
+					when edit mode is false
+			event onDynXLS (on dynamic xml start)
+				Called to load the xml with the child url 
+				js 	sbom_loadChildURL
+					Calls the xml load but with a a url containing additional get information
+					(By defualt, the URL is only set with get of the ID)
+			event onOpenEnd
+				Called when a node if finished open/closeing 
+				js sustainable_minds_treegrid_onOpenEnd
+					Saves the open/close state
+			event onRowSelect
+				Called  when a row is selected
+				js sbom_treegrid_onRowSelect
+					open/closes the tree when name is clicked
+			event onMouseOver
+				Called whenever something diffrent is mouse overed (the mouse is over that cell)
+				js cancel_mouseover_of_actions
+					Cancels the title popup for actions column 
+		add userData
+			User data is specific data stored about the grid, nonvisable but accessable. 
+			It can be stored for the entire grid or row specific.
+			Set after initial xml load
+			userData phase
+				phase the grid is in
+			userdata editmode
+				if the grid is in editable mode
+		Uses set_loading_message_div to set the ID of the div the loading message is stored in
+			Cannot use user data since userdata is stored after first load of xml
+		Sets enableDataNames
+			Tells the grid to send data about a row edited with column IDs instead of column indexes
+	
+Most other phases_tg functions are called within the class and/or overiden by sub class functions
+
+Now that the treegrid's initial code has been outputed, the treegrid most recieve the correct xml
+The initial xml contains a call to xml page
+The xml page sets up a phases_tg_ajax_get based on what phase it's in (information passed via get)
+	__construct
+		The constructer gets various info from GET using xml_ajax clean_get
+			gets:
+				phaseID
+				conceptID
+				type (item or component)
+				gridDivName (name of the div the grid is in; so delete will target the correct grid)
+				phases_to_use = phase to get the information from, can differ from phaseID
+				rID = the real ID of the parent ('id' is altered to be unique whereas rIDs do not need to be)
+				if no realID, then use 'parent' (root) for parentID
+				if realID, use that has parentID and set the returnParentID to 'id' 
+			Fills parent with the parent information based on type
+			
+Output the XML by calling print_xml (inherited from xml_ajax, which returns the XML document).
+print_xml calls fill_xml to fill the xml			
+	fill_xml
+		overides one in xml_ajax to fill the xml page with certian information
+		Sets the parent as <rows> with returnParentID as id if is set
+		Calls process functions based on type (item: matprocs. component: componets, items, items_single)
+The XML nodes that will be returned are created two ways (both in xml_ajax): make_xml_node and add_cells
+	make_xml_node
+		Takes in parent xml node and an array containing 'node' (<node>) and arrays of
+		textNodes, cData (textnodes inside of xml comments), and attributes ('attribute'='info')
+		and sets that node with the info
+	add_cells
+		Takes in parent node and array containing arrays of information (from above) with keys based on header ids
+		Sends each row to xml_ajax as node <cell>
+			if header_order set (from get), outputs only cells with keys corresponding to header_order keys, in header_order order
+			
+As mentioned, the fill_xml function calls processing function that gets the information it needs to send 
+Most functions process_functions calls are shared among process functions or overidden by specific phase functions
+	process_(type) functions
+		calls fill_(type)()
+			Fills an array with the rows of items/components/matprocs to return
+		calls (type)_text to get specific text used for links, return data
+		sets the ID
+		if in edit mode
+			makes the urls for actions on the treegrid (like add material, etc/)
+			(in items, see if the items can have a process before setting add_process)
+			Sets the action value
+		Gets the okala, co2 values
+		Makes the root <row> xml node
+		Makes any user data (nonvisable row specific information)
+		Makes an array for cells and calls add_cells
+This is called for the first xml call and all subquiet calls to get data (Whenever a previously unopened node is opened)
+
+The next part is when a row is edited
+The xml calls a page that makes an instanious of phases_tg_ajax_edit based on phase
+This calls the constructer like phases_tg_ajax_get
+	__construct
+		The constructer gets various info from GET using xml_ajax clean_get
+			gets:	
+				row_id, the row_id of the row (unique for the grid)
+				rID, the real ID of that item/component
+				type,if it's component, item, or matproc edited (note:predefined variables still refear to matproc as PROCESS is several areas)
+				status, set if delete, not set if edit
+				eol whether the information we want is for noteol, eol, or both
+Then it calls fill_xml from xml_ajax (as did like phases_tg_ajax_get)
+	fill_xml
+		Makes root <data> node
+		Calls delete or update  based on status, which in turn call delete_,update_ based on type
+		Makes end actionPerform node that tells dhtml to finish that actions 
+			
+The delete_ functions vary based on type
+	delete_component
+		Deletes the component then calls send_components_update_row on parent componetid 
+		
+		send_components_update_row(componentID)
+			sends updated okala/co2 values to all componentid and its recursive parents.
+		
+	delete_item
+		Delete the item, calls send_components_update_row 	 
+		
+	delete_process (materials can not be deleted, only processes)
+		Delete the process and makes an action with new item information,
+		uses send_components_update_row
+		If no more other process left for item, send item_de_process with
+		 necessary informaition to dechild and update the item 
+As do the update_ functions (update functions do not exist for columns that can not be edited)
+	
+	update_component_name(value)
+		Updates the component's name (no extra return nodes or processing needed)
+	update_component_desc(value)
+		Updates the component's description(comment) (no extra return nodes or processing needed)	
+	
+	update_item_name(value)
+		Updates the Item's name (no extra return nodes or processing needed)
+	update_item_desc(value)
+		Updates the Item's description (no extra return nodes or processing needed)
+	update_item_amt(value)
+		An item amount can only be updated if it's a single item (no process).
+			(Other wise it will be changed via a matproc node)
+		Updates an item amount
+			Goes through process and see if any amounts need to be changed (process amount with same unit cannot excede item amount)
+			(Since this is item single, the only process that can exist is an EOL process. Since item amounts can only be changed in
+			Manufactoring, this will not be in the grid so new information does not need to be sent)
+		Sends new item information via send_item_update_row and component info via send_components_update_row
+		
+			send_item_update_row
+				Takes an itemID and sends new okala/co2 information of that item, returns item. 
+			
+	update_matproc_amt(value)
+		If process 
+			If units is same as material and value excedes material, value is now material amount
+		update amount
+		if material
+			go through processes
+				Lower amount of process if unit is same and process amoutn excedes material amount
+				send updated information
+			send material updated information
+		if process
+			send updated information
+		Sends new item information via send_item_update_row and component info via send_components_update_row
+
+The edits are processes as such and xml returned. The dataprocesser calls the associated functions 
+ for the actions returned and the grid is updated accordingly 
+
+
+-Additional-
+
+The basic structer of dhtml object classes is
+	__constructer
+		Makes the dhtml object ans sets various information based on what class is made
+	
+	set_ functions
+		Sets various information that is later outputed in various formats when JS is made
+	
+	includeFiles
+		includes the necessary files, calls recursive parent includeFiles for shared files
+	
+	draw
+		Through functions calls, attaches the initial javascript to the footer and returns the div that object will be in
+	
+	drawEnd
+		Called by draw to finish up making the javascript and return the div
+	
+	common_js
+		outputs the javascript this object and it's children will share. All shared JS should be here. 
+	
+	make_js
+		Called by draw, calls the necessary	functions to make the js. Does not call parent make_js functions
+		
+Additional grid specific functions (shared by treegrid, it's child)
+
+	makeDataProcessJS
+		Makes the dataprocesser javascript (for handling edits)
+	makeHeaderJS
+		Makes javascript for the grid's headers (including name, sort type, align, visibility)
+	make_userDataJS
+		Outputs the javascript to store userData (nonvisable but accessible information)
+		

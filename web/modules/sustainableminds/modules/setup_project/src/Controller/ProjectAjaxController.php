@@ -9,7 +9,6 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 class ProjectAjaxController{
 
-    
     /**
      * Creates blank product
      */

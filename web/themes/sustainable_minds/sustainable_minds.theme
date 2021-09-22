@@ -504,6 +504,10 @@ function sustainable_minds_preprocess_block(&$variables) {
   $variables['bodyString'] = $be_ixf_client->getBodyString('body_1');
   $variables['close'] = $be_ixf_client->close();
   $variables['bid'] = '123';
+  if ( $variables['attributes']['id'] == "block-hint" ) {
+    $variables['content']['body'][0]['#text']= '<div class="block-sustainable_minds-about lightblue_bg mb-3">'.sustainable_minds_hint_contents().'</div>';
+    $variables['content']['body'][0]['#format']= "full_html";
+  }
 }
 
 //BE Config: add the following method to the theme.theme file
@@ -609,3 +613,14 @@ function sustainable_minds_preprocess_node__workshop(&$variables, $hook){
 //     $suggestions[] = $hook . '__' . $id;
 //   }
 // }
+
+function sustainable_minds_block_view_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+	$a = 10;
+	if ($block->getBaseId() === 'hint') {
+	  $build['#pre_render'][] = '_sustainable_minds_block_poweredby_prerender';
+	}
+  }
+  function _sustainable_minds_block_poweredby_prerender(array $build) {
+	$build['content']['#markup'] = Markup::create('Your text');
+	return $build;
+  }

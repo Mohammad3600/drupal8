@@ -4,6 +4,7 @@
  * Contains Drupal\setup_project\Controller\ProjectController.  
  */  
 namespace Drupal\setup_project\Controller;
+use Drupal\setup_project\phases\phases_tg_manufacturing;
 use Drupal\Core\Database\Database;
 use Drupal\taxonomy\Entity\Term;  
 use Drupal\user\Entity\User;
@@ -62,12 +63,14 @@ class ProjectController{
             '#children' => $wizard . $output ,
         ];
     }
+
     public function viewBOM($conceptid = null, $phaseid = null){
         $db = \Drupal::service('setup_project.sbom_db');
         $concept = $db->get_concept($conceptid);
         $wizard = sustainable_minds_concept_wizard($concept, $conceptid);
         $comp_type = 0;
         $sbom_tabs = sbom_tabs($conceptid, (int)$phaseid);
+        $treegrid = new  phases_tg_manufacturing($conceptid);       
         // switch($phaseid){
         //     case PHASEID_MANUFACTURE:
         //         $treegrid = new  phases_tg_manufacturing($conceptid);       
@@ -83,11 +86,12 @@ class ProjectController{
         //     break;
         // }
 
-        // $output .= $treegrid->draw();
+        $output .= $treegrid->draw();
         return [
-            '#children' => $wizard .$sbom_tabs,
+            '#children' => $wizard .$sbom_tabs .$output,
         ];
     }
+    
     public function viewResults($conceptid = null){
         $db = \Drupal::service('setup_project.sbom_db');
         $concept = $db->get_concept($conceptid);
